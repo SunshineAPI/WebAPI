@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+
+var app = require('../app');
+app.set('port', process.env.PORT || 3000);
+app.set('bind', process.env.BIND || "0.0.0.0");
+
+var server = app.listen(app.get('port'), app.get("bind"), function() {
+	console.log('Express server listening on port ' + app.get("port"));
+});
