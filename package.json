@@ -5,6 +5,9 @@
   "main": "server.js",
   "repository": "git@github.com:gilrosenthal/OvercastAPI.git",
   "author": "Gil Rosenthal <gil.a.rosenthal@gmail.com>",
+  "scripts": {
+    "start": "node server.js" 
+  },
   "dependencies": {
     "cheerio": "^0.19.0",
     "express": "~3.2.4",

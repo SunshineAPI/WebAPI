@@ -1,39 +1,29 @@
 var http = require('http');
 var request = require("request");
+
 var cheerio = require("cheerio");
 var express = require('express');
-
-
-var Player = require("./modules/Player.js");
-var Profile = require("./modules/Profile.js");
-var ForumStats = require("./modules/ForumStats.js");
-var ProjectAresStats = require("./modules/ProjectAresStats.js");
-var BlitzStats = require("./modules/BlitzStats.js");
-var GhostSquadronStats = require("./modules/GhostSquadronStats.js");
-
 var app = express();
 var server = http.createServer(app);
-
-var port = process.env.PORT || 3000;
-var ip = process.env.BIND || "0.0.0.0";
-
-server.listen(port, ip, function() {
-    console.log("HTTP server listening at", ip + ":" + port);
-});
+var Player = require("./Player.js");
+var Profile = require("./Profile.js");
+var ForumStats = require("./ForumStats.js");
+var ProjectAresStats = require("./ProjectAresStats.js");
+var BlitzStats = require("./BlitzStats.js");
+var GhostSquadronStats = require("./GhostSquadronStats.js");
+var player;
 
 app.get('/player/:player', function(req, res) {
     var profile;
-    var player = req.params.player;
-    if (player.length > 16) {
-        return res.status(422).send("422 unprocessable player");
-    }
-    scrapeFromProfile(player, function(user, status) {
-        if (user) {
-            res.json(user);
-        } else {
-            res.status(status).send("404 player not found");
-        }
+    scrapeFromProfile(req.params.player, function(user) {
+        res.send(user);
     });
+});
+
+var port = process.env.PORT || 3000;
+var ip = process.env.BIND || "0.0.0.0";
+server.listen(port, ip, function() {
+    console.log("HTTP server listening at", ip + ":" + port);
 });
 
 
@@ -42,13 +32,16 @@ String.prototype.escapeSpecialChars = function() {
 };
 
 
+var modelFromData = function(user, cb) {
+
+
+};
+
 var scrapeFromProfile = function(name, cb) {
-    request("http://oc.tc/stats/" + name, function(error, response, body) {
-        console.log(response);
+    request("http://oc.tc/" + name, function(error, response, body) {
         if (error) {
-            return cb(null, 500);
-        } else if (response.statusCode !== 200) {
-            return cb(null, 404);
+            console.error("Failed to scrape user ", name);
+            return null;
         }
         var PAStats;
         var profile;
@@ -60,13 +53,15 @@ var scrapeFromProfile = function(name, cb) {
         var ghostArray = new Array();
         var $ = cheerio.load(body);
         if ($("body > div > section:nth-child(2) > div.row > div.span3 > div").text() != "") {
+            console.log("Not null");
             var toReturn = $("body > div > section:nth-child(2) > div.row > div.span3 > div").text().replace("\\n", "");
             playerArray["staus"] = toReturn;
         } else {
+            console.log("Null");
             var spanthree = $("body > div > section:nth-child(2) > div.row > div.span3 > strong");
+            console.log(spanthree.text());
             playerArray["status"] = "Seen " + spanthree.text() + " ago on " + $("body > div > section:nth-child(2) > div.row > div.span3 > span:nth-child(3) > a").text().replace("\\n", "");
         }
-        playerArray["status"] = playerArray["status"].escapeSpecialChars();
         playerArray["kills"] = $("body > div > section:nth-child(2) > div.row > div.span7 > div > div.span8 > div > div.span5 > h2").text().escapeSpecialChars().replace("kills", "");
         playerArray["deaths"] = $("body > div > section:nth-child(2) > div.row > div.span7 > div > div.span4 > h2").text().escapeSpecialChars().replace("deaths", "");
         playerArray["friends"] = $("body > div > section:nth-child(2) > div.row > div.span2 > h2").text().escapeSpecialChars().replace("friends", "");
@@ -197,9 +192,11 @@ var scrapeFromProfile = function(name, cb) {
             profileArray["youtube"] = profileArray["sixth"];
         }
 
+
+
         profileArray["bio"] = $("#about > div:nth-child(3) > div > pre").text();
         forumArray["posts"] = $("#stats > div:nth-child(2) > div > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("forum posts", "");
-        forumArray["topics"] = $("#stats > div:nth-child(2) > div > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("topics started", "");
+        forumArray["started"] = $("#stats > div:nth-child(2) > div > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("topics started", "");
         paArray["kills"] = $("#stats > div:nth-child(4) > div.span4 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kills", "");
         paArray["deaths"] = $("#stats > div:nth-child(4) > div.span4 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("deaths", "");
         paArray["kd"] = $("#stats > div:nth-child(4) > div.span3 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kd", "");
@@ -224,7 +221,10 @@ var scrapeFromProfile = function(name, cb) {
         var forums = new ForumStats(forumArray["posts"], forumArray["started"]);
         profile = new Profile(profileArray["skype"], profileArray["twitter"], profileArray["facebook"], profileArray["steam"], profileArray["twitch"], profileArray["github"], profileArray["Youtube"], profileArray["bio"]);
         player = new Player(name, playerArray["status"], playerArray["kills"], playerArray["deaths"], playerArray["friends"], playerArray["kd"], playerArray["kk"], playerArray["joins"], playerArray["time"], playerArray["raindrops"], playerArray["cores"], playerArray["monuments"], playerArray["wools"], profile, forums, PAStats, Blitz, ghost);
+        console.log(player);
         cb(player);
+
+
 
     });
 };
