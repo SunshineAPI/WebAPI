@@ -6,7 +6,7 @@
   "repository": "git@github.com:gilrosenthal/OvercastAPI.git",
   "author": "Gil Rosenthal <gil.a.rosenthal@gmail.com>",
   "scripts": {
-    "start": "node app.js"
+    "start": "node bin/www"
   },
   "dependencies": {
     "body-parser": "^1.13.2",
