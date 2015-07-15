@@ -1,4 +1,4 @@
-function Player(name,status,kills,deaths,friends,kd,kk,joins,playingtime,raindrops,cores,monuments,wools,profile,ForumStats,ProjectAresStats,BlitzStats,GhostSquadronStats){
+function Player(name, status, kills, deaths, friends, kd, kk, joins, playingtime, raindrops, cores, monuments, wools, profile, ForumStats, ProjectAresStats, BlitzStats, GhostSquadronStats) {
     this.name = name;
     this.status = status;
     this.kills = kills;
@@ -13,11 +13,11 @@ function Player(name,status,kills,deaths,friends,kd,kk,joins,playingtime,raindro
     this.monuments = monuments;
     this.wools = wools;
     this.profile = profile;
-    this.ForumStats = ForumStats;
-    this.ProjectAresStats = ProjectAresStats;
-    this.BlitzStats = BlitzStats;
-    this.GhostSquadronStats = GhostSquadronStats;
+    this.stats = {};
+    this.stats.forum = ForumStats;
+    this.stats.project_ares = ProjectAresStats;
+    this.stats.blitz = BlitzStats;
+    this.stats.ghost_squadron = GhostSquadronStats;
 }
-
 
 module.exports = Player;
