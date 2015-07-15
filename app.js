@@ -3,8 +3,10 @@ var express = require('express');
 var app = express();
 
 var players = require("./routes/players");
+var forums = require("./routes/forums");
 
 app.use("/players", players);
+app.use("/forums", forums);
 
 
 
