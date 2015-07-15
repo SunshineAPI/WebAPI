@@ -4,9 +4,13 @@ var app = express();
 
 var players = require("./routes/players");
 var forums = require("./routes/forums");
+var tournaments = require("./routes/tournaments");
+
 
 app.use("/players", players);
 app.use("/forums", forums);
+app.use("/tournaments", tournaments);
+
 
 
 
