@@ -44,5 +44,68 @@ router.get('/', function(req, res) {
     });
 });
 
+router.get('/:id', function(req, res) {
+    var name = req.params.id;
+    var options = {
+        method: 'GET',
+        url: 'https://oc.tc/tournaments/' + name
+    };
+
+    request(options, function(error, response, body) {
+        var data = {};
+        var info = {};
+
+        var $ = cheerio.load(body);
+
+        info.url = options.url;
+        info.id = name;
+        info.image = $(".tournament-banner").children().first().attr("src");
+        info.rules = "";
+
+        var rules = $(".row .span12 p");
+        rules.each(function(i, elm) {
+            elm = $(elm);
+            info.rules += elm.text();
+        });
+
+        info.rules = info.rules.escapeSpecialChars();
+
+        info.alert = $(".row .span12 .alert").text().escapeSpecialChars();
+
+        data.info = info;
+
+        var teams = [];
+        var list = $(".row .span12 table tbody tr");
+        list.each(function(i, elm) {
+            elm = $(elm);
+
+            var cols = $(elm).children();
+
+            var id = cols.first().text();
+            var name = $(cols[1]).text().escapeSpecialChars();
+            var path = $(cols[1]).find("a").attr("href");
+            var leader = $(cols[2]).text().escapeSpecialChars();
+            var memberCount = parseInt($(cols[3]).text());
+            var status = $(cols[4]).text().escapeSpecialChars();
+            var registered = $(cols[5]).text().escapeSpecialChars();
+
+            var t = {
+                id: id,
+                name: name,
+                path: path,
+                leader: leader,
+                member_count: memberCount,
+                status: status,
+                registered: registered
+            };
+            teams.push(t);
+        });
+
+        data.teams = teams;
+
+        res.json(data);
+    });
+});
+
 
 module.exports = router;
