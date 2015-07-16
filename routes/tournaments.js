@@ -2,7 +2,8 @@ var express = require("express");
 var router = express.Router();
 var request = require("request");
 var cheerio = require("cheerio");
-var Tournament = require("../modules/tournament")
+var Tournament = require("../modules/tournament");
+var Team = require("../modules/team");
 
 router.get('/', function(req, res) {
 
@@ -86,18 +87,13 @@ router.get('/:id', function(req, res) {
             var path = $(cols[1]).find("a").attr("href");
             var leader = $(cols[2]).text().escapeSpecialChars();
             var memberCount = parseInt($(cols[3]).text());
+            var members = $(cols[3]).attr("title").replace("and", " ").replace(/,/g, " ").replace(/\s\s+/g, " ");
+
             var status = $(cols[4]).text().escapeSpecialChars();
             var registered = $(cols[5]).text().escapeSpecialChars();
 
-            var t = {
-                id: id,
-                name: name,
-                path: path,
-                leader: leader,
-                member_count: memberCount,
-                status: status,
-                registered: registered
-            };
+            var t = new Team(name, path, leader, memberCount, members.split(" "), id, status, registered);
+
             teams.push(t);
         });
 
