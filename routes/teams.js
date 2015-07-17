@@ -6,7 +6,7 @@ var Team = require("../modules/team");
 
 // /teams?page=2
 router.get('/', function(req, res) {
-  var page = req.query.page;
+  var page = parseInt(req.query.page) || 1;
   var options = {
     method: 'GET',
     url: 'https://oc.tc/teams/' + (page ? "?page=" + page : "")

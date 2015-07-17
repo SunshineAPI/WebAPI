@@ -5,9 +5,10 @@ var auth = require("../modules/auth");
 var request = require("request");
 var cheerio = require("cheerio");
 var Topic = require("../modules/topic");
+var paser = require("../modules/parser")
 
 router.get('/new', function(req, res) {
-    var page = req.query.page;
+    var page = parseInt(req.query.page) || 1;
     var options = {
         method: 'GET',
         url: 'https://oc.tc/forums' + (page ? "?page=" + page : "")
@@ -15,64 +16,50 @@ router.get('/new', function(req, res) {
 
     request(options, function(error, response, body) {
         var data = {};
-        var topics = [];
+        parser.parseForum(body, page, "new", function(err, pages, topics) {
+            if (err) {
+                return res.status(422).send(err);
+            }
+            data.page = page;
+            data.pages = pages;
+            data.topics = topics;
 
-        var $ = cheerio.load(body);
-
-        var pagination = $(".span9 .btn-group.pull-left").first();
-        var maxPage;
-        var last = $(pagination).children().last();
-
-        if ($(last).attr("href")) {
-            maxPage = parseInt($(last).attr("href").split("?page=")[1]);
-        } else {
-            maxPage = parseInt($(last).text());
-        }
-
-        // check for pages above the max page count
-        if (page > maxPage) {
-            return res.status(422).send("Invalid page number");
-        }
-
-
-        var topicList = $(".span9 table tbody tr");
-
-        topicList.each(function(i, elm) {
-
-            elm = $(elm);
-
-            var topic = elm.children()[0];
-            var tdata = $(topic).find("a");
-
-            var title = $(tdata[0]).text();
-            var author = $(tdata[1]).text();
-            var category = $(tdata[2]).text().trim();
-
-            var latest = elm.children()[1];
-            tdata = $(latest).find("a");
-
-            var latestAuthor = $(tdata[1]).text();
-            var latestTimestamp = $(tdata[2]).text();
-
-
-            var posts = $(elm.children()[2]);
-            posts = $(posts.children()[0]).text();
-            var views = $(elm.children()[3]);
-            views = $(views.children()[0]).text();
-
-
-            var t = new Topic(title, author, category, latestAuthor, latestTimestamp, posts, views);
-            topics.push(t);
+            res.json(data);
         });
-
-        data.page = page;
-        data.pages = maxPage;
-        data.topics = topics;
-
-        res.json(data);
-
     });
 });
+
+router.get('/:oid', function(req, res) {
+    var oid = req.params.oid;
+    var page = parseInt(req.query.page) || 1;
+    var options = {
+        method: 'GET',
+        url: 'https://oc.tc/forums/' + oid + (page ? "?page=" + page : "")
+    };
+
+    request(options, function(error, response, body) {
+        var data = {};
+        parser.parseForum(body, page, oid, function(err, pages, topics, $) {
+            if (err) {
+                return res.status(422).send(err);
+            }
+            var c = $("#forum-sidebar .active a");
+            data.page = page;
+            data.pages = pages;
+            data.category = {
+                name: c.text().escapeSpecialChars(),
+                id: oid,
+                parent: {
+                    name: c.parent().parent().prev().text()
+                }
+            }
+            data.topics = topics;
+
+            res.json(data);
+        });
+    });
+});
+
 
 
 module.exports = router;
