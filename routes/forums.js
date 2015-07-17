@@ -29,6 +29,46 @@ router.get('/new', function(req, res) {
     });
 });
 
+router.get('/categories', function(req, res) {
+    var options = {
+        method: 'GET',
+        url: 'https://oc.tc/forums/'
+    };
+
+    request(options, function(error, response, body) {
+        var data = {};
+        data.categories = [];
+        var $ = cheerio.load(body);
+
+        var sidebar = $("#forum-sidebar");
+
+        sidebar.find(".nav-list").each(function(i, elm) {
+            elm = $(elm);
+            var cat = {};
+            if (elm.prev().length) {
+                cat.name = elm.prev().text().escapeSpecialChars();
+            } else {
+                cat.name = "General";
+            }
+            cat.sub_categories = [];
+
+            var sub = elm.find("li a");
+            sub.each(function(i, s) {
+                s = $(s);
+                var id = s.attr("href").match(/([0-9a-fA-F]{24})$/);
+                cat.sub_categories.push({
+                    name: s.text().escapeSpecialChars(),
+                    id: (id ? id[0] : null)
+                });
+            })
+            data.categories.push(cat);
+        });
+        res.json(data);
+
+
+    });
+});
+
 router.get('/:oid', function(req, res) {
     var oid = req.params.oid;
     var page = parseInt(req.query.page) || 1;
