@@ -8,6 +8,8 @@ var ProjectAresStats = require("../modules/ProjectAresStats.js");
 var BlitzStats = require("../modules/BlitzStats.js");
 var GhostSquadronStats = require("../modules/GhostSquadronStats.js");
 var Topic = require("../modules/topic");
+var url = require("url");
+var querystring = require("querystring");
 
 var ex = {};
 
@@ -255,6 +257,17 @@ ex.parseForum = function(body, page, cat, callback) {
 	});
 
 	callback(null, maxPage, topics, $);
+}
+
+ex.pageCount = function($, pagination) {
+	var last = $(pagination).children().last();
+	if ($(last).attr("href")) {
+		var href = url.parse("https://oc.tc" + $(last).attr("href")).query;
+		var parsed = querystring.parse(href);
+		return parseInt(parsed.page);
+	} else {
+		return parseInt($(last).text());
+	}
 }
 
 module.exports = ex;
