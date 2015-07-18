@@ -23,12 +23,12 @@ ex.scrapeFromProfile = function(name, cb) {
 		}
 		var PAStats;
 		var profile;
-		var playerArray = new Array();
-		var profileArray = new Array();
-		var forumArray = new Array();
-		var paArray = new Array();
-		var blitzArray = new Array();
-		var ghostArray = new Array();
+		var playerArray = [];
+		var profileArray = [];
+		var forumArray = [];
+		var paArray = [];
+		var blitzArray = [];
+		var ghostArray = [];
 		var $ = cheerio.load(body);
 		if ($("body > div > section:nth-child(2) > div.row > div.span3 > div").text() != "") {
 			var toReturn = $("body > div > section:nth-child(2) > div.row > div.span3 > div").text().replace("\\n", "");
