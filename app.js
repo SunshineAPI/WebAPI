@@ -11,6 +11,7 @@ var stats = require("./routes/stats");
 var alerts = require("./routes/alerts");
 var punishments = require("./routes/punishments");
 var staff = require("./routes/staff");
+var maps = require("./routes/maps");
 
 
 app.use("/players", players);
@@ -22,6 +23,8 @@ app.use("/stats", stats);
 app.use("/alerts", alerts);
 app.use("/punishments", punishments);
 app.use("/staff", staff);
+app.use("/maps", maps);
+
 
 String.prototype.escapeSpecialChars = function() {
     return this.replace(new RegExp("\\n", "g"), "", "");
