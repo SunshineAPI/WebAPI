@@ -101,5 +101,90 @@ router.get('/:oid', function(req, res) {
 });
 
 
+router.get('/topics/:id', function(req, res) {
+    var id = req.params.id;
+    var page = parseInt(req.query.page) || 1;
+    var options = {
+        method: 'GET',
+        url: 'https://oc.tc/forums/topics/' + id + (page ? "?page=" + page : "")
+    };
+
+    request(options, function(error, response, body) {
+        var data = {};
+        
+        var $ = cheerio.load(body);
+
+        // move to parser
+        function getText(elm) {
+            elm = $(elm);
+            return elm.contents().filter(function() {
+                return this.type === 'text';
+            }).text().escapeSpecialChars();
+        }
+
+        var pagination = $(".span9 .btn-group.pull-left")
+        var pages = parser.pageCount($, pagination) || 1;
+
+        if (page > pages) {
+            res.status(422).send("invalid page number");
+        }
+
+        var header = $(".page-header > h3");
+        var title = getText(header).escapeSpecialChars();
+        var creator = header.find("a").text();
+
+        data.page = page;
+        data.pages = pages;
+        var t = {
+            id: id,
+            title: title,
+            author: creator
+        };
+        data.topic = t;
+
+        var posts = [];
+        var rows = $(".span9 > div[id]");
+
+        for (var i = 0; i < rows.length; i++) {
+            var post = $(rows[i]);
+            var postId = post.attr("id");
+
+            var content = post.find(".post-content").html().spaceSpecialChars().trim();
+
+            var info = post.find(".span9 > .pull-left a:not(.label)");
+            var author = $(info[1]).text().escapeSpecialChars();
+            var change = $(info[2]).text().spaceSpecialChars().trim();
+        
+            var p = {
+                id: id,
+                content: content,
+                author: author,
+                timestamp: change
+            };
+
+            var quote = post.find("blockquote");
+            if (quote.length) {
+                var qInfo = quote.find("span");
+                var qAuthor = $(qInfo[0]).text();
+                var qTimestamp = $(qInfo[1]).text();
+                var qContent = quote.find(".collapse").html().spaceSpecialChars().trim();
+                var qId = quote.find(".collapse").attr("id").match(/([0-9a-fA-F]{24})$/)[0];
+                p.quoting = {
+                    id: qId,
+                    author: qAuthor,
+                    timestamp: qTimestamp,
+                    content: qContent,
+                }
+            }
+
+            posts.push(p);
+        }
+
+        data.posts = posts;
+        res.json(data);
+    });
+});
+
+
 
 module.exports = router;
