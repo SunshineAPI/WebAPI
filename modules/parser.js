@@ -7,6 +7,9 @@ var ForumStats = require("../modules/ForumStats.js");
 var ProjectAresStats = require("../modules/ProjectAresStats.js");
 var BlitzStats = require("../modules/BlitzStats.js");
 var GhostSquadronStats = require("../modules/GhostSquadronStats.js");
+var Topic = require("../modules/topic");
+var url = require("url");
+var querystring = require("querystring");
 
 var ex = {};
 
@@ -196,5 +199,75 @@ ex.scrapeFromProfile = function(name, cb) {
 
 	});
 };
+
+ex.parseForum = function(body, page, cat, callback) {
+	var $ = cheerio.load(body);
+	var topics = [];
+
+	var pagination = $(".span9 .btn-group.pull-left").first();
+	var maxPage;
+	var last = $(pagination).children().last();
+
+	if ($(last).attr("href")) {
+		maxPage = parseInt($(last).attr("href").split("?page=")[1]);
+	} else {
+		maxPage = parseInt($(last).text());
+	}
+
+	// check for pages above the max page count
+	if (page > maxPage) {
+		callback("Invalid page number", null, null);
+	}
+
+
+	var topicList = $(".span9 table tbody tr");
+
+	topicList.each(function(i, elm) {
+
+		elm = $(elm);
+
+		var topic = elm.children()[0];
+		var tdata = $(topic).find("a");
+
+		var title = $(tdata[0]).text();
+		var author = $(tdata[1]).text();
+		var category;
+
+		if (cat === "new") {
+			category = $(tdata[2]).text().escapeSpecialChars().trim();
+		} else {
+			category = $("#forum-sidebar .active a").text().escapeSpecialChars();
+		}
+
+		var latest = elm.children()[1];
+		tdata = $(latest).find("a");
+
+		var latestAuthor = $(tdata[1]).text();
+		var latestTimestamp = $(tdata[2]).text();
+
+
+		var posts = $(elm.children()[2]);
+		posts = $(posts.children()[0]).text();
+		var views = $(elm.children()[3]);
+		views = $(views.children()[0]).text();
+
+
+		var t = new Topic(title, author, category, latestAuthor, latestTimestamp, posts, views);
+		topics.push(t);
+	});
+
+	callback(null, maxPage, topics, $);
+}
+
+ex.pageCount = function($, pagination) {
+	var last = $(pagination).children().last();
+	if ($(last).attr("href")) {
+		var href = url.parse("https://oc.tc" + $(last).attr("href")).query;
+		var parsed = querystring.parse(href);
+		return parseInt(parsed.page);
+	} else {
+		return parseInt($(last).text());
+	}
+}
 
 module.exports = ex;
