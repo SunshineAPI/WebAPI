@@ -16,6 +16,14 @@ router.get('/', function(req, res) {
         }
         var $ = cheerio.load(body);
 
+        // move to parser
+        function getText(elm) {
+            elm = $(elm);
+            return elm.contents().filter(function() {
+                return this.type === 'text';
+            }).text().escapeSpecialChars();
+        }
+
         var groups = $(".staff-group");
         var data = {};
         var staff = [];
@@ -23,7 +31,7 @@ router.get('/', function(req, res) {
         for (var i = 0; i < groups.length; i++) {
             var group = $(groups[i]);
             var header = group.find("h2");
-            var title = header.text().escapeSpecialChars();
+            var title = getText(header).escapeSpecialChars();
             var color = header.css("color");
             var members = [];
             
