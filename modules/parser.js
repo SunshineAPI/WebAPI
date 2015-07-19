@@ -195,7 +195,7 @@ ex.scrapeFromProfile = function(name, cb) {
 		var ghost = new GhostSquadronStats(ghostArray["kills"], ghostArray["deaths"], ghostArray["kd"], ghostArray["kk"], ghostArray["played"], ghostArray["observed"]);
 		var forums = new ForumStats(forumArray["posts"], forumArray["started"]);
 		profile = new Profile(profileArray["skype"], profileArray["twitter"], profileArray["facebook"], profileArray["steam"], profileArray["twitch"], profileArray["github"], profileArray["Youtube"], profileArray["bio"]);
-		player = new Player(name, playerArray["status"], playerArray["kills"], playerArray["deaths"], playerArray["friends"], playerArray["kd"], playerArray["kk"], playerArray["joins"], playerArray["time"], playerArray["raindrops"], playerArray["cores"], playerArray["monuments"], playerArray["wools"], profile, forums, PAStats, Blitz, ghost);
+		 var player = new Player(name, playerArray["status"], playerArray["kills"], playerArray["deaths"], playerArray["friends"], playerArray["kd"], playerArray["kk"], playerArray["joins"], playerArray["time"], playerArray["raindrops"], playerArray["cores"], playerArray["monuments"], playerArray["wools"], profile, forums, PAStats, Blitz, ghost);
 		cb(player);
 
 	});
