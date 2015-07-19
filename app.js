@@ -31,7 +31,7 @@ app.use("/punishments", punishments);
 app.use("/staff", staff);
 app.use("/maps", maps);
 app.use("/servers", servers);
-
+app.set('json spaces', 4);
 
 String.prototype.escapeSpecialChars = function() {
     return this.replace(new RegExp("\\n", "g"), "", "");
