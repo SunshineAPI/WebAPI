@@ -1,14 +1,14 @@
+"use strict";
 var express = require("express");
 var router = express.Router();
-var parser = require("../modules/parser");
 var request = require("request");
 var cheerio = require("cheerio");
 
-router.get('/', function(req, res) {
+router.get("/", function(req, res) {
     var options = {
-        method: 'GET',
-        url: 'https://oc.tc/staff'
-    }
+        method: "GET",
+        url: "https://oc.tc/staff"
+    };
 
     request(options, function(error, response, body) {
         if (error) {
@@ -20,7 +20,7 @@ router.get('/', function(req, res) {
         function getText(elm) {
             elm = $(elm);
             return elm.contents().filter(function() {
-                return this.type === 'text';
+                return this.type === "text";
             }).text().escapeSpecialChars();
         }
 
@@ -36,10 +36,11 @@ router.get('/', function(req, res) {
             var members = [];
             
             var thumbs = group.find(".thumbnail div.staff-caption");
-            thumbs.each(function(i, elm) {
-                elm = $(elm);
+
+            for (var x = 0; x < thumbs.length; x++) {
+                var elm = $(thumbs[x]);
                 members.push(elm.text().escapeSpecialChars());
-            });
+            }
 
             staff.push({
                 title: title,

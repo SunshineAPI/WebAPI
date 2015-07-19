@@ -1,3 +1,4 @@
+"use strict";
 function Team(name, path, leader, memberCount, members, tourneyId, tourneyStatus, tourneyRegistered) {
 	this.name = name;
 	this.path = path;
@@ -8,7 +9,7 @@ function Team(name, path, leader, memberCount, members, tourneyId, tourneyStatus
 	} else {
 		this.created = members;
 	}
-	tourney = {};
+	var tourney = {};
 	tourney.id = tourneyId;
 	tourney.status = tourneyStatus;
 	tourney.registered = tourneyRegistered;

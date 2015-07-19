@@ -1,3 +1,4 @@
+"use strict";
 var express = require("express");
 var router = express.Router();
 var request = require("request");
@@ -5,11 +6,11 @@ var cheerio = require("cheerio");
 var Tournament = require("../modules/tournament");
 var Team = require("../modules/team");
 
-router.get('/', function(req, res) {
+router.get("/", function(req, res) {
 
     var options = {
-        method: 'GET',
-        url: 'https://oc.tc/tournaments'
+        method: "GET",
+        url: "https://oc.tc/tournaments"
     };
 
     request(options, function(error, response, body) {
@@ -18,7 +19,6 @@ router.get('/', function(req, res) {
         var $ = cheerio.load(body);
 
         var tournaments = $("body section");
-        var links = tournaments.find(".row");
 
         var headers = tournaments.find(".page-header");
         var tourneys = tournaments.find(".row");
@@ -33,23 +33,23 @@ router.get('/', function(req, res) {
         }
         data.past = [];
         for (i; i < tourneys.length; i++) {
-            var tourney = $(tourneys[i]);
-            var current = tourney.find(".tournament-banner");
-            var link = $(current[0]).attr("href");
-            var image = $(current[1]).attr("src");
-            var tourney = new Tournament(link, image);
-            data.past.push(tourney);
+            var tourneyList = $(tourneys[i]);
+            var currentList = tourneyList.find(".tournament-banner");
+            var linkList = $(currentList[0]).attr("href");
+            var imageList = $(currentList[1]).attr("src");
+            var newToruney = new Tournament(linkList, imageList);
+            data.past.push(newToruney);
         }
 
         res.json(data);
     });
 });
 
-router.get('/:id', function(req, res) {
+router.get("/:id", function(req, res) {
     var name = req.params.id;
     var options = {
-        method: 'GET',
-        url: 'https://oc.tc/tournaments/' + name
+        method: "GET",
+        url: "https://oc.tc/tournaments/" + name
     };
 
     request(options, function(error, response, body) {

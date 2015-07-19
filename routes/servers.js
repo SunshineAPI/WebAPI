@@ -1,3 +1,4 @@
+"use strict";
 var express = require("express");
 var router = express.Router();
 var parser = require("../modules/parser");
@@ -6,10 +7,10 @@ var cheerio = require("cheerio");
 
 var regions = ["global", "all", "us", "eu"];
 
-router.get('/rotations', function(req, res) {
+router.get("/rotations", function(req, res) {
     var options = {
-        method: 'GET',
-        url: 'https://oc.tc/maps'
+        method: "GET",
+        url: "https://oc.tc/maps"
     };
 
 
@@ -18,11 +19,11 @@ router.get('/rotations', function(req, res) {
 
         var data = {};
 
-        var servers = $('.dropdown').last().find(".dropdown-menu > li");
+        var servers = $(".dropdown").last().find(".dropdown-menu > li");
         var region;
         for (var i = 0; i < servers.length; i++) {
-            elm = $(servers[i]);
-            if (elm.hasClass('dropdown-submenu')) {
+            var elm = $(servers[i]);
+            if (elm.hasClass("dropdown-submenu")) {
                 region = elm.children().first().text().toLowerCase();
                 data[region] = [];
                 continue;
@@ -42,11 +43,11 @@ router.get('/rotations', function(req, res) {
 });
 
 
-router.get('/rotations/:id', function(req, res) {
+router.get("/rotations/:id", function(req, res) {
     var id = req.params.id;
     var options = {
-        method: 'GET',
-        url: 'https://oc.tc/maps/rotation/' + id
+        method: "GET",
+        url: "https://oc.tc/maps/rotation/" + id
     };
 
 
@@ -66,11 +67,11 @@ router.get('/rotations/:id', function(req, res) {
     });
 });
 
-router.get('/:region?', function(req, res) {
+router.get("/:region?", function(req, res) {
     var region = req.params.region || "all";
     var options = {
-        method: 'GET',
-        url: 'https://oc.tc/play/' + region
+        method: "GET",
+        url: "https://oc.tc/play/" + region
     };
 
     if (regions.indexOf(region) === -1) {
@@ -94,10 +95,10 @@ router.get('/:region?', function(req, res) {
             if (serverRegion.length) {
                 serverRegion = serverRegion.text().match(/\((.*?)\)/)[1];
             } else {
-                serverRegion = region
+                serverRegion = region;
             }
             var image = elm.find(".server-box").css("background-image")
-                .match(/\((.*?)\)/)[1].replace(/('|")/g, '');;
+                .match(/\((.*?)\)/)[1].replace(/('|")/g, "");
             var currentMap = elm.find(".current-map a");
             var cMapName = currentMap.text();
             var cMapId = currentMap.attr("href").replace("/maps/", "");
@@ -125,13 +126,13 @@ router.get('/:region?', function(req, res) {
                     image: image,
                     id: cMapId
                 }
-            }
+            };
 
             if (nextMap.length) {
                 server.next_map = {
                     name: nMapName,
                     id: nMapId
-                }
+                };
             } else {
                 server.next_map = null;
             }

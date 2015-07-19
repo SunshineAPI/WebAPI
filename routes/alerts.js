@@ -1,11 +1,11 @@
+"use strict";
 var express = require("express");
 var router = express.Router();
 var parser = require("../modules/parser");
 var auth = require("../modules/auth");
-var request = require("request");
 var cheerio = require("cheerio");
 
-router.get('/', function(req, res) {
+router.get("/", function(req, res) {
     // move to middleware
     var login = req.headers.authorization;
     var arr;
@@ -22,9 +22,9 @@ router.get('/', function(req, res) {
     var page = parseInt(req.query.page) || 1;
 
     var options = {
-        method: 'GET',
-        url: 'https://oc.tc/alerts?page=' + page
-    }
+        method: "GET",
+        url: "https://oc.tc/alerts?page=" + page
+    };
 
     auth.authed_req(options, username, pass, function(error, response, body) {
         if (error) {

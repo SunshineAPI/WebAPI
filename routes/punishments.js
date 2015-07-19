@@ -1,16 +1,17 @@
+"use strict";
 var express = require("express");
 var router = express.Router();
 var parser = require("../modules/parser");
 var request = require("request");
 var cheerio = require("cheerio");
 
-router.get('/', function(req, res) {
+router.get("/", function(req, res) {
     var page = parseInt(req.query.page) || 1;
 
 
     var options = {
-        method: 'GET',
-        url: 'https://oc.tc/punishments?page=' + page
+        method: "GET",
+        url: "https://oc.tc/punishments?page=" + page
     };
 
     request(options, function(error, response, body) {
@@ -61,12 +62,12 @@ router.get('/', function(req, res) {
 });
 
 
-router.get('/:id', function(req, res) {
+router.get("/:id", function(req, res) {
     var id = req.params.id;
 
     var options = {
-        method: 'GET',
-        url: 'https://oc.tc/punishments/' + id
+        method: "GET",
+        url: "https://oc.tc/punishments/" + id
     };
 
     request(options, function(error, response, body) {
@@ -76,18 +77,18 @@ router.get('/:id', function(req, res) {
         function getText(elm) {
             elm = $(elm);
             return elm.contents().filter(function() {
-                return this.type === 'text';
+                return this.type === "text";
             }).text().escapeSpecialChars();
         }
 
         var punished = $("h1 a").text().escapeSpecialChars();
         var date = $("h1 small").text().spaceSpecialChars().trim();
 
-        var punisher = $('.punisher a').text();
-        var reason = getText('.reason');
-        var type = getText('.type');
+        var punisher = $(".punisher a").text();
+        var reason = getText(".reason");
+        var type = getText(".type");
 
-        var rows = $('.punishment .row');
+        var rows = $(".punishment .row");
         var middle = $(rows[1]);
         var middleCols = middle.children();
         var expires = getText($(middleCols[0]).find("h3"));
@@ -127,7 +128,7 @@ router.get('/:id', function(req, res) {
             },
             active: active,
             automatic: automatic
-        }
+        };
 
 
 

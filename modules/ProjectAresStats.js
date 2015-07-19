@@ -1,3 +1,4 @@
+"use strict";
 function ProjectAresStats(kills, deaths, kd, kk, played, observed) {
 	this.kills = kills;
 	this.deaths = deaths;
