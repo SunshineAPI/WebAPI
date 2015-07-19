@@ -1,12 +1,24 @@
 {
   "name": "OvercastAPI",
-  "version": "0.0.0",
-  "description": "The final API for Overcast Network in JSON",
+  "version": "0.0.1",
+  "description": "REST API for the Overcast Network",
   "main": "app.js",
-  "repository": "git@github.com:gilrosenthal/OvercastAPI.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gilrosenthal/OvercastAPI"
+  },
+  "issues": {
+    "url": "https://github.com/gilrosenthal/OvercastAPI/issues"
+  },
   "author": "Gil Rosenthal <gil.a.rosenthal@gmail.com>",
+  "contributors": [
+    {
+      "name": "Jake0oo0"
+    }
+  ],
   "scripts": {
-    "start": "node bin/www"
+    "start": "node bin/www",
+    "test": ""
   },
   "dependencies": {
     "body-parser": "^1.13.2",
