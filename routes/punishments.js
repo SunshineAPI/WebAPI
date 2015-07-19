@@ -8,20 +8,29 @@ var cheerio = require("cheerio");
 router.get("/", function(req, res) {
     var page = parseInt(req.query.page) || 1;
 
-
     var options = {
         method: "GET",
         url: "https://oc.tc/punishments?page=" + page
     };
 
     request(options, function(error, response, body) {
+        if (error) {
+            console.error(error);
+            return res.status(500).json({
+                errors: ["Unable to complete request"]
+            });
+        }
         var $ = cheerio.load(body);
         var pagination = $(".span12 .btn-group.pull-left");
-        var max = parser.pageCount($, pagination);
-        var data = {};
+        var pages = parser.pageCount($, pagination);
 
-        data.page = page;
-        data.max = max;
+        if (page > pages) {
+            return res.status(422).json({
+                errors: ["Invalid page number"]
+            });
+        }
+
+        var links = parser.setMeta(req, page, pages);
 
         var punishments = [];
 
@@ -54,10 +63,12 @@ router.get("/", function(req, res) {
             });
         }
 
-        data.punishments = punishments;
 
 
-        res.json({data: data});
+        res.json({
+            links: links,
+            data: punishments
+        });
     });
 });
 
@@ -71,7 +82,15 @@ router.get("/:id", function(req, res) {
     };
 
     request(options, function(error, response, body) {
+        if (error) {
+            console.error(error);
+            return res.status(500).json({
+                errors: ["Unable to complete request"]
+            });
+        }
+
         var $ = cheerio.load(body);
+        var links = parser.setMeta(req);
 
         // move to parser
         function getText(elm) {
@@ -111,9 +130,9 @@ router.get("/:id", function(req, res) {
             automatic = true;
         } else {
             automatic = false;
-        } 
+        }
 
-        var data = {
+        var punishment = {
             id: id,
             punished: punished,
             punisher: punisher,
@@ -132,7 +151,10 @@ router.get("/:id", function(req, res) {
 
 
 
-        res.json({data: data});
+        res.json({
+            links: links,
+            data: punishment
+        });
     });
 });
 

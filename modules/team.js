@@ -1,7 +1,7 @@
 "use strict";
-function Team(name, path, leader, memberCount, members, tourneyId, tourneyStatus, tourneyRegistered) {
+function Team(name, id, leader, memberCount, members, tourneyId, tourneyStatus, tourneyRegistered) {
 	this.name = name;
-	this.path = path;
+	this.id = id;
 	this.leader = leader;
 	this.member_count = memberCount;
 	if (Array.isArray(members)) {

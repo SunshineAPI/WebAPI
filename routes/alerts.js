@@ -13,7 +13,9 @@ router.get("/", function(req, res) {
         arr = login.split(":");
     }
     if (!login || arr.length !== 2) {
-        return res.status(401).json({errors: ["Provide login credentials"]});
+        return res.status(401).json({
+            errors: ["Provide login credentials"]
+        });
     }
 
     var pass = arr[1];
@@ -28,16 +30,24 @@ router.get("/", function(req, res) {
 
     auth.authed_req(options, username, pass, function(error, response, body) {
         if (error) {
-            return res.status(error.status).json({errors: [error.message]});
+            return res.status(error.status).json({
+                errors: [error.message]
+            });
         }
         var $ = cheerio.load(body);
         var rows = $(".span12 table tbody tr");
         var pagination = $(".span12 .btn-group.pull-left");
-        var data = {};
         var alerts = [];
 
-        data.page = page;
-        data.pages = parser.pageCount($, pagination) || 1;
+        var pages = parser.pageCount($, pagination) || 1;
+
+        if (page > pages) {
+            return res.status(422).json({
+                errors: ["Invalid page number"]
+            });
+        }
+
+        var links = parser.setMeta(req, page, pages);
 
         for (var i = 0; i < rows.length; i++) {
             var elm = $(rows[i]);
@@ -54,9 +64,11 @@ router.get("/", function(req, res) {
                 status: status
             });
         }
-        data.alerts = alerts;
 
-        res.json({data: data});
+        res.json({
+            links: links,
+            data: alerts,
+        });
     });
 });
 

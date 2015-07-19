@@ -14,18 +14,26 @@ router.get("/", function(req, res) {
     };
 
     request(options, function(error, response, body) {
+        if (error) {
+            console.error(error);
+            return res.status(500).json({
+                errors: ["Unable to complete request"]
+            });
+        }
         var $ = cheerio.load(body);
         var pagination = $(".span12 .btn-group.pull-left");
-        var max = parser.pageCount($, pagination);
+        var pages = parser.pageCount($, pagination);
         var data = {};
         var channels = [];
-        if (page > max) {
-            return res.status(422).json({errors: ["Invalid page number"]});
+        if (page > pages) {
+            return res.status(422).json({
+                errors: ["Invalid page number"]
+            });
         }
+        var links = parser.setMeta(req, page, pages);
+        var meta = {};
+        meta.sort = sort || "subscribers";
 
-        data.page = page;
-        data.pages = max;
-        data.sort = sort || "subscribers";
         var rows = $("table tbody tr");
         for (var i = 0; i < rows.length; i++) {
             var elm = $(rows[i]);
@@ -56,8 +64,12 @@ router.get("/", function(req, res) {
             });
 
         }
-        data.channels = channels;
-        res.json({data: data});
+
+        res.json({
+            links: links,
+            meta: meta,
+            data: channels
+        });
     });
 });
 

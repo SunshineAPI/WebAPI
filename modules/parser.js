@@ -193,9 +193,9 @@ ex.scrapeFromProfile = function(name, cb) {
 		PAStats = new ProjectAresStats(paArray["kills"], paArray["deaths"], paArray["kd"], paArray["kk"], paArray["played"], paArray["observed"]);
 		var Blitz = new BlitzStats(blitzArray["kills"], blitzArray["deaths"], blitzArray["kd"], blitzArray["kk"], blitzArray["played"], blitzArray["observed"]);
 		var ghost = new GhostSquadronStats(ghostArray["kills"], ghostArray["deaths"], ghostArray["kd"], ghostArray["kk"], ghostArray["played"], ghostArray["observed"]);
-		var forums = new ForumStats(forumArray["posts"], forumArray["started"]);
+		var forums = new ForumStats(forumArray["posts"], forumArray["topics"]);
 		profile = new Profile(profileArray["skype"], profileArray["twitter"], profileArray["facebook"], profileArray["steam"], profileArray["twitch"], profileArray["github"], profileArray["Youtube"], profileArray["bio"]);
-		player = new Player(name, playerArray["status"], playerArray["kills"], playerArray["deaths"], playerArray["friends"], playerArray["kd"], playerArray["kk"], playerArray["joins"], playerArray["time"], playerArray["raindrops"], playerArray["cores"], playerArray["monuments"], playerArray["wools"], profile, forums, PAStats, Blitz, ghost);
+		var player = new Player(name, playerArray["status"], playerArray["kills"], playerArray["deaths"], playerArray["friends"], playerArray["kd"], playerArray["kk"], playerArray["joins"], playerArray["time"], playerArray["raindrops"], playerArray["cores"], playerArray["monuments"], playerArray["wools"], profile, forums, PAStats, Blitz, ghost);
 		cb(player);
 
 	});
@@ -308,6 +308,23 @@ ex.parseMapList = function($) {
 		});
 	});
 	return maps;
+}
+
+ex.setMeta = function(req, page, pages) {
+	var links = {};
+	links.self = req.protocol + '://' + req.get('host') + req.originalUrl;
+
+	if (page && pages) {
+		var pagination = {};
+		pagination.first = 1;
+		pagination.prev = (page - 1 > 0 ? page - 1 : null);
+		pagination.current = page;
+		pagination.next = (page + 1 > pages ? null : page + 1);
+		pagination.last = pages;
+
+		links.pagination = pagination;
+	}
+	return links;
 }
 
 ex.getText = function(elm) {

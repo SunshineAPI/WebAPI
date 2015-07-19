@@ -5,6 +5,7 @@ var request = require("request");
 var cheerio = require("cheerio");
 var Tournament = require("../modules/tournament");
 var Team = require("../modules/team");
+var parser = require("../modules/parser");
 
 router.get("/", function(req, res) {
 
@@ -14,7 +15,14 @@ router.get("/", function(req, res) {
     };
 
     request(options, function(error, response, body) {
+        if (error) {
+            console.error(error);
+            return res.status(500).json({
+                errors: ["Unable to complete request"]
+            });
+        }
         var data = {};
+        var links = parser.setMeta(req);
 
         var $ = cheerio.load(body);
 
@@ -41,7 +49,10 @@ router.get("/", function(req, res) {
             data.past.push(newToruney);
         }
 
-        res.json({data: data});
+        res.json({
+            links: links,
+            data: data
+        });
     });
 });
 
@@ -49,16 +60,28 @@ router.get("/:id", function(req, res) {
     var name = req.params.id;
     var options = {
         method: "GET",
-        url: "https://oc.tc/tournaments/" + name
+        url: "https://oc.tc/tournaments/" + name,
+        followRedirect: false
     };
 
     request(options, function(error, response, body) {
+        if (error) {
+            console.error(error);
+            return res.status(500).json({
+                errors: ["Unable to complete request"]
+            });
+        }
+        if (response.statusCode === 302) {
+            return res.status(404).json({
+                errors: ["Tournament not found"]
+            });
+        }
         var data = {};
         var info = {};
 
         var $ = cheerio.load(body);
+        var links = parser.setMeta(req);
 
-        info.url = options.url;
         info.id = name;
         info.image = $(".tournament-banner").children().first().attr("src");
         info.rules = "";
@@ -99,7 +122,10 @@ router.get("/:id", function(req, res) {
 
         data.teams = teams;
 
-        res.json({data: data});
+        res.json({
+            links: links,
+            data: data
+        });
     });
 });
 

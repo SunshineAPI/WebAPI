@@ -10,7 +10,8 @@ router.get("/:player", function(req, res) {
     }
     parser.scrapeFromProfile(player, function(user, status) {
         if (user) {
-            res.json({data: user});
+            var links = parser.setMeta(req);
+            res.json({links: links, data: user});
         } else {
             res.status(404).json({errors: ["Player not found"]});
         }

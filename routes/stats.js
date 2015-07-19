@@ -17,7 +17,9 @@ router.get("/", function(req, res) {
     var time = req.query.time || "day";
 
     if (sorts.indexOf(sort) === -1 || games.indexOf(game) === 1 || periods.indexOf(time) === -1) {
-        return res.status(422).json({errors: ["Invalid sort options"]});
+        return res.status(422).json({
+            errors: ["Invalid sort options"]
+        });
     }
 
     var query = querystring.stringify({
@@ -33,23 +35,29 @@ router.get("/", function(req, res) {
     };
 
     request(options, function(error, response, body) {
+        if (error) {
+            console.error(error);
+            return res.status(500).json({
+                errors: ["Unable to complete request"]
+            });
+        }
+
         var $ = cheerio.load(body);
         var pagination = $(".span12 .btn-group.pull-left").first();
-        var max = parser.pageCount($, pagination);
-        if (page > max) {
-            return res.status(422).json({errors: ["Invalid page number"]});
+        var pages = parser.pageCount($, pagination);
+        if (page > pages) {
+            return res.status(422).json({
+                errors: ["Invalid page number"]
+            });
         }
-        var data = {};
         var players = [];
-        data.page = page;
-        data.pages = max;
+        var links = parser.setMeta(req, page, pages);
 
-        var sorting = {};
-        sorting.time = time;
-        sorting.game = game;
-        sorting.sort = sort;
-        data.sorting = sorting;
-        data.players = [];
+        var meta = {};
+        meta.time = time;
+        meta.game = game;
+        meta.sort = sort;
+
         var rows = $("table tbody tr");
 
         for (var i = 0; i < rows.length; i++) {
@@ -85,8 +93,11 @@ router.get("/", function(req, res) {
             });
 
         }
-        data.players = players;
-        res.json(data);
+        res.json({
+            links: links,
+            meta: meta,
+            data: players
+        });
     });
 });
 

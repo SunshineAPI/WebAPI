@@ -16,15 +16,22 @@ router.get("/playing", function(req, res) {
     };
 
     request(options, function(error, response, body) {
+        if (error) {
+            console.error(error);
+            return res.status(500).json({
+                errors: ["Unable to complete request"]
+            });
+        }
+
         var $ = cheerio.load(body);
 
-        var data = {};
-
         var maps = parser.parseMapList($);
+        var links = parser.setMeta(req);
 
-        data.maps = maps;
-
-        res.json(data);
+        res.json({
+            links: links,
+            data: maps
+        });
     });
 });
 
@@ -36,9 +43,15 @@ router.get("/all", function(req, res) {
     };
 
     request(options, function(error, response, body) {
+        if (error) {
+            console.error(error);
+            return res.status(500).json({
+                errors: ["Unable to complete request"]
+            });
+        }
+
         var $ = cheerio.load(body);
 
-        var data = {};
         var pagination = $(".span12 .btn-group.pull-left").first();
         var pages = parser.pageCount($, pagination);
 
@@ -48,14 +61,14 @@ router.get("/all", function(req, res) {
             });
         }
 
-        data.page = page;
-        data.pages = pages;
-
+        var links = parser.setMeta(req, page, pages);
         var maps = parser.parseMapList($);
 
-        data.maps = maps;
 
-        res.json(data);
+        res.json({
+            links: links,
+            data: maps
+        });
     });
 });
 
@@ -67,9 +80,21 @@ router.get("/:id", function(req, res) {
     };
 
     request(options, function(error, response, body) {
+        if (error) {
+            console.error(error);
+            return res.status(500).json({
+                errors: ["Unable to complete request"]
+            });
+        } else if (response.statusCode === 404) {
+            return res.status(404).json({
+                errors: ["Map not found"]
+            });
+        }
+
         var $ = cheerio.load(body);
 
-        var data = {};
+        var map = {};
+        var links = parser.setMeta(req);
 
         var header = $(".span8 h1");
         var name = parser.getText(header);
@@ -124,7 +149,7 @@ router.get("/:id", function(req, res) {
         parseVotes($(".tab-pane#ratings-latest"), latest);
         parseVotes($(".tab-pane#ratings-all"), all);
 
-        data = {
+        map = {
             name: name,
             version: version,
             author: author,
@@ -139,7 +164,8 @@ router.get("/:id", function(req, res) {
         };
 
         res.json({
-            data: data
+            links: links,
+            data: map
         });
     });
 });

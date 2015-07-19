@@ -4,6 +4,7 @@ var router = express.Router();
 var request = require("request");
 var cheerio = require("cheerio");
 var Team = require("../modules/team");
+var parser = require("../modules/parser");
 
 // /teams?page=2
 router.get("/", function(req, res) {
@@ -14,37 +15,34 @@ router.get("/", function(req, res) {
   };
 
   request(options, function(error, response, body) {
-    var data = {};
+    if (error) {
+      console.error(error);
+      return res.status(500).json({
+        errors: ["Unable to complete request"]
+      });
+    }
 
     var $ = cheerio.load(body);
 
-    data.page = page || 1;
-
-    var maxPage;
     var pagination = $(".span12 .btn-group.pull-left");
-    var last = $(pagination).children().last();
-    if ($(last).attr("href")) {
-      maxPage = parseInt($(last).attr("href").split("?page=")[1]);
-    } else {
-      maxPage = parseInt($(last).text());
-    }
+    var pages = parser.pageCount($, pagination);
 
-    if (page > maxPage) {
+    if (page > pages) {
       return res.status(422).json({
         errors: ["Invalid page number"]
       });
     }
+    var links = parser.setMeta(req, page, pages);
 
-    data.pages = maxPage;
 
-    data.teams = [];
+    var teams = [];
     var rows = $("table.table tbody tr");
     for (var i = 0; i < rows.length; i++) {
       var elm = $(rows[i]);
 
       var n = elm.children().first().find("a");
       var name = n.text().escapeSpecialChars();
-      var path = n.attr("href");
+      var id = n.attr("href").replace("/teams/", "");
 
       var l = $(elm.children()[1]).find("a");
       var leader = l.text().escapeSpecialChars();
@@ -52,11 +50,14 @@ router.get("/", function(req, res) {
       var memberCount = parseInt($(elm.children()[2]).text());
       var created = $(elm.children()[3]).text().escapeSpecialChars();
 
-      var t = new Team(name, path, leader, memberCount, created);
-      data.teams.push(t);
+      var t = new Team(name, id, leader, memberCount, created);
+      teams.push(t);
     }
 
-    res.json(data);
+    res.json({
+      links: links,
+      data: teams
+    });
   });
 
 });
@@ -105,19 +106,11 @@ router.get("/:team", function(req, res) {
     data.id = team;
     data.name = $("h1").text();
 
-    var pages;
     var pagination = $(".span12 .btn-group.pull-left");
-    if (pagination.length) {
-      var last = $(pagination).children().last();
-      if ($(last).attr("href")) {
-        pages = parseInt($(last).attr("href").split("?page=")[1]);
-      } else {
-        pages = parseInt($(last).text());
-      }
-    } else {
-      pages = 1;
-    }
+    var pages = parser.pageCount($, pagination);
+    var links = parser.setMeta(req);
 
+    // todo move to parser
     function getText(elm) {
       elm = $(elm);
       return elm.contents().filter(function() {
@@ -190,7 +183,10 @@ router.get("/:team", function(req, res) {
       data.players = players;
 
 
-      res.json(data);
+      res.json({
+        links: links,
+        data: data
+      });
     }
   });
 

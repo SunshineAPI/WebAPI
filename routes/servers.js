@@ -15,9 +15,17 @@ router.get("/rotations", function(req, res) {
 
 
     request(options, function(error, response, body) {
+        if (error) {
+            console.error(error);
+            return res.status(500).json({
+                errors: ["Unable to complete request"]
+            });
+        }
+
         var $ = cheerio.load(body);
 
         var data = {};
+        var links = parser.setMeta(req);
 
         var servers = $(".dropdown").last().find(".dropdown-menu > li");
         var region;
@@ -38,7 +46,10 @@ router.get("/rotations", function(req, res) {
             });
         }
 
-        res.json({data: data});
+        res.json({
+            links: links,
+            data: data
+        });
     });
 });
 
@@ -52,18 +63,29 @@ router.get("/rotations/:id", function(req, res) {
 
 
     request(options, function(error, response, body) {
+        if (error) {
+            console.error(error);
+            return res.status(500).json({
+                errors: ["Unable to complete request"]
+            });
+        }
+
         var $ = cheerio.load(body);
 
         var data = {};
+        var links = parser.setMeta(req);
 
         var maps = parser.parseMapList($);
         var server = $(".dropdown .dropdown-toggle").last().text().escapeSpecialChars();
-        
-        data.id = id;
-        data.server = server;
-        data.rotation = maps;        
 
-        res.json({data: data});
+        data.rotation = {};
+        data.rotation.server = server;
+        data.rotation.maps = maps;
+
+        res.json({
+            links: links,
+            data: data
+        });
     });
 });
 
@@ -75,15 +97,24 @@ router.get("/:region?", function(req, res) {
     };
 
     if (regions.indexOf(region) === -1) {
-        return res.status(422).json(errors: ["Invalid server region"]);
+        return res.status(422).json({
+            errors: ["Invalid server region"]
+        });
     }
 
     request(options, function(error, response, body) {
+        if (error) {
+            console.error(error);
+            return res.status(500).json({
+                errors: ["Unable to complete request"]
+            });
+        }
+
         var $ = cheerio.load(body);
 
-        var data = {};
-        data.region = region;
-
+        var meta = {};
+        meta.region = region;
+        var links = parser.setMeta(req);
         var servers = [];
 
         var serverList = $("div.thumbnail");
@@ -140,7 +171,11 @@ router.get("/:region?", function(req, res) {
             servers.push(server);
         });
 
-        res.json({data: data});
+        res.json({
+            links: links,
+            meta: meta,
+            data: servers
+        });
     });
 });
 
