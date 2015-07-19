@@ -1,3 +1,4 @@
+"use strict";
 var express = require("express");
 var router = express.Router();
 var parser = require("../modules/parser");
@@ -7,15 +8,15 @@ var querystring = require("querystring");
 
 var periods = ["day", "week", "eternity"];
 var games = ["all", "projectares", "blitz", "ghostsquadron"];
-var sort = ["kills", "deaths", "kd", "kk", "cores", "wools", "monuments", "playing_time"];
+var sorts = ["kills", "deaths", "kd", "kk", "cores", "wools", "monuments", "playing_time"];
 
-router.get('/', function(req, res) {
+router.get("/", function(req, res) {
     var page = parseInt(req.query.page) || 1;
     var sort = req.query.sort || "kills";
     var game = req.query.game || "all";
     var time = req.query.time || "day";
 
-    if (sort.indexOf(sort) === -1 || games.indexOf(game) === 1 || periods.indexOf(time) === -1) {
+    if (sorts.indexOf(sort) === -1 || games.indexOf(game) === 1 || periods.indexOf(time) === -1) {
         return res.status(422).send("Invalid sort options");
     }
 
@@ -27,8 +28,8 @@ router.get('/', function(req, res) {
     });
 
     var options = {
-        method: 'GET',
-        url: 'https://oc.tc/stats?' + query
+        method: "GET",
+        url: "https://oc.tc/stats?" + query
     };
 
     request(options, function(error, response, body) {

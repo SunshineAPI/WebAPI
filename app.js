@@ -1,4 +1,5 @@
-var express = require('express');
+"use strict";
+var express = require("express");
 
 var app = express();
 
@@ -11,7 +12,8 @@ var stats = require("./routes/stats");
 var alerts = require("./routes/alerts");
 var punishments = require("./routes/punishments");
 var staff = require("./routes/staff");
-
+var maps = require("./routes/maps");
+var servers = require("./routes/servers");
 
 app.use("/players", players);
 app.use("/forums", forums);
@@ -22,6 +24,9 @@ app.use("/stats", stats);
 app.use("/alerts", alerts);
 app.use("/punishments", punishments);
 app.use("/staff", staff);
+app.use("/maps", maps);
+app.use("/servers", servers);
+
 
 String.prototype.escapeSpecialChars = function() {
     return this.replace(new RegExp("\\n", "g"), "", "");

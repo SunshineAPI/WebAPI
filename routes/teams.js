@@ -1,3 +1,4 @@
+"use strict";
 var express = require("express");
 var router = express.Router();
 var request = require("request");
@@ -5,11 +6,11 @@ var cheerio = require("cheerio");
 var Team = require("../modules/team");
 
 // /teams?page=2
-router.get('/', function(req, res) {
+router.get("/", function(req, res) {
   var page = parseInt(req.query.page) || 1;
   var options = {
-    method: 'GET',
-    url: 'https://oc.tc/teams/' + (page ? "?page=" + page : "")
+    method: "GET",
+    url: "https://oc.tc/teams/" + (page ? "?page=" + page : "")
   };
 
   request(options, function(error, response, body) {
@@ -59,11 +60,11 @@ router.get('/', function(req, res) {
 });
 
 // /teams/korea
-router.get('/:team', function(req, res) {
+router.get("/:team", function(req, res) {
   var team = req.params.team;
   var base = "https://oc.tc/teams/" + team;
   var options = {
-    method: 'GET',
+    method: "GET",
     url: base
   };
 
@@ -118,13 +119,13 @@ router.get('/:team', function(req, res) {
     function getText(elm) {
       elm = $(elm);
       return elm.contents().filter(function() {
-        return this.type === 'text';
+        return this.type === "text";
       }).text().escapeSpecialChars();
     }
 
 
     var top = $(".span12 .span4");
-    var bottom = $(".span12 .span3")
+    var bottom = $(".span12 .span3");
 
     var wools = parseInt(getText(top[0]));
     var cores = parseInt(getText(top[1]));
@@ -141,6 +142,7 @@ router.get('/:team', function(req, res) {
       monuments: monuments,
       kd: kd,
       kk: kk,
+      kills: kills,
       deaths: deaths
     };
 

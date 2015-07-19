@@ -1,15 +1,16 @@
+"use strict";
 var express = require("express");
 var router = express.Router();
 var parser = require("../modules/parser");
 var request = require("request");
 var cheerio = require("cheerio");
 
-router.get('/', function(req, res) {
+router.get("/", function(req, res) {
     var page = parseInt(req.query.page) || 1;
     var sort = req.query.sort;
     var options = {
-        method: 'GET',
-        url: 'https://oc.tc/channels' + "?page=" + page + (sort ? "&sort=" + sort : "")
+        method: "GET",
+        url: "https://oc.tc/channels" + "?page=" + page + (sort ? "&sort=" + sort : "")
     };
 
     request(options, function(error, response, body) {

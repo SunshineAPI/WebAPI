@@ -1,3 +1,4 @@
+"use strict";
 function Profile(skype, twitter, facebook, steam, twitch, github, youtube, bio) {
 	this.skype = skype;
 	this.twitter = twitter;

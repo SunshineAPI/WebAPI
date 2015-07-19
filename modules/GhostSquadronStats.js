@@ -1,3 +1,4 @@
+"use strict";
 function GhostSquadronStats(kills, deaths, kd, kk, played, observed) {
 	this.kills = kills;
 	this.deaths = deaths;

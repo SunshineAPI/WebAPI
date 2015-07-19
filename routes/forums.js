@@ -1,17 +1,15 @@
+"use strict";
 var express = require("express");
 var router = express.Router();
 var parser = require("../modules/parser");
-var auth = require("../modules/auth");
 var request = require("request");
 var cheerio = require("cheerio");
-var Topic = require("../modules/topic");
-var paser = require("../modules/parser")
 
-router.get('/new', function(req, res) {
+router.get("/new", function(req, res) {
     var page = parseInt(req.query.page) || 1;
     var options = {
-        method: 'GET',
-        url: 'https://oc.tc/forums' + (page ? "?page=" + page : "")
+        method: "GET",
+        url: "https://oc.tc/forums" + (page ? "?page=" + page : "")
     };
 
     request(options, function(error, response, body) {
@@ -29,10 +27,10 @@ router.get('/new', function(req, res) {
     });
 });
 
-router.get('/categories', function(req, res) {
+router.get("/categories", function(req, res) {
     var options = {
-        method: 'GET',
-        url: 'https://oc.tc/forums/'
+        method: "GET",
+        url: "https://oc.tc/forums/"
     };
 
     request(options, function(error, response, body) {
@@ -60,7 +58,7 @@ router.get('/categories', function(req, res) {
                     name: s.text().escapeSpecialChars(),
                     id: (id ? id[0] : null)
                 });
-            })
+            });
             data.categories.push(cat);
         });
         res.json(data);
@@ -69,12 +67,12 @@ router.get('/categories', function(req, res) {
     });
 });
 
-router.get('/:oid', function(req, res) {
+router.get("/:oid", function(req, res) {
     var oid = req.params.oid;
     var page = parseInt(req.query.page) || 1;
     var options = {
-        method: 'GET',
-        url: 'https://oc.tc/forums/' + oid + (page ? "?page=" + page : "")
+        method: "GET",
+        url: "https://oc.tc/forums/" + oid + (page ? "?page=" + page : "")
     };
 
     request(options, function(error, response, body) {
@@ -92,7 +90,7 @@ router.get('/:oid', function(req, res) {
                 parent: {
                     name: c.parent().parent().prev().text()
                 }
-            }
+            };
             data.topics = topics;
 
             res.json(data);
@@ -101,12 +99,12 @@ router.get('/:oid', function(req, res) {
 });
 
 
-router.get('/topics/:id', function(req, res) {
+router.get("/topics/:id", function(req, res) {
     var id = req.params.id;
     var page = parseInt(req.query.page) || 1;
     var options = {
-        method: 'GET',
-        url: 'https://oc.tc/forums/topics/' + id + (page ? "?page=" + page : "")
+        method: "GET",
+        url: "https://oc.tc/forums/topics/" + id + (page ? "?page=" + page : "")
     };
 
     request(options, function(error, response, body) {
@@ -118,11 +116,11 @@ router.get('/topics/:id', function(req, res) {
         function getText(elm) {
             elm = $(elm);
             return elm.contents().filter(function() {
-                return this.type === 'text';
+                return this.type === "text";
             }).text().escapeSpecialChars();
         }
 
-        var pagination = $(".span9 .btn-group.pull-left")
+        var pagination = $(".span9 .btn-group.pull-left");
         var pages = parser.pageCount($, pagination) || 1;
 
         if (page > pages) {
@@ -156,7 +154,7 @@ router.get('/topics/:id', function(req, res) {
             var change = $(info[2]).text().spaceSpecialChars().trim();
         
             var p = {
-                id: id,
+                id: postId,
                 content: content,
                 author: author,
                 timestamp: change
@@ -174,7 +172,7 @@ router.get('/topics/:id', function(req, res) {
                     author: qAuthor,
                     timestamp: qTimestamp,
                     content: qContent,
-                }
+                };
             }
 
             posts.push(p);

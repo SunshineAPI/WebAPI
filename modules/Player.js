@@ -1,3 +1,4 @@
+"use strict";
 function Player(name, status, kills, deaths, friends, kd, kk, joins, playingtime, raindrops, cores, monuments, wools, profile, ForumStats, ProjectAresStats, BlitzStats, GhostSquadronStats) {
     this.name = name;
     this.status = status;

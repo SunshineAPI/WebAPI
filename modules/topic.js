@@ -1,3 +1,4 @@
+"use strict";
 function Topic(title, author, category, latestAuthor, latestTimestamp, posts, views) {
 	this.title = title;
 	this.author = author;

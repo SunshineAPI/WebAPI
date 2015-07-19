@@ -1,3 +1,4 @@
+"use strict";
 var cheerio = require("cheerio");
 var request = require("request");
 
@@ -268,6 +269,58 @@ ex.pageCount = function($, pagination) {
 	} else {
 		return parseInt($(last).text());
 	}
+}
+
+ex.parseMapList = function($) {
+	var maps = [];
+	var list = $("div.map.thumbnail");
+
+	list.each(function(i, elm) {
+		elm = $(elm);
+
+		var image = elm.find("img").attr("src");
+		var shortId = elm.attr("id");
+		var title = elm.find("h1.lead a");
+		var longId = title.attr("href").replace("/maps/", "");
+		var name = title.text();
+		var authorNodes = elm.find("small a");
+		var online = elm.find(".actions a.label");
+		var servers = [];
+		online.each(function(i, e) {
+			servers.push($(e).text());
+		});
+		var authors = [];
+		authorNodes.each(function(i, e) {
+			authors.push($(e).text());
+		});
+		var rating = elm.find("> div:nth-child(2) > div[title]");
+		rating = rating.attr("title").match(/([0-9]+\.[0-9][0-9]?)/)[0];
+		rating = parseFloat(rating);
+
+		maps.push({
+			name: name,
+			short_id: shortId,
+			long_id: longId,
+			image: image,
+			rating: rating,
+			authors: authors,
+			servers: servers
+		});
+	});
+	return maps;
+}
+
+ex.getText = function(elm) {
+	return elm.contents().filter(function() {
+		return this.type === 'text';
+	}).text().escapeSpecialChars();
+}
+
+ex.getTextNodes = function(elm) {
+	return elm.contents().filter(function() {
+		// filter our blank (new lines) lines
+		return this.type === 'text' && this.data.length > 2;
+	});
 }
 
 module.exports = ex;
