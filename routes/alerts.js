@@ -30,8 +30,8 @@ router.get("/", function(req, res) {
 
     auth.authed_req(options, username, pass, function(error, response, body) {
         if (error) {
-            return res.status(error.status).json({
-                errors: [error.message]
+            return res.status(500).json({
+                errors: ["Unable to complete request"]
             });
         }
         var $ = cheerio.load(body);

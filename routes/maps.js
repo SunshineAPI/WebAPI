@@ -179,7 +179,9 @@ router.get("/gamemode/:gamemode", function(req, res) {
     };
 
     if (gamemodes.indexOf(gamemode) === -1) {
-        return res.status(422).send("invalid gamemode");
+        return res.status(422).json({
+                errors: ["Invalid gamemode"]
+            });
     }
 
     request(options, function(error, response, body) {
