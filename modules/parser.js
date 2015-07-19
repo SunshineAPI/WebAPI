@@ -315,4 +315,11 @@ ex.getText = function(elm) {
 	}).text().escapeSpecialChars();
 }
 
+ex.getTextNodes = function(elm) {
+	return elm.contents().filter(function() {
+		// filter our blank (new lines) lines
+		return this.type === 'text' && this.data.length > 2;
+	});
+}
+
 module.exports = ex;
