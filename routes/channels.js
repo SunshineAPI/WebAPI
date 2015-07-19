@@ -19,6 +19,10 @@ router.get("/", function(req, res) {
         var max = parser.pageCount($, pagination);
         var data = {};
         var channels = [];
+        if (page > max) {
+            return res.status(422).json({errors: ["Invalid page number"]});
+        }
+
         data.page = page;
         data.pages = max;
         data.sort = sort || "subscribers";
@@ -53,7 +57,7 @@ router.get("/", function(req, res) {
 
         }
         data.channels = channels;
-        res.json(data);
+        res.json({data: data});
     });
 });
 

@@ -38,7 +38,7 @@ router.get("/rotations", function(req, res) {
             });
         }
 
-        res.json(data);
+        res.json({data: data});
     });
 });
 
@@ -63,7 +63,7 @@ router.get("/rotations/:id", function(req, res) {
         data.server = server;
         data.rotation = maps;        
 
-        res.json(data);
+        res.json({data: data});
     });
 });
 
@@ -75,7 +75,7 @@ router.get("/:region?", function(req, res) {
     };
 
     if (regions.indexOf(region) === -1) {
-        return res.status(422).send("invalid region");
+        return res.status(422).json(errors: ["Invalid server region"]);
     }
 
     request(options, function(error, response, body) {
@@ -140,9 +140,7 @@ router.get("/:region?", function(req, res) {
             servers.push(server);
         });
 
-        data.servers = servers;
-
-        res.json(data);
+        res.json({data: data});
     });
 });
 

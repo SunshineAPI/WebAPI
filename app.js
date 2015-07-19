@@ -3,6 +3,11 @@ var express = require("express");
 
 var app = express();
 
+app.use(function (req, res, next) {
+  res.removeHeader("x-powered-by");
+  next();
+});
+
 var players = require("./routes/players");
 var forums = require("./routes/forums");
 var tournaments = require("./routes/tournaments");

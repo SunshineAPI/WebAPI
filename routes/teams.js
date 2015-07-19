@@ -30,7 +30,9 @@ router.get("/", function(req, res) {
     }
 
     if (page > maxPage) {
-      return res.status(422).send("Invalid page number");
+      return res.status(422).json({
+        errors: ["Invalid page number"]
+      });
     }
 
     data.pages = maxPage;

@@ -51,7 +51,7 @@ router.get("/", function(req, res) {
 
         data.groups = staff;
 
-        res.json(data);
+        res.json({data: data});
     });
 });
 

@@ -41,7 +41,7 @@ router.get("/", function(req, res) {
             data.past.push(newToruney);
         }
 
-        res.json(data);
+        res.json({data: data});
     });
 });
 
@@ -99,7 +99,7 @@ router.get("/:id", function(req, res) {
 
         data.teams = teams;
 
-        res.json(data);
+        res.json({data: data});
     });
 });
 

@@ -17,7 +17,7 @@ router.get("/", function(req, res) {
     var time = req.query.time || "day";
 
     if (sorts.indexOf(sort) === -1 || games.indexOf(game) === 1 || periods.indexOf(time) === -1) {
-        return res.status(422).send("Invalid sort options");
+        return res.status(422).json({errors: ["Invalid sort options"]});
     }
 
     var query = querystring.stringify({
@@ -36,6 +36,9 @@ router.get("/", function(req, res) {
         var $ = cheerio.load(body);
         var pagination = $(".span12 .btn-group.pull-left").first();
         var max = parser.pageCount($, pagination);
+        if (page > max) {
+            return res.status(422).json({errors: ["Invalid page number"]});
+        }
         var data = {};
         var players = [];
         data.page = page;

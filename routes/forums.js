@@ -15,14 +15,19 @@ router.get("/new", function(req, res) {
     request(options, function(error, response, body) {
         var data = {};
         parser.parseForum(body, page, "new", function(err, pages, topics) {
-            if (err) {
-                return res.status(422).send(err);
+            if (page > pages) {
+                return res.status(422).json({
+                    errors: ["Invalid page number"]
+                });
             }
+
             data.page = page;
             data.pages = pages;
             data.topics = topics;
 
-            res.json(data);
+            res.json({
+                data: data
+            });
         });
     });
 });
@@ -61,7 +66,9 @@ router.get("/categories", function(req, res) {
             });
             data.categories.push(cat);
         });
-        res.json(data);
+        res.json({
+            data: data
+        });
 
 
     });
@@ -82,6 +89,11 @@ router.get("/:oid", function(req, res) {
                 return res.status(422).send(err);
             }
             var c = $("#forum-sidebar .active a");
+            if (page > pages) {
+                return res.status(422).json({
+                    errors: ["Invalid page number"]
+                });
+            }
             data.page = page;
             data.pages = pages;
             data.category = {
@@ -93,7 +105,9 @@ router.get("/:oid", function(req, res) {
             };
             data.topics = topics;
 
-            res.json(data);
+            res.json({
+                data: data
+            });
         });
     });
 });
@@ -109,7 +123,7 @@ router.get("/topics/:id", function(req, res) {
 
     request(options, function(error, response, body) {
         var data = {};
-        
+
         var $ = cheerio.load(body);
 
         // move to parser
@@ -124,7 +138,7 @@ router.get("/topics/:id", function(req, res) {
         var pages = parser.pageCount($, pagination) || 1;
 
         if (page > pages) {
-            res.status(422).send("invalid page number");
+            return res.status(422).send("invalid page number");
         }
 
         var header = $(".page-header > h3");
@@ -152,7 +166,7 @@ router.get("/topics/:id", function(req, res) {
             var info = post.find(".span9 > .pull-left a:not(.label)");
             var author = $(info[1]).text().escapeSpecialChars();
             var change = $(info[2]).text().spaceSpecialChars().trim();
-        
+
             var p = {
                 id: postId,
                 content: content,
@@ -179,7 +193,9 @@ router.get("/topics/:id", function(req, res) {
         }
 
         data.posts = posts;
-        res.json(data);
+        res.json({
+            data: data
+        });
     });
 });
 

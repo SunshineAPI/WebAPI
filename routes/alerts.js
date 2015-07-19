@@ -13,7 +13,7 @@ router.get("/", function(req, res) {
         arr = login.split(":");
     }
     if (!login || arr.length !== 2) {
-        return res.status(401).send("provide authentication credentials in header");
+        return res.status(401).json({errors: ["Provide login credentials"]});
     }
 
     var pass = arr[1];
@@ -28,7 +28,7 @@ router.get("/", function(req, res) {
 
     auth.authed_req(options, username, pass, function(error, response, body) {
         if (error) {
-            return res.status(error.status).send(error.message);
+            return res.status(error.status).json({errors: [error.message]});
         }
         var $ = cheerio.load(body);
         var rows = $(".span12 table tbody tr");
@@ -56,7 +56,7 @@ router.get("/", function(req, res) {
         }
         data.alerts = alerts;
 
-        res.json(data);
+        res.json({data: data});
     });
 });
 

@@ -43,7 +43,9 @@ router.get("/all", function(req, res) {
         var pages = parser.pageCount($, pagination);
 
         if (page > pages) {
-            return res.status(422).send("invalid page number");
+            return res.status(422).json({
+                errors: ["Invalid page number"]
+            });
         }
 
         data.page = page;
@@ -136,7 +138,9 @@ router.get("/:id", function(req, res) {
             }
         };
 
-        res.json(data);
+        res.json({
+            data: data
+        });
     });
 });
 
@@ -160,7 +164,9 @@ router.get("/gamemode/:gamemode", function(req, res) {
         var pages = parser.pageCount($, pagination);
 
         if (page > pages) {
-            return res.status(422).send("invalid page number");
+            return res.status(422).json({
+                errors: ["Invalid page number"]
+            });
         }
 
         data.page = page;
@@ -171,7 +177,9 @@ router.get("/gamemode/:gamemode", function(req, res) {
 
         data.maps = maps;
 
-        res.json(data);
+        res.json({
+            data: data
+        });
     });
 });
 

@@ -57,7 +57,7 @@ router.get("/", function(req, res) {
         data.punishments = punishments;
 
 
-        res.json(data);
+        res.json({data: data});
     });
 });
 
@@ -132,7 +132,7 @@ router.get("/:id", function(req, res) {
 
 
 
-        res.json(data);
+        res.json({data: data});
     });
 });
 
