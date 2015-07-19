@@ -91,7 +91,4 @@ router.get('/gamemode/:gamemode', function(req, res) {
     });
 });
 
-
-
-
 module.exports = router;

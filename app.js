@@ -12,7 +12,7 @@ var alerts = require("./routes/alerts");
 var punishments = require("./routes/punishments");
 var staff = require("./routes/staff");
 var maps = require("./routes/maps");
-
+var servers = require("./routes/servers");
 
 app.use("/players", players);
 app.use("/forums", forums);
@@ -24,6 +24,7 @@ app.use("/alerts", alerts);
 app.use("/punishments", punishments);
 app.use("/staff", staff);
 app.use("/maps", maps);
+app.use("/servers", servers);
 
 
 String.prototype.escapeSpecialChars = function() {

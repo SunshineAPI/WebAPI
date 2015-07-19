@@ -309,4 +309,10 @@ ex.parseMapList = function($) {
 	return maps;
 }
 
+ex.getText = function(elm) {
+	return elm.contents().filter(function() {
+		return this.type === 'text';
+	}).text().escapeSpecialChars();
+}
+
 module.exports = ex;
