@@ -4,6 +4,10 @@ var parser = require("../modules/parser");
 var request = require("request");
 var cheerio = require("cheerio");
 
+var gamemodes = ["tdm", "ctw", "ctf",
+    "dtc", "blitz", "rage", "gs", "mixed"
+];
+
 router.get('/playing', function(req, res) {
     var options = {
         method: 'GET',
@@ -15,42 +19,78 @@ router.get('/playing', function(req, res) {
 
         var data = {};
 
-        var maps = [];
-        var list = $("div.map.thumbnail");
-
-        list.each(function(i, elm) {
-            elm = $(elm);
-
-            var image = elm.find("img").attr("src");
-            var shortId = elm.attr("id");
-            var title = elm.find("h1.lead a");
-            var longId = title.attr("href").replace("/maps/", "");
-            var name = title.text();
-            var authorNodes = elm.find("small a");
-            var authors = [];
-            authorNodes.each(function(i, e) {
-                authors.push($(e).text());
-            });
-            var rating = elm.find("> div:nth-child(2) > div[title]");
-            console.log(rating);
-            rating = rating.attr("title").match(/([0-9]+\.[0-9][0-9]?)/)[0];
-            rating = parseFloat(rating);
-
-            maps.push({
-                name: name,
-                short_id: shortId,
-                long_id: longId,
-                image: image,
-                rating: rating,
-                authors: authors
-            });
-        });
+        var maps = parser.parseMapList($);
 
         data.maps = maps;
 
         res.json(data);
     });
 });
+
+router.get('/all', function(req, res) {
+    var page = req.query.page || 1;
+    var options = {
+        method: 'GET',
+        url: 'https://oc.tc/maps/all?page=' + page
+    };
+
+    request(options, function(error, response, body) {
+        var $ = cheerio.load(body);
+
+        var data = {};
+        var pagination = $(".span12 .btn-group.pull-left").first();
+        var pages = parser.pageCount($, pagination);
+
+        if (page > pages) {
+            return res.status(422).send("invalid page number");
+        }
+
+        data.page = page;
+        data.pages = pages;
+
+        var maps = parser.parseMapList($);
+
+        data.maps = maps;
+
+        res.json(data);
+    });
+});
+
+router.get('/gamemode/:gamemode', function(req, res) {
+    var page = req.query.page || 1;
+    var gamemode = req.params.gamemode;
+    var options = {
+        method: 'GET',
+        url: 'https://oc.tc/maps/gamemode/' + gamemode +'/?page=' + page
+    };
+
+    if (gamemodes.indexOf(gamemode) === -1) {
+        return res.status(422).send("invalid gamemode");
+    }
+
+    request(options, function(error, response, body) {
+        var $ = cheerio.load(body);
+
+        var data = {};
+        var pagination = $(".span12 .btn-group.pull-left").first();
+        var pages = parser.pageCount($, pagination);
+
+        if (page > pages) {
+            return res.status(422).send("invalid page number");
+        }
+
+        data.page = page;
+        data.pages = pages;
+        data.gamemode = gamemode;
+
+        var maps = parser.parseMapList($);
+
+        data.maps = maps;
+
+        res.json(data);
+    });
+});
+
 
 
 
