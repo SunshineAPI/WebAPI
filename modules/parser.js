@@ -16,7 +16,6 @@ var ex = {};
 
 ex.scrapeFromProfile = function(name, cb) {
 	request("http://oc.tc/stats/" + name, function(error, response, body) {
-		console.log(response);
 		if (error) {
 			return cb(null, 500);
 		} else if (response.statusCode !== 200) {

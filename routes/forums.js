@@ -4,7 +4,7 @@ var router = express.Router();
 var parser = require("../modules/parser");
 var request = require("request");
 var cheerio = require("cheerio");
-var auth = require("auth");
+var auth = require("../modules/auth");
 
 router.get("/new", function(req, res) {
     var page = parseInt(req.query.page) || 1;
