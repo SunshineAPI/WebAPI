@@ -20,7 +20,6 @@ var punishments = require("./routes/punishments");
 var staff = require("./routes/staff");
 var maps = require("./routes/maps");
 var servers = require("./routes/servers");
-var poster = require("./modules/poster");
 
 app.use("/players", players);
 app.use("/forums", forums);
@@ -33,7 +32,6 @@ app.use("/punishments", punishments);
 app.use("/staff", staff);
 app.use("/maps", maps);
 app.use("/servers", servers);
-app.use("/post",poster);
 app.set('json spaces', 4);
 
 String.prototype.escapeSpecialChars = function() {
