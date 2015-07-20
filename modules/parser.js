@@ -369,7 +369,7 @@ exp.parseMapList = function($) {
 
 exp.setMeta = function(req, page, pages) {
 	var links = {};
-	links.self = req.protocol + '://' + req.get('host') + req.originalUrl;
+	links.self = req.protocol + "://" + req.get("host") + req.originalUrl;
 
 	if (page && pages) {
 		var pagination = {};
@@ -386,14 +386,14 @@ exp.setMeta = function(req, page, pages) {
 
 exp.getText = function(elm) {
 	return elm.contents().filter(function() {
-		return this.type === 'text';
+		return this.type === "text";
 	}).text().escapeSpecialChars();
 };
 
 exp.getTextNodes = function(elm) {
 	return elm.contents().filter(function() {
 		// filter our blank (new lines) lines
-		return this.type === 'text' && this.data.length > 2;
+		return this.type === "text" && this.data.length > 2;
 	});
 };
 
