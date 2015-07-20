@@ -110,26 +110,17 @@ router.get("/:team", function(req, res) {
     var pages = parser.pageCount($, pagination);
     var links = parser.setMeta(req);
 
-    // todo move to parser
-    function getText(elm) {
-      elm = $(elm);
-      return elm.contents().filter(function() {
-        return this.type === "text";
-      }).text().escapeSpecialChars();
-    }
-
-
     var top = $(".span12 .span4");
     var bottom = $(".span12 .span3");
 
-    var wools = parseInt(getText(top[0]));
-    var cores = parseInt(getText(top[1]));
-    var monuments = parseInt(getText(top[2]));
+    var wools = parseInt(parser.getText($(top[0])));
+    var cores = parseInt(parser.getText($(top[1])));
+    var monuments = parseInt(parser.getText($(top[2])));
 
-    var kk = parseFloat(getText(bottom[0]));
-    var kd = parseFloat(getText(bottom[1]));
-    var kills = parseInt(getText(bottom[2]));
-    var deaths = parseInt(getText(bottom[3]));
+    var kk = parseFloat(parser.getText($(bottom[0])));
+    var kd = parseFloat(parser.getText($(bottom[1])));
+    var kills = parseInt(parser.getText($(bottom[2])));
+    var deaths = parseInt(parser.getText($(bottom[3])));
 
     data.stats = {
       wools: wools,

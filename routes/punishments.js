@@ -92,26 +92,18 @@ router.get("/:id", function(req, res) {
         var $ = cheerio.load(body);
         var links = parser.setMeta(req);
 
-        // move to parser
-        function getText(elm) {
-            elm = $(elm);
-            return elm.contents().filter(function() {
-                return this.type === "text";
-            }).text().escapeSpecialChars();
-        }
-
         var punished = $("h1 a").text().escapeSpecialChars();
         var date = $("h1 small").text().spaceSpecialChars().trim();
 
         var punisher = $(".punisher a").text();
-        var reason = getText(".reason");
-        var type = getText(".type");
+        var reason = parser.getText($(".reason"));
+        var type =  parser.getText($(".type"));
 
         var rows = $(".punishment .row");
         var middle = $(rows[1]);
         var middleCols = middle.children();
-        var expires = getText($(middleCols[0]).find("h3"));
-        var server = getText($(middleCols[1]).find("h3"));
+        var expires = parser.getText($(middleCols[0]).find("h3"));
+        var server = parser.getText($(middleCols[1]).find("h3"));
         var match = $(middleCols[2]).find("h3 a");
         var map = match.text();
         var matchLink = match.attr("href");
@@ -119,13 +111,13 @@ router.get("/:id", function(req, res) {
 
         var bottom = $(rows[2]);
         var botCols = bottom.children();
-        var active = getText($(botCols[1]).find("h3")).escapeSpecialChars().trim();
+        var active = parser.getText($(botCols[1]).find("h3")).escapeSpecialChars().trim();
         if (active === "Yes") {
             active = true;
         } else {
             active = false;
         }
-        var automatic = getText($(botCols[2]).find("h3")).escapeSpecialChars().trim();
+        var automatic = parser.getText($(botCols[2]).find("h3")).escapeSpecialChars().trim();
         if (automatic === "Yes") {
             automatic = true;
         } else {
