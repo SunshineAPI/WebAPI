@@ -12,9 +12,9 @@ var Topic = require("../modules/topic");
 var url = require("url");
 var querystring = require("querystring");
 
-var ex = {};
+var exp = {};
 
-ex.scrapeFromProfile = function(name, cb) {
+exp.scrapeFromProfile = function(name, cb) {
 	request("http://oc.tc/stats/" + name, function(error, response, body) {
 		if (error) {
 			return cb(null, 500);
@@ -200,7 +200,7 @@ ex.scrapeFromProfile = function(name, cb) {
 	});
 };
 
-ex.parseForum = function(body, page, cat, callback) {
+exp.parseForum = function(body, page, cat, callback) {
 	var $ = cheerio.load(body);
 	var topics = [];
 
@@ -259,9 +259,9 @@ ex.parseForum = function(body, page, cat, callback) {
 	});
 
 	callback(null, maxPage, topics, $);
-}
+};
 
-ex.parseForumTopic = function($, id) {
+exp.parseForumTopic = function($, id) {
 	var header = $(".page-header > h3");
 	var title = ex.getText(header).escapeSpecialChars();
 	var creator = header.find("a").text();
@@ -282,9 +282,9 @@ ex.parseForumTopic = function($, id) {
 
 	t.posts = posts;
 	return t;
-}
+};
 
-ex.parsePost = function($, post) {
+exp.parsePost = function($, post) {
 	var postId = post.attr("id");
 
 	var content = post.find(".post-content").html().spaceSpecialChars().trim();
@@ -315,9 +315,9 @@ ex.parsePost = function($, post) {
 		};
 	}
 	return p;
-}
+};
 
-ex.pageCount = function($, pagination) {
+exp.pageCount = function($, pagination) {
 	var last = $(pagination).children().last();
 	if ($(last).attr("href")) {
 		var href = url.parse("https://oc.tc" + $(last).attr("href")).query;
@@ -326,9 +326,9 @@ ex.pageCount = function($, pagination) {
 	} else {
 		return parseInt($(last).text());
 	}
-}
+};
 
-ex.parseMapList = function($) {
+exp.parseMapList = function($) {
 	var maps = [];
 	var list = $("div.map.thumbnail");
 
@@ -365,9 +365,9 @@ ex.parseMapList = function($) {
 		});
 	});
 	return maps;
-}
+};
 
-ex.setMeta = function(req, page, pages) {
+exp.setMeta = function(req, page, pages) {
 	var links = {};
 	links.self = req.protocol + '://' + req.get('host') + req.originalUrl;
 
@@ -382,19 +382,19 @@ ex.setMeta = function(req, page, pages) {
 		links.pagination = pagination;
 	}
 	return links;
-}
+};
 
-ex.getText = function(elm) {
+exp.getText = function(elm) {
 	return elm.contents().filter(function() {
 		return this.type === 'text';
 	}).text().escapeSpecialChars();
-}
+};
 
-ex.getTextNodes = function(elm) {
+exp.getTextNodes = function(elm) {
 	return elm.contents().filter(function() {
 		// filter our blank (new lines) lines
 		return this.type === 'text' && this.data.length > 2;
 	});
-}
+};
 
-module.exports = ex;
+module.exports = exp;
