@@ -262,6 +262,62 @@ ex.parseForum = function(body, page, cat, callback) {
 	callback(null, maxPage, topics, $);
 }
 
+ex.parseForumTopic = function($, id) {
+	var header = $(".page-header > h3");
+	var title = ex.getText(header).escapeSpecialChars();
+	var creator = header.find("a").text();
+	var t = {
+		id: id,
+		title: title,
+		author: creator
+	};
+
+	var posts = [];
+	var rows = $(".span9 > div[id]");
+
+	for (var i = 0; i < rows.length; i++) {
+		var post = ex.parsePost($, $(rows[i]));
+
+		posts.push(post);
+	}
+
+	t.posts = posts;
+	return t;
+}
+
+ex.parsePost = function($, post) {
+	var postId = post.attr("id");
+
+	var content = post.find(".post-content").html().spaceSpecialChars().trim();
+
+	var info = post.find(".span9 > .pull-left a:not(.label)");
+	var author = $(info[1]).text().escapeSpecialChars();
+	var change = $(info[2]).text().spaceSpecialChars().trim();
+
+	var p = {
+		id: postId,
+		content: content,
+		author: author,
+		timestamp: change
+	};
+
+	var quote = post.find("blockquote");
+	if (quote.length) {
+		var qInfo = quote.find("span");
+		var qAuthor = $(qInfo[0]).text();
+		var qTimestamp = $(qInfo[1]).text();
+		var qContent = quote.find(".collapse").html().spaceSpecialChars().trim();
+		var qId = quote.find(".collapse").attr("id").match(/([0-9a-fA-F]{24})$/)[0];
+		p.quoting = {
+			id: qId,
+			author: qAuthor,
+			timestamp: qTimestamp,
+			content: qContent,
+		};
+	}
+	return p;
+}
+
 ex.pageCount = function($, pagination) {
 	var last = $(pagination).children().last();
 	if ($(last).attr("href")) {

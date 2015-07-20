@@ -127,17 +127,42 @@ router.get("/topics/:id", function(req, res) {
     };
 
     request(options, function(error, response, body) {
-        var data = {};
-
         var $ = cheerio.load(body);
 
-        // move to parser
-        function getText(elm) {
-            elm = $(elm);
-            return elm.contents().filter(function() {
-                return this.type === "text";
-            }).text().escapeSpecialChars();
+        var pagination = $(".span9 .btn-group.pull-left");
+        var pages = parser.pageCount($, pagination) || 1;
+
+        if (page > pages) {
+            return res.status(422).json({
+                errors: ["Invalid page number"]
+            });
         }
+        var links = parser.setMeta(req, page, pages);
+
+        var topic = parser.parseForumTopic($, id);
+
+        res.json({
+            links: links,
+            data: topic
+        });
+    });
+});
+
+router.get("/posts/:id", function(req, res) {
+    var id = req.params.id;
+    var page = parseInt(req.query.page) || 1;
+    var options = {
+        method: "GET",
+        url: "https://oc.tc/forums/posts/" + id + (page ? "?page=" + page : "")
+    };
+
+    request(options, function(error, response, body) {
+        if (response.statusCode === 404) {
+            return res.status(404).json({
+                errors: ["Post not found"]
+            });
+        }
+        var $ = cheerio.load(body);
 
         var pagination = $(".span9 .btn-group.pull-left");
         var pages = parser.pageCount($, pagination) || 1;
@@ -148,63 +173,17 @@ router.get("/topics/:id", function(req, res) {
             });
         }
 
-        var header = $(".page-header > h3");
-        var title = getText(header).escapeSpecialChars();
-        var creator = header.find("a").text();
+        var node = $(".span9 > div[id=" + id + "]");
+
+        var post = parser.parsePost($, node);
 
         var links = parser.setMeta(req, page, pages);
-        var t = {
-            id: id,
-            title: title,
-            author: creator
-        };
 
-        var posts = [];
-        var rows = $(".span9 > div[id]");
-
-        for (var i = 0; i < rows.length; i++) {
-            var post = $(rows[i]);
-            var postId = post.attr("id");
-
-            var content = post.find(".post-content").html().spaceSpecialChars().trim();
-
-            var info = post.find(".span9 > .pull-left a:not(.label)");
-            var author = $(info[1]).text().escapeSpecialChars();
-            var change = $(info[2]).text().spaceSpecialChars().trim();
-
-            var p = {
-                id: postId,
-                content: content,
-                author: author,
-                timestamp: change
-            };
-
-            var quote = post.find("blockquote");
-            if (quote.length) {
-                var qInfo = quote.find("span");
-                var qAuthor = $(qInfo[0]).text();
-                var qTimestamp = $(qInfo[1]).text();
-                var qContent = quote.find(".collapse").html().spaceSpecialChars().trim();
-                var qId = quote.find(".collapse").attr("id").match(/([0-9a-fA-F]{24})$/)[0];
-                p.quoting = {
-                    id: qId,
-                    author: qAuthor,
-                    timestamp: qTimestamp,
-                    content: qContent,
-                };
-            }
-
-            posts.push(p);
-        }
-
-        t.posts = posts;
         res.json({
             links: links,
-            data: t
+            data: post
         });
     });
 });
-
-
 
 module.exports = router;
