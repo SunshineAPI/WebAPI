@@ -13,7 +13,6 @@ router.get("/new", function(req, res) {
     };
 
     request(options, function(error, response, body) {
-        var data = {};
         parser.parseForum(body, page, "new", function(err, pages, topics) {
             if (page > pages) {
                 return res.status(422).json({
@@ -21,12 +20,11 @@ router.get("/new", function(req, res) {
                 });
             }
 
-            data.page = page;
-            data.pages = pages;
-            data.topics = topics;
+            var links = parser.setMeta(req, page, pages);
 
             res.json({
-                data: data
+                links: links,
+                data: topics
             });
         });
     });
@@ -39,9 +37,9 @@ router.get("/categories", function(req, res) {
     };
 
     request(options, function(error, response, body) {
-        var data = {};
-        data.categories = [];
+        var categories = [];
         var $ = cheerio.load(body);
+        var links = parser.setMeta(req);
 
         var sidebar = $("#forum-sidebar");
 
@@ -64,29 +62,35 @@ router.get("/categories", function(req, res) {
                     id: (id ? id[0] : null)
                 });
             });
-            data.categories.push(cat);
+            categories.push(cat);
         });
         res.json({
-            data: data
+            links: links,
+            data: categories
         });
-
 
     });
 });
 
-router.get("/:oid", function(req, res) {
-    var oid = req.params.oid;
+router.get("/:id", function(req, res) {
+    var id = req.params.id;
     var page = parseInt(req.query.page) || 1;
     var options = {
         method: "GET",
-        url: "https://oc.tc/forums/" + oid + (page ? "?page=" + page : "")
+        url: "https://oc.tc/forums/" + id + (page ? "?page=" + page : "")
     };
 
     request(options, function(error, response, body) {
-        var data = {};
-        parser.parseForum(body, page, oid, function(err, pages, topics, $) {
-            if (err) {
-                return res.status(422).send(err);
+        if (response.statusCode === 404) {
+            return res.status(404).json({
+                errors: ["Forum category not found"]
+            });
+        }
+        parser.parseForum(body, page, id, function(err, pages, topics, $) {
+            if (error || err) {
+                return res.status(500).json({
+                    errors: ["Unable to complete request"]
+                });
             }
             var c = $("#forum-sidebar .active a");
             if (page > pages) {
@@ -94,19 +98,20 @@ router.get("/:oid", function(req, res) {
                     errors: ["Invalid page number"]
                 });
             }
-            data.page = page;
-            data.pages = pages;
-            data.category = {
+            var links = parser.setMeta(req, page, pages);
+            var meta = {};
+            meta.category = {
                 name: c.text().escapeSpecialChars(),
-                id: oid,
+                id: id,
                 parent: {
                     name: c.parent().parent().prev().text()
                 }
             };
-            data.topics = topics;
 
             res.json({
-                data: data
+                links: links,
+                meta: meta,
+                data: topics
             });
         });
     });
@@ -138,21 +143,21 @@ router.get("/topics/:id", function(req, res) {
         var pages = parser.pageCount($, pagination) || 1;
 
         if (page > pages) {
-            return res.status(422).send("invalid page number");
+            return res.status(422).json({
+                errors: ["Invalid page number"]
+            });
         }
 
         var header = $(".page-header > h3");
         var title = getText(header).escapeSpecialChars();
         var creator = header.find("a").text();
 
-        data.page = page;
-        data.pages = pages;
+        var links = parser.setMeta(req, page, pages);
         var t = {
             id: id,
             title: title,
             author: creator
         };
-        data.topic = t;
 
         var posts = [];
         var rows = $(".span9 > div[id]");
@@ -192,9 +197,10 @@ router.get("/topics/:id", function(req, res) {
             posts.push(p);
         }
 
-        data.posts = posts;
+        t.posts = posts;
         res.json({
-            data: data
+            links: links,
+            data: t
         });
     });
 });

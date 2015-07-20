@@ -230,7 +230,9 @@ ex.parseForum = function(body, page, cat, callback) {
 		var topic = elm.children()[0];
 		var tdata = $(topic).find("a");
 
+		// todo add id
 		var title = $(tdata[0]).text();
+		var id = $(tdata[0]).attr("href").match(/([0-9a-fA-F]{24})$/)[0];
 		var author = $(tdata[1]).text();
 		var category;
 
@@ -253,7 +255,7 @@ ex.parseForum = function(body, page, cat, callback) {
 		views = $(views.children()[0]).text();
 
 
-		var t = new Topic(title, author, category, latestAuthor, latestTimestamp, posts, views);
+		var t = new Topic(title, id, author, category, latestAuthor, latestTimestamp, posts, views);
 		topics.push(t);
 	});
 

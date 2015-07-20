@@ -1,6 +1,7 @@
 "use strict";
-function Topic(title, author, category, latestAuthor, latestTimestamp, posts, views) {
+function Topic(title, id, author, category, latestAuthor, latestTimestamp, posts, views) {
 	this.title = title;
+	this.id = id;
 	this.author = author;
 	this.category = category;
 	this.latest = {};
