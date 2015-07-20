@@ -1,13 +1,14 @@
 "use strict";
 var express = require("express");
-
+var bodyParser = require('body-parser');
 var app = express();
 
 app.use(function (req, res, next) {
   res.removeHeader("x-powered-by");
   next();
 });
-
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 var players = require("./routes/players");
 var forums = require("./routes/forums");
 var tournaments = require("./routes/tournaments");
@@ -19,6 +20,7 @@ var punishments = require("./routes/punishments");
 var staff = require("./routes/staff");
 var maps = require("./routes/maps");
 var servers = require("./routes/servers");
+var poster = require("./modules/poster");
 
 app.use("/players", players);
 app.use("/forums", forums);
@@ -31,6 +33,7 @@ app.use("/punishments", punishments);
 app.use("/staff", staff);
 app.use("/maps", maps);
 app.use("/servers", servers);
+app.use("/post",poster);
 app.set('json spaces', 4);
 
 String.prototype.escapeSpecialChars = function() {
