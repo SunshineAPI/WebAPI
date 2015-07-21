@@ -39,9 +39,15 @@ exp.scrapeFromProfile = function(name, cb) {
 		if ($("body > div > section:nth-child(2) > div.row > div.span3 > div").text() != "") {
 			var toReturn = $("body > div > section:nth-child(2) > div.row > div.span3 > div").text().replace("\\n", "");
 			playerArray["status"] = toReturn;
-		} else {
-			var spanthree = $("body > div > section:nth-child(2) > div.row > div.span3 > strong");
-			playerArray["status"] = "Seen " + spanthree.text() + " ago on " + $("body > div > section:nth-child(2) > div.row > div.span3 > span:nth-child(3) > a").text().replace("\\n", "");
+		} 
+		else if($("body > div > section:nth-child(2) > div.row > div.span3 > span:nth-child(3)").children().length==0){
+			console.log("Nullerino");
+			var spanthree = $("body > div > section:nth-child(2) > div.row > div.span3 > strong").text();
+			playerArray["status"] = "Seen " + spanthree + " ago".replace("\\n", "");
+		}
+		else {
+			var spanthree = $("body > div > section:nth-child(2) > div.row > div.span3 > strong").text();
+			playerArray["status"] = "Seen " + spanthree + " ago on " + $("body > div > section:nth-child(2) > div.row > div.span3 > span:nth-child(3) > a").text().replace("\\n", "");
 		}
 		playerArray["status"] = playerArray["status"].escapeSpecialChars();
 		playerArray["kills"] = $("body > div > section:nth-child(2) > div.row > div.span7 > div > div.span8 > div > div.span5 > h2").text().escapeSpecialChars().replace("kills", "");
