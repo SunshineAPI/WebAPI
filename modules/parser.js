@@ -15,7 +15,12 @@ var querystring = require("querystring");
 var exp = {};
 
 exp.scrapeFromProfile = function(name, cb) {
-	request("http://oc.tc/stats/" + name, function(error, response, body) {
+	var options = {
+		uri : "http://oc.tc/stats/" + name,
+		timeout : 2000,
+		followAllRedirects : true
+	};
+	request(options, function(error, response, body) {
 		if (error) {
 			return cb(null, 500);
 		} else if (response.statusCode !== 200) {
@@ -194,7 +199,7 @@ exp.scrapeFromProfile = function(name, cb) {
 		var ghost = new GhostSquadronStats(ghostArray["kills"], ghostArray["deaths"], ghostArray["kd"], ghostArray["kk"], ghostArray["played"], ghostArray["observed"]);
 		var forums = new ForumStats(forumArray["posts"], forumArray["topics"]);
 		profile = new Profile(profileArray["skype"], profileArray["twitter"], profileArray["facebook"], profileArray["steam"], profileArray["twitch"], profileArray["github"], profileArray["Youtube"], profileArray["bio"]);
-		var player = new Player(name, playerArray["status"], playerArray["kills"], playerArray["deaths"], playerArray["friends"], playerArray["kd"], playerArray["kk"], playerArray["joins"], playerArray["time"], playerArray["raindrops"], playerArray["cores"], playerArray["monuments"], playerArray["wools"], profile, forums, PAStats, Blitz, ghost);
+		var player = new Player(response.request.uri.href.substring(14,response.request.uri.href.length), playerArray["status"], playerArray["kills"], playerArray["deaths"], playerArray["friends"], playerArray["kd"], playerArray["kk"], playerArray["joins"], playerArray["time"], playerArray["raindrops"], playerArray["cores"], playerArray["monuments"], playerArray["wools"], profile, forums, PAStats, Blitz, ghost);
 		cb(player);
 
 	});
