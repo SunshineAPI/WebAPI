@@ -37,7 +37,7 @@ exp.scrapeFromProfile = function(name, cb) {
 		var $ = cheerio.load(body);
 		if ($("body > div > section:nth-child(2) > div.row > div.span3 > div").text() != "") {
 			var toReturn = $("body > div > section:nth-child(2) > div.row > div.span3 > div").text().replace("\\n", "");
-			playerArray["staus"] = toReturn;
+			playerArray["status"] = toReturn;
 		} else {
 			var spanthree = $("body > div > section:nth-child(2) > div.row > div.span3 > strong");
 			playerArray["status"] = "Seen " + spanthree.text() + " ago on " + $("body > div > section:nth-child(2) > div.row > div.span3 > span:nth-child(3) > a").text().replace("\\n", "");
