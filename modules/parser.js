@@ -34,6 +34,7 @@ exp.scrapeFromProfile = function(name, cb) {
 		var paArray = [];
 		var blitzArray = [];
 		var ghostArray = [];
+		var socialArray = [];
 		var $ = cheerio.load(body);
 		if ($("body > div > section:nth-child(2) > div.row > div.span3 > div").text() != "") {
 			var toReturn = $("body > div > section:nth-child(2) > div.row > div.span3 > div").text().replace("\\n", "");
@@ -54,124 +55,18 @@ exp.scrapeFromProfile = function(name, cb) {
 		playerArray["bottomObj"] = $("#objectives > div:nth-child(5) > div > h2").text().escapeSpecialChars();
 		playerArray["midObj"] = $("#objectives > div:nth-child(3) > div > h2").text().escapeSpecialChars();
 		playerArray["topObj"] = $("#objectives > div:nth-child(1) > div > h2").text().escapeSpecialChars();
-		if (String(playerArray["topObj"]).indexOf("cores") !== -1) {
-			playerArray["cores"] = playerArray["topObj"].replace("cores leaked", "");
-		} else if (String(playerArray["topObj"]).indexOf("monuments") !== -1) {
-			playerArray["monuments"] = playerArray["topObj"].replace("monuments destroyed", "");
-		} else {
-			playerArray["wools"] = playerArray["topObj"].replace("wools placed", "");
-		}
-		if (String(playerArray["midObj"]).indexOf("cores") !== -1) {
-			playerArray["cores"] = playerArray["midObj"].replace("cores leaked", "");
-		} else if (String(playerArray["midObj"]).toString().indexOf("monuments") !== -1) {
-			playerArray["monuments"] = playerArray["midObj"].replace("monuments destroyed", "");
-		} else {
-			playerArray["wools"] = playerArray["topObj"].replace("wools placed", "");
-		}
-		if (String(playerArray["bottomObj"]).indexOf("cores") !== -1) {
-			playerArray["cores"] = playerArray["bottomObj"].replace("cores leaked", "");
-		} else if (String(playerArray["bottomObj"]).indexOf("monuments") !== -1) {
-			playerArray["monuments"] = playerArray["bottomObj"].replace("monuments destroyed", "");
-		} else {
-			playerArray["wools"] = playerArray["bottomObj"].replace("wools placed", "");
-		}
-		profileArray["first"] = $("#about > div:nth-child(1) > div:nth-child(1) > blockquote > p").text().escapeSpecialChars();
-		profileArray["second"] = $("#about > div:nth-child(1) > div:nth-child(2) > blockquote > p > a").text().escapeSpecialChars();
-		profileArray["third"] = $("#about > div:nth-child(1) > div:nth-child(3) > blockquote > p > a").text().escapeSpecialChars();
-		profileArray["fourth"] = $("#about > div:nth-child(1) > div:nth-child(4) > blockquote > p > a").text().escapeSpecialChars();
-		profileArray["fifth"] = $("#about > div:nth-child(1) > div:nth-child(5) > blockquote > p > a").text().escapeSpecialChars();
-		profileArray["sixth"] = $("#about > div:nth-child(1) > div:nth-child(6) > blockquote > p > a").text().escapeSpecialChars();
-
-		if ($("#about > div:nth-child(1) > div:nth-child(1) > h6").text().toString().indexOf("Skype") !== -1) {
-			profileArray["skype"] = profileArray["first"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(1) > h6").text().toString().indexOf("Twitter") !== -1) {
-			profileArray["twitter"] = profileArray["first"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(1) > h6").text().toString().indexOf("Facebook") !== -1) {
-			profileArray["facebook"] = profileArray["first"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(1) > h6").text().toString().indexOf("Steam") !== -1) {
-			profileArray["steam"] = profileArray["first"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(1) > h6").text().toString().indexOf("Twitch") !== -1) {
-			profileArray["twitch"] = profileArray["first"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(1) > h6").text().toString().indexOf("Github") !== -1) {
-			profileArray["github"] = profileArray["first"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(1) > h6").text().toString().indexOf("YouTube") !== -1) {
-			profileArray["youtube"] = profileArray["first"];
-		}
-		if ($("#about > div:nth-child(1) > div:nth-child(2) > h6").text().toString().indexOf("Skype") !== -1) {
-			profileArray["skype"] = profileArray["second"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(2) > h6").text().toString().indexOf("Twitter") !== -1) {
-			profileArray["twitter"] = profileArray["second"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(2) > h6").text().toString().indexOf("Facebook") !== -1) {
-			profileArray["facebook"] = profileArray["second"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(2) > h6").text().toString().indexOf("Steam") !== -1) {
-			profileArray["steam"] = profileArray["second"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(2) > h6").text().toString().indexOf("Twitch") !== -1) {
-			profileArray["twitch"] = profileArray["second"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(2) > h6").text().toString().indexOf("Github") !== -1) {
-			profileArray["github"] = profileArray["second"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(2) > h6").text().toString().indexOf("YouTube") !== -1) {
-			profileArray["youtube"] = profileArray["second"];
-		}
-		if ($("#about > div:nth-child(1) > div:nth-child(3) > h6").text().toString().indexOf("Skype") !== -1) {
-			profileArray["skype"] = profileArray["third"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(3) > h6").text().toString().indexOf("Twitter") !== -1) {
-			profileArray["twitter"] = profileArray["third"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(3) > h6").text().toString().indexOf("Facebook") !== -1) {
-			profileArray["facebook"] = profileArray["third"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(3) > h6").text().toString().indexOf("Steam") !== -1) {
-			profileArray["steam"] = profileArray["third"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(3) > h6").text().toString().indexOf("Twitch") !== -1) {
-			profileArray["twitch"] = profileArray["third"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(3) > h6").text().toString().indexOf("Github") !== -1) {
-			profileArray["github"] = profileArray["third"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(3) > h6").text().toString().indexOf("YouTube") !== -1) {
-			profileArray["youtube"] = profileArray["third"];
-		}
-		if ($("#about > div:nth-child(1) > div:nth-child(4) > h6").text().toString().indexOf("Skype") !== -1) {
-			profileArray["skype"] = profileArray["fourth"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(4) > h6").text().toString().indexOf("Twitter") !== -1) {
-			profileArray["twitter"] = profileArray["fourth"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(4) > h6").text().toString().indexOf("Facebook") !== -1) {
-			profileArray["facebook"] = profileArray["fourth"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(4) > h6").text().toString().indexOf("Steam") !== -1) {
-			profileArray["steam"] = profileArray["fourth"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(4) > h6").text().toString().indexOf("Twitch") !== -1) {
-			profileArray["twitch"] = profileArray["fourth"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(4) > h6").text().toString().indexOf("Github") !== -1) {
-			profileArray["github"] = profileArray["fourth"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(4) > h6").text().toString().indexOf("YouTube") !== -1) {
-			profileArray["youtube"] = profileArray["fourth"];
-		}
-		if ($("#about > div:nth-child(1) > div:nth-child(5) > h6").text().toString().indexOf("Skype") !== -1) {
-			profileArray["skype"] = profileArray["fifth"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(5) > h6").text().toString().indexOf("Twitter") !== -1) {
-			profileArray["twitter"] = profileArray["fifth"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(5) > h6").text().toString().indexOf("Facebook") !== -1) {
-			profileArray["facebook"] = profileArray["fifth"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(5) > h6").text().toString().indexOf("Steam") !== -1) {
-			profileArray["steam"] = profileArray["fifth"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(5) > h6").text().toString().indexOf("Twitch") !== -1) {
-			profileArray["twitch"] = profileArray["fifth"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(5) > h6").text().toString().indexOf("Github") !== -1) {
-			profileArray["github"] = profileArray["fifth"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(5) > h6").text().toString().indexOf("YouTube") !== -1) {
-			profileArray["youtube"] = profileArray["fifth"];
-		}
-		if ($("#about > div:nth-child(1) > div:nth-child(6) > h6").text().toString().indexOf("Skype") !== -1) {
-			profileArray["skype"] = profileArray["sixth"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(6) > h6").text().toString().indexOf("Twitter") !== -1) {
-			profileArray["twitter"] = profileArray["sixth"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(6) > h6").text().toString().indexOf("Facebook") !== -1) {
-			profileArray["facebook"] = profileArray["sixth"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(6) > h6").text().toString().indexOf("Steam") !== -1) {
-			profileArray["steam"] = profileArray["sixth"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(6) > h6").text().toString().indexOf("Twitch") !== -1) {
-			profileArray["twitch"] = profileArray["sixth"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(6) > h6").text().toString().indexOf("Github") !== -1) {
-			profileArray["github"] = profileArray["sixth"];
-		} else if ($("#about > div:nth-child(1) > div:nth-child(6) > h6").text().toString().indexOf("YouTube") !== -1) {
-			profileArray["youtube"] = profileArray["sixth"];
-		}
+		
+		$(".span4").each(function(i,elem){
+			if($(this).children().length==4){
+				//bleh
+			}
+			else{
+				socialArray[$(this).children("h6").text()] = $(this).children("blockquote").children("p").text();
+				console.log(socialArray[$(this).children("h6").text()]);
+			}
+		});
+		
+	
 
 		profileArray["bio"] = $("#about > div:nth-child(3) > div > pre").text();
 		forumArray["posts"] = $("#stats > div:nth-child(2) > div > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("forum posts", "");
@@ -198,7 +93,7 @@ exp.scrapeFromProfile = function(name, cb) {
 		var Blitz = new BlitzStats(blitzArray["kills"], blitzArray["deaths"], blitzArray["kd"], blitzArray["kk"], blitzArray["played"], blitzArray["observed"]);
 		var ghost = new GhostSquadronStats(ghostArray["kills"], ghostArray["deaths"], ghostArray["kd"], ghostArray["kk"], ghostArray["played"], ghostArray["observed"]);
 		var forums = new ForumStats(forumArray["posts"], forumArray["topics"]);
-		profile = new Profile(profileArray["skype"], profileArray["twitter"], profileArray["facebook"], profileArray["steam"], profileArray["twitch"], profileArray["github"], profileArray["Youtube"], profileArray["bio"]);
+		profile = new Profile(socialArray["Skype"], socialArray["Twitter"], socialArray["Facebook"], socialArray["Steam"], socialArray["Twitch"], socialArray["Github"], socialArray["YouTube"], profileArray["bio"]);
 		var player = new Player(response.request.uri.href.substring(14,response.request.uri.href.length), playerArray["status"], playerArray["kills"], playerArray["deaths"], playerArray["friends"], playerArray["kd"], playerArray["kk"], playerArray["joins"], playerArray["time"], playerArray["raindrops"], playerArray["cores"], playerArray["monuments"], playerArray["wools"], profile, forums, PAStats, Blitz, ghost);
 		cb(player);
 
