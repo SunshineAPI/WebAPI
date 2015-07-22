@@ -5,10 +5,10 @@
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gilrosenthal/OvercastAPI"
+    "url": "https://github.com/SunshineAPI/SunshineWebAPI"
   },
   "issues": {
-    "url": "https://github.com/gilrosenthal/OvercastAPI/issues"
+    "url": "https://github.com/SunshineAPI/SunshineWebAPI/issues"
   },
   "author": "Gil Rosenthal <gil.a.rosenthal@gmail.com>",
   "contributors": [
@@ -28,5 +28,6 @@
     "express-handlebars": "^2.0.1",
     "redis": "^0.12.1",
     "request": "^2.58.0"
-  }
+  },
+  "license": "MIT"
 }
