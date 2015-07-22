@@ -3,9 +3,9 @@ var express = require("express");
 var router = express.Router();
 
 router.get("/", function(req, res) {
-	console.log(req.secure, "SECURE", req.protocol, req.headers['x-forwarded-proto']);
+	var proto = req.headers['x-forwarded-proto'] || "http";
     res.render("index", {
-    	domain: "http" + (req.secure ? "s" : "") + "://" + req.get("host")
+    	domain: proto + "://" + req.get("host")
     });
 });
 
