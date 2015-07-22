@@ -4,7 +4,7 @@ var router = express.Router();
 
 router.get("/", function(req, res) {
     res.render("index", {
-    	domain: "http" + (req.connection.encrypted ? "s" : "") + "://" + req.get("host")
+    	domain: "http" + (req.secure ? "s" : "") + "://" + req.get("host")
     });
 });
 
