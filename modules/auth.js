@@ -67,7 +67,7 @@ var requestCookie = function(username, password, cb) {
 	request(options, function(error, response, body) {
 		var cHeader = response.headers["set-cookie"];
 		if (error) {
-			return cb(error || response.stausCode, null);
+			return cb(error || response.statusCode, null);
 		} else if (body.toString().indexOf("Forgot your password") > -1) {
 			return cb(401, null);
 		}
