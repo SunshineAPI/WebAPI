@@ -1,14 +1,21 @@
 "use strict";
 var express = require("express");
+var exphbs = require("express-handlebars");
 var bodyParser = require("body-parser");
 var app = express();
+
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
+app.set("json spaces", 4);
 
 app.use(function (req, res, next) {
   res.removeHeader("x-powered-by");
   next();
 });
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
+
+var index = require("./routes/index");
 var players = require("./routes/players");
 var forums = require("./routes/forums");
 var tournaments = require("./routes/tournaments");
@@ -21,6 +28,9 @@ var staff = require("./routes/staff");
 var maps = require("./routes/maps");
 var servers = require("./routes/servers");
 
+app.use('/assets', express.static('public'));
+
+app.use("/", index);
 app.use("/players", players);
 app.use("/forums", forums);
 app.use("/tournaments", tournaments);
@@ -32,7 +42,6 @@ app.use("/punishments", punishments);
 app.use("/staff", staff);
 app.use("/maps", maps);
 app.use("/servers", servers);
-app.set("json spaces", 4);
 
 String.prototype.escapeSpecialChars = function() {
     return this.replace(new RegExp("\\n", "g"), "", "");

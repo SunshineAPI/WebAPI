@@ -1,0 +1,80 @@
+ <header>
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a href="/" class="navbar-brand"><i class="fa fa-sun-o"></i> Sunshine</a>
+            </div>
+            <div class="navbar-header pull-right">
+                <p class="navbar-brand">The Unofficial API of the <a href="//oc.tc" target="_blank">Overcast Network</a></p>
+            </div>
+        </div>
+    </div>
+    <a href="//github.com/gilrosenthal/OvercastAPI" target="_blank" class="fork">Fork me on GitHub</a>
+</header>
+<main>
+    <div class="container">
+        <section id="about">
+            <h2>About</h2>
+            <p>
+                Sunshine is an unofficial API for the  <a href="//oc.tc" target="_blank">Overcast Network</a>.<br>
+                It was created by <a href="//github.com/gilrosenthal" target="_blank">Gil</a> and <a href="//github.com/Jake0oo0" target="_blank">Jake</a> using <a href="//nodejs.org" target="_blank">node.js</a><br><br>
+                
+                Sunshine uses a technique called "web scraping" to index information from Overcast Network's website.<br>
+                This information includes stats, forum posts, teams, etc.<br>
+                All data is returned in a JSON format.
+            </p>
+        </section>
+        <section id="contributors">
+            <h2>Contributors</h2>
+            <div class="thumbnail" data-toggle="tooltip" title="Initial idea, Development">
+                <img src="//crafatar.com/avatars/0401f604541c4b288e7ee0679c454f2c?helm&size=75">
+            </div>
+            <div class="thumbnail" data-toggle="tooltip" title="Development">
+                <img src="//crafatar.com/avatars/2d5aa9cdaeb049189930461fc9b91cc5?helm&size=75">
+            </div>
+            <div class="thumbnail" data-toggle="tooltip" title="Hosting, Documentation">
+                <img src="//crafatar.com/avatars/149cf470051a49b99ab0e731a8d20f8e?helm&size=75">
+            </div>
+        </section>
+        <section id="documentation">
+            <h2>Documentation</h2>
+            <section>
+                <h3>Stats</h3>
+                <div class="code">//sunshine.bearden.io/player/<mark>username</mark></div>
+            </section>
+            <section>
+                <h3>Player Info</h3>
+                <div class="code"></div>
+            </section>
+            <section>
+                <h3>Forum Topic</h3>
+                <div class="code"></div>
+            </section>
+            <section>
+                <h3>Forum Post</h3>
+                <div class="code"></div>
+            </section>
+            <section>
+                <h3>Teams</h3>
+                <div class="code"></div>
+            </section>
+            <section>
+                <h3>Tournaments</h3>
+                <div class="code"></div>
+            </section>
+        </section>
+    </div>
+</main>
+<footer>
+    <div class="container">
+        <hr>
+        <p class="pull-right">&copy; Sunshine 2015</p>
+    </div>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>

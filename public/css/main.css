@@ -1,0 +1,109 @@
+body {
+    color:#444;
+}
+main {
+    margin-top: 50px;
+}
+footer {
+    color: #888;
+}
+#about {
+    font-size: 16px;
+}
+#contributors {
+    overflow: auto;
+}
+.thumbnail {
+    float: left;
+    margin-right: 10px;
+}
+.navbar p {
+    margin: 0;
+}
+a {
+    color: #f1c40f;
+}
+a:hover {
+    color: #f39c12;
+    text-decoration: none;
+}
+a.fork {
+    position: fixed;
+    display: inline-block;
+    top: 0;
+    right: 0;
+    z-index: 9999;
+    padding: 3px 40px;
+    color: #fff;
+    font-weight: bold;
+    background: #f1c40f;
+    border: 2px solid #f39c12;
+    -webkit-transform: rotate(45deg) translate(65px);
+    transform: rotate(45deg) translate(65px);
+}
+a.fork:hover {
+    background: #E3BC20;
+    text-decoration: none;
+}
+.code {
+    display: block;
+    font-family: monospace;
+    word-wrap: break-word;
+    min-height: 20px;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    background: #fafafa;
+    border-left: 3px solid #888;
+    border-radius: 0px 4px 4px 0px;
+    box-shadow: 0 0 1px inset;
+    position: relative;
+}
+.code .example {
+    cursor: pointer;
+}
+.code .example:hover {
+    color: #000;
+    text-decoration: underline;
+}
+.preview-background {
+    background: #eee;
+    height: 220px;
+}
+.code .example-wrapper .preview,
+.code .preview-placeholder {
+    display: none;
+    left: 0;
+    right: 0;
+    position: absolute;
+    bottom: -240px;
+    padding-left: 10px;
+    padding-top: 200px;
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    font-size: 14px;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-weight: 300;
+    color: #666;
+}
+.code .preview-placeholder {
+    display: block;
+    font-weight: bold;
+}
+.code .preview-placeholder:hover {
+    display: block!important;
+}
+.code:hover .preview-placeholder {
+    display: none;
+}
+.code .example-wrapper .preview i {
+    color: #aaa;
+}
+.code .example-wrapper:hover .preview {
+    display: block;
+}
+mark {
+  background: inherit;
+  color: #f39c12;
+  font-weight: bold;
+  padding: 0;
+}
