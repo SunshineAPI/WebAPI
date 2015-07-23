@@ -16,9 +16,9 @@ var exp = {};
 
 exp.scrapeFromProfile = function(name, cb) {
 	var options = {
-		uri : "http://oc.tc/stats/" + name,
-		timeout : 2000,
-		followAllRedirects : true
+		uri: "http://oc.tc/stats/" + name,
+		timeout: 2000,
+		followAllRedirects: true
 	};
 	request(options, function(error, response, body) {
 		if (error) {
@@ -34,77 +34,73 @@ exp.scrapeFromProfile = function(name, cb) {
 		var paArray = [];
 		var blitzArray = [];
 		var ghostArray = [];
-		var socialArray = [];
+		var socialArray = {};
 		var $ = cheerio.load(body);
-		if ($("body > div > section:nth-child(2) > div.row > div.span3 > div").text() != "") {
+		if ($("body > div > section:nth-child(2) > div.row > div.span3 > div").text() !== "") {
 			var toReturn = $("body > div > section:nth-child(2) > div.row > div.span3 > div").text().replace("\\n", "");
-			playerArray["status"] = toReturn;
-		} 
-		else if($("body > div > section:nth-child(2) > div.row > div.span3 > span:nth-child(3)").children().length==0){
-			console.log("Nullerino");
+			playerArray.status = toReturn;
+		} else if ($("body > div > section:nth-child(2) > div.row > div.span3 > span:nth-child(3)").children().length === 0) {
 			var spanthree = $("body > div > section:nth-child(2) > div.row > div.span3 > strong").text();
-			playerArray["status"] = "Seen " + spanthree + " ago".replace("\\n", "");
-		}
-		else {
+			playerArray.status = "Seen " + spanthree + " ago".replace("\\n", "");
+		} else {
 			var spanthree = $("body > div > section:nth-child(2) > div.row > div.span3 > strong").text();
-			playerArray["status"] = "Seen " + spanthree + " ago on " + $("body > div > section:nth-child(2) > div.row > div.span3 > span:nth-child(3) > a").text().replace("\\n", "");
+			playerArray.status = "Seen " + spanthree + " ago on " + $("body > div > section:nth-child(2) > div.row > div.span3 > span:nth-child(3) > a").text().replace("\\n", "");
 		}
-		playerArray["status"] = playerArray["status"].escapeSpecialChars();
-		playerArray["kills"] = $("body > div > section:nth-child(2) > div.row > div.span7 > div > div.span8 > div > div.span5 > h2").text().escapeSpecialChars().replace("kills", "");
-		playerArray["deaths"] = $("body > div > section:nth-child(2) > div.row > div.span7 > div > div.span4 > h2").text().escapeSpecialChars().replace("deaths", "");
-		playerArray["friends"] = $("body > div > section:nth-child(2) > div.row > div.span2 > h2").text().escapeSpecialChars().replace("friends", "");
-		playerArray["kd"] = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(4)").text().escapeSpecialChars().replace("kd ratio", "");
-		playerArray["kk"] = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(5)").text().escapeSpecialChars().replace("kk ratio", "");
-		playerArray["joins"] = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(6)").text().escapeSpecialChars().replace("server joins", "");
-		playerArray["time"] = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(7)").text().escapeSpecialChars().replace("days played", "");
-		playerArray["raindrops"] = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(8)").text().escapeSpecialChars().replace("raindrops", "");
-		playerArray["bottomObj"] = $("#objectives > div:nth-child(5) > div > h2").text().escapeSpecialChars();
-		playerArray["midObj"] = $("#objectives > div:nth-child(3) > div > h2").text().escapeSpecialChars();
-		playerArray["topObj"] = $("#objectives > div:nth-child(1) > div > h2").text().escapeSpecialChars();
-		
-		$(".span4").each(function(i,elem){
-			if($(this).children().length==4){
+		playerArray.status = playerArray.status.escapeSpecialChars();
+		playerArray.kills = $("body > div > section:nth-child(2) > div.row > div.span7 > div > div.span8 > div > div.span5 > h2").text().escapeSpecialChars().replace("kills", "");
+		playerArray.deaths = $("body > div > section:nth-child(2) > div.row > div.span7 > div > div.span4 > h2").text().escapeSpecialChars().replace("deaths", "");
+		playerArray.friends = $("body > div > section:nth-child(2) > div.row > div.span2 > h2").text().escapeSpecialChars().replace("friends", "");
+		playerArray.kd = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(4)").text().escapeSpecialChars().replace("kd ratio", "");
+		playerArray.kk = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(5)").text().escapeSpecialChars().replace("kk ratio", "");
+		playerArray.joins = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(6)").text().escapeSpecialChars().replace("server joins", "");
+		playerArray.time = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(7)").text().escapeSpecialChars().replace("days played", "");
+		playerArray.raindrops = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(8)").text().escapeSpecialChars().replace("raindrops", "");
+		playerArray.bottomObj = $("#objectives > div:nth-child(5) > div > h2").text().escapeSpecialChars();
+		playerArray.midObj = $("#objectives > div:nth-child(3) > div > h2").text().escapeSpecialChars();
+		playerArray.topObj = $("#objectives > div:nth-child(1) > div > h2").text().escapeSpecialChars();
+
+		$(".span4").each(function(i, elem) {
+			if ($(this).children().length == 4) {
 				//bleh
-			}
-			else if($(this).children("h6").text()=="Team"){
-				socialArray["Team"] = $(this).children("blockquote").text();
-				console.log(socialArray["Team"]);
-			}
-			else{
+			} else if ($(this).children("h6").text() == "Team") {
+				socialArray.Team = $(this).children("blockquote").text();
+			} else {
 				socialArray[$(this).children("h6").text()] = $(this).children("blockquote").children("p").text();
-				console.log(socialArray[$(this).children("h6").text()]);
 			}
 		});
-		
-	
 
-		profileArray["bio"] = $("#about > div:nth-child(3) > div > pre").text();
-		forumArray["posts"] = $("#stats > div:nth-child(2) > div > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("forum posts", "");
-		forumArray["topics"] = $("#stats > div:nth-child(2) > div > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("topics started", "");
-		paArray["kills"] = $("#stats > div:nth-child(4) > div.span4 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kills", "");
-		paArray["deaths"] = $("#stats > div:nth-child(4) > div.span4 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("deaths", "");
-		paArray["kd"] = $("#stats > div:nth-child(4) > div.span3 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kd", "");
-		paArray["kk"] = $("#stats > div:nth-child(4) > div.span3 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("kk", "");
-		paArray["played"] = $("#stats > div:nth-child(4) > div.span5 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("days played", "");
-		paArray["observed"] = $("#stats > div:nth-child(4) > div.span5 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("days observed", "");
-		blitzArray["kills"] = $("#stats > div:nth-child(6) > div.span4 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kills", "");
-		blitzArray["deaths"] = $("#stats > div:nth-child(6) > div.span4 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("deaths", "");
-		blitzArray["kd"] = $("#stats > div:nth-child(6) > div.span3 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kd", "");
-		blitzArray["kk"] = $("#stats > div:nth-child(6) > div.span3 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("kk", "");
-		blitzArray["played"] = $("#stats > div:nth-child(6) > div.span5 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("days played", "");
-		blitzArray["observed"] = $("#stats > div:nth-child(6) > div.span5 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("days observed", "");
-		ghostArray["kills"] = $("#stats > div:nth-child(8) > div.span4 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kills", "");
-		ghostArray["deaths"] = $("#stats > div:nth-child(8) > div.span4 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("deaths", "");
-		ghostArray["kd"] = $("#stats > div:nth-child(8) > div.span3 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kd", "");
-		ghostArray["kk"] = $("#stats > div:nth-child(8) > div.span3 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("kk", "");
-		ghostArray["played"] = $("#stats > div:nth-child(8) > div.span5 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("days played", "");
-		ghostArray["observed"] = $("#stats > div:nth-child(8) > div.span5 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("days observed", "");
-		PAStats = new ProjectAresStats(paArray["kills"], paArray["deaths"], paArray["kd"], paArray["kk"], paArray["played"], paArray["observed"]);
-		var Blitz = new BlitzStats(blitzArray["kills"], blitzArray["deaths"], blitzArray["kd"], blitzArray["kk"], blitzArray["played"], blitzArray["observed"]);
-		var ghost = new GhostSquadronStats(ghostArray["kills"], ghostArray["deaths"], ghostArray["kd"], ghostArray["kk"], ghostArray["played"], ghostArray["observed"]);
-		var forums = new ForumStats(forumArray["posts"], forumArray["topics"]);
-		profile = new Profile(socialArray["Team"],socialArray["Skype"], socialArray["Twitter"], socialArray["Facebook"], socialArray["Steam"], socialArray["Twitch"], socialArray["Github"], socialArray["YouTube"], profileArray["bio"]);
-		var player = new Player(response.request.uri.href.substring(14,response.request.uri.href.length), playerArray["status"], playerArray["kills"], playerArray["deaths"], playerArray["friends"], playerArray["kd"], playerArray["kk"], playerArray["joins"], playerArray["time"], playerArray["raindrops"], playerArray["cores"], playerArray["monuments"], playerArray["wools"], profile, forums, PAStats, Blitz, ghost);
+
+		profileArray.bio = $("#about > div:nth-child(3) > div > pre").text();
+		forumArray.posts = $("#stats > div:nth-child(2) > div > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("forum posts", "");
+		forumArray.topics = $("#stats > div:nth-child(2) > div > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("topics started", "");
+		
+		paArray.kills = $("#stats > div:nth-child(4) > div.span4 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kills", "");
+		paArray.deaths = $("#stats > div:nth-child(4) > div.span4 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("deaths", "");
+		paArray.kd = $("#stats > div:nth-child(4) > div.span3 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kd", "");
+		paArray.kk = $("#stats > div:nth-child(4) > div.span3 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("kk", "");
+		paArray.played = $("#stats > div:nth-child(4) > div.span5 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("days played", "");
+		paArray.observed = $("#stats > div:nth-child(4) > div.span5 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("days observed", "");
+		
+		blitzArray.kills = $("#stats > div:nth-child(6) > div.span4 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kills", "");
+		blitzArray.deaths = $("#stats > div:nth-child(6) > div.span4 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("deaths", "");
+		blitzArray.kd = $("#stats > div:nth-child(6) > div.span3 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kd", "");
+		blitzArray.kk = $("#stats > div:nth-child(6) > div.span3 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("kk", "");
+		blitzArray.played = $("#stats > div:nth-child(6) > div.span5 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("days played", "");
+		blitzArray.observed = $("#stats > div:nth-child(6) > div.span5 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("days observed", "");
+		
+		ghostArray.kills = $("#stats > div:nth-child(8) > div.span4 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kills", "");
+		ghostArray.deaths = $("#stats > div:nth-child(8) > div.span4 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("deaths", "");
+		ghostArray.kd = $("#stats > div:nth-child(8) > div.span3 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kd", "");
+		ghostArray.kk = $("#stats > div:nth-child(8) > div.span3 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("kk", "");
+		ghostArray.played = $("#stats > div:nth-child(8) > div.span5 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("days played", "");
+		ghostArray.observed = $("#stats > div:nth-child(8) > div.span5 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("days observed", "");
+		
+		PAStats = new ProjectAresStats(paArray.kills, paArray.deaths, paArray.kd, paArray.kk, paArray.played, paArray.observed);
+		var Blitz = new BlitzStats(blitzArray.kills, blitzArray.deaths, blitzArray.kd, blitzArray.kk, blitzArray.played, blitzArray.observed);
+		var ghost = new GhostSquadronStats(ghostArray.kills, ghostArray.deaths, ghostArray.kd, ghostArray.kk, ghostArray.played, ghostArray.observed);
+		var forums = new ForumStats(forumArray.posts, forumArray.topics);
+		profile = new Profile(socialArray.Team, socialArray.Skype, socialArray.Twitter, socialArray.Facebook, socialArray.Steam, socialArray.Twitch, socialArray.Github, socialArray.Youtube, profileArray.bio);
+		var player = new Player(response.request.uri.href.substring(14, response.request.uri.href.length), playerArray.status, playerArray.kills, playerArray.deaths, playerArray.friends, playerArray.kd, playerArray.kk, playerArray.joins, playerArray.time, playerArray.raindrops, playerArray.cores, playerArray.monuments, playerArray.wools, profile, forums, PAStats, Blitz, ghost);
 		cb(player);
 
 	});
