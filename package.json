@@ -35,5 +35,5 @@
     "redis": "^0.12.1",
     "request": "^2.58.0"
   },
-  "license": "MIT"
+  "license": "GPL v3"
 }
