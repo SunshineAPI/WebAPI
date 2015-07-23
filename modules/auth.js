@@ -28,29 +28,35 @@ var connect_redis = function() {
 	});
 };
 
-ex.get_hash = function(username, password) {
-	return crypto.createHash("md5").update(username + ":" + password).digest("hex");
+ex.get_hash = function(email, password) {
+	return crypto.createHash("md5").update(email + ":" + password).digest("hex");
 };
 
-var getCookie = function(username, password, cb) {
-	var hash = ex.get_hash(username, password);
+ex.getCookie = function(email, password, cb) {
+	var hash = ex.get_hash(email, password);
 
 	instance.get(hash, function(err, reply) {
 		if (err) {
-			cb(err, null);
+			cb(err, null, null);
 		} else {
 			if (reply) {
-				cb(null, reply);
+				cb(null, reply, hash);
 			} else {
-				requestCookie(username, password, function(err, cookie) {
-					cb(err, cookie);
+				requestCookie(email, password, function(err, cookie, newHash) {
+					cb(err, cookie, newHash);
 				});
 			}
 		}
 	});
 };
 
-var requestCookie = function(username, password, cb) {
+ex.getCookieFromHash = function(hash, cb) {
+	instance.get(hash, function(err, reply) {
+		cb(err, reply);
+	});
+};
+
+var requestCookie = function(email, password, cb) {
 
 	var options = {
 		method: "POST",
@@ -59,7 +65,7 @@ var requestCookie = function(username, password, cb) {
 			"content-type": "multipart/form-data;"
 		},
 		formData: {
-			"user[email]": username,
+			"user[email]": email,
 			"user[password]": password
 		}
 	};
@@ -73,40 +79,37 @@ var requestCookie = function(username, password, cb) {
 		}
 		var cookies = parseCookies(cHeader[1]);
 		var cookie = cookies._ProjectAres_sess;
-
+		var hash = ex.get_hash(email, password);
 		if (cookie) {
-			instance.set(ex.get_hash(username, password), cookie);
+			instance.set(hash, cookie);
 		}
 
-		cb(null, cookie);
+		cb(null, cookie, hash);
 
 	});
 };
 
-ex.authed_req = function(options, username, password, callback) {
+ex.authed_req = function(options, cookie, callback) {
 	if (!options.headers) {
 		options.headers = {};
 	}
-	getCookie(username, password, function(error, cookie) {
+	options.headers.Cookie = "_ProjectAres_sess=" + cookie;
+	request(options, function(error, response, body) {
 		if (error) {
-			if (error === 401) {
-				return callback({status: 401, message: "incorrect credentials"}, null, null);
-			} else {
-				return callback({status: 500, message: "failed to login"}, null, null);
-			}
+			callback({
+				status: 500,
+				message: "failed to make oc.tc API request"
+			}, response, body);
+		} else {
+			callback(null, response, body);
 		}
-		options.headers.Cookie = "_ProjectAres_sess=" + cookie;
-		request(options, function(error, response, body) {
-			if (error) {
-				callback({status: 500, message: "failed to make oc.tc API request"}, response, body);
-			} else {
-				callback(null, response, body);
-			}
-			
-		});
 	});
 };
 
+/*
+	Parses the cookie header, mostly in order to get the
+	session cookie returned by any authenticated request
+ */
 function parseCookies(rc) {
 	var list = {};
 
@@ -116,6 +119,73 @@ function parseCookies(rc) {
 	});
 
 	return list;
+}
+
+
+/*
+	The middleware to authorize API users.
+	Will set req.authorized to `true` if
+	the request has been authorized by
+	or `false` if not. 
+
+	If true, req.authorization is a hash of
+	relevant information, including the token
+	hash, session cookie, and time until expiry.
+ */
+ex.authorize = function(req, res, next) {
+	var header = req.headers.authorization;
+	if (!header) {
+		return res.status(403).json({
+			errors: ["Provide authentication"]
+		});
+	}
+	if (header.indexOf("Bearer") > -1) {
+		header = header.replace("Bearer", "").trim();
+		var token = header;
+
+		ex.getCookieFromHash(token, function(err, cookie) {
+			if (err || cookie === null) {
+				res.status(403).json({
+					errors: ["Invalid authentication token"]
+				});
+			} else {
+				req.authorized = true;
+				req.authorization = {
+					token: token,
+					cookie: cookie
+				};
+				next();
+			}
+		});
+	} else if (header.indexOf("Credentials") > -1) {
+		header = header.replace("Credentials", "").trim();
+		var split = header.split(":");
+		var email = split[0];
+		var password = split[1];
+
+		ex.getCookie(email, password, function(err, cookie, hash) {
+			if (err && err === 401) {
+				res.status(401).json({
+					errors: ["Invalid email or password"]
+				});
+			} else if (err) {
+				res.status(500).json({
+					errors: ["Failed to authenticate with Overcast"]
+				});
+			} else {
+				req.authorized = true;
+				req.authorization = {
+					token: hash,
+					cookie: cookie
+				};
+				next();
+			}
+		});
+	} else {
+		res.status(403).json({
+			errors: ["Provide authentication credentials"]
+		});
+	}
 }
 
 

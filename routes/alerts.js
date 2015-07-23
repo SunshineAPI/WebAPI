@@ -5,22 +5,8 @@ var parser = require("../modules/parser");
 var auth = require("../modules/auth");
 var cheerio = require("cheerio");
 
-router.get("/", function(req, res) {
-    // move to middleware
-    var login = req.headers.authorization;
-    var arr;
-    if (login) {
-        arr = login.split(":");
-    }
-    if (!login || arr.length !== 2) {
-        return res.status(401).json({
-            errors: ["Provide login credentials"]
-        });
-    }
-
-    var pass = arr[1];
-    var username = arr[0];
-
+router.get("/", auth.authorize, function(req, res) {
+    
     var page = parseInt(req.query.page) || 1;
 
     var options = {
@@ -28,7 +14,7 @@ router.get("/", function(req, res) {
         url: "https://oc.tc/alerts?page=" + page
     };
 
-    auth.authed_req(options, username, pass, function(error, response, body) {
+    auth.authed_req(options, req.authorization.cookie, function(error, response, body) {
         if (error) {
             return res.status(500).json({
                 errors: ["Unable to complete request"]
