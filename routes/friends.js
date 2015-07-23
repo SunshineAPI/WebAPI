@@ -1,8 +1,6 @@
 "use strict";
 var express = require("express");
 var router = express.Router();
-var parser = require("../modules/parser");
-var request = require("request");
 var cheerio = require("cheerio");
 var auth = require("../modules/auth");
 
@@ -23,7 +21,7 @@ router.get("/all", auth.authorize, function(req, res) {
                 errors: [error.message]
             });
         }
-        var all = new Array();
+        var all = [];
         var $ = cheerio.load(body);
         var allfriends = $(".friend-icon");
         allfriends.each(function(i, elem) {
@@ -50,7 +48,7 @@ router.get("/offline", auth.authorize, function(req, res) {
                 errors: [error.message]
             });
         }
-        var all = new Array();
+        var all = [];
         var $ = cheerio.load(body);
         var allfriends = $(".span1");
         allfriends.each(function(i, elem) {
@@ -77,7 +75,7 @@ router.get("/online", auth.authorize, function(req, res) {
                 errors: [error.message]
             });
         }
-        var all = new Array();
+        var all = [];
         var $ = cheerio.load(body);
         var allfriends = $(".span2");
         allfriends.each(function(i, elem) {
