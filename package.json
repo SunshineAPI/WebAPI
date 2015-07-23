@@ -13,7 +13,12 @@
   "author": "Gil Rosenthal <gil.a.rosenthal@gmail.com>",
   "contributors": [
     {
-      "name": "Jake0oo0"
+      "name": "Jake0oo0",
+      "email": "jake0oo0dev@gmail.com"
+    },
+    {
+      "name": "Jacob Bearden",
+      "email": "jacob@bearden.io"
     }
   ],
   "scripts": {
