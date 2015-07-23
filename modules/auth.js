@@ -4,9 +4,9 @@ var request = require("request");
 var crypto = require("crypto");
 var instance = null;
 
-var ex = {};
+var exp = {};
 
-ex.getRedis = function() {
+exp.getRedis = function() {
 	return instance;
 };
 
@@ -24,15 +24,21 @@ var connect_redis = function() {
 	});
 
 	instance.on("end", function() {
-		console.warn("Lost redis connection!");
+		console.error("Lost redis connection!");
 	});
 };
 
-ex.get_hash = function(email, password) {
+exp.get_hash = function(email, password) {
 	return crypto.createHash("md5").update(email + ":" + password).digest("hex");
 };
 
-ex.getCookie = function(email, password, cb) {
+/*
+	Hashes the `email` and `password`, and attempts
+	to look it up in the redis cache. If not found,
+	a request will be made to Overcast to try and
+	obtain a new cookie, which may result in a 401
+ */
+exp.getCookie = function(email, password, cb) {
 	var hash = ex.get_hash(email, password);
 
 	instance.get(hash, function(err, reply) {
@@ -50,12 +56,16 @@ ex.getCookie = function(email, password, cb) {
 	});
 };
 
-ex.getCookieFromHash = function(hash, cb) {
+exp.getCookieFromHash = function(hash, cb) {
 	instance.get(hash, function(err, reply) {
 		cb(err, reply);
 	});
 };
 
+/*
+	Make a POST request to Overcast in order to attempt
+	to login to the site, and retrieve a session cookie.
+ */
 var requestCookie = function(email, password, cb) {
 
 	var options = {
@@ -89,7 +99,12 @@ var requestCookie = function(email, password, cb) {
 	});
 };
 
-ex.authed_req = function(options, cookie, callback) {
+/*
+	Make an authenticated request to Overcast by
+	passing the session cookie which can be accessed
+	in the `authorization` hash of an authorized request
+ */
+exp.authed_req = function(options, cookie, callback) {
 	if (!options.headers) {
 		options.headers = {};
 	}
@@ -132,7 +147,7 @@ function parseCookies(rc) {
 	relevant information, including the token
 	hash, session cookie, and time until expiry.
  */
-ex.authorize = function(req, res, next) {
+exp.authorize = function(req, res, next) {
 	var header = req.headers.authorization;
 	if (!header) {
 		return res.status(403).json({
@@ -191,4 +206,4 @@ ex.authorize = function(req, res, next) {
 
 connect_redis();
 
-module.exports = ex;
+module.exports = exp;
