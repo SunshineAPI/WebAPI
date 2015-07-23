@@ -187,9 +187,8 @@ router.get("/posts/:id", function(req, res) {
     });
 });
 
-
-router.post("/topics/:section", auth.authorize, function(req, res) {
-    var key = req.params.section;
+router.post("/topics/:category", auth.authorize, function(req, res) {
+    var key = req.params.category;
     
 
     var options = {
@@ -225,7 +224,7 @@ router.post("/topics/:section", auth.authorize, function(req, res) {
 });
 
 
-router.post("/reply/:topic", function(req, res) {
+router.post("/topics/:topic/reply", function(req, res) {
     var topic = req.params.topic;
 
     var options = {
@@ -259,7 +258,7 @@ router.post("/reply/:topic", function(req, res) {
     });
 });
 
-router.post("/quotes/:topic", auth.authorize, function(req, res) {
+router.post("/topics/:topic/quote", auth.authorize, function(req, res) {
     var key = req.params.topic;
     var options = {
         method: "POST",
