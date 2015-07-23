@@ -173,7 +173,7 @@ exp.parseForum = function(body, page, cat, callback) {
 
 exp.parseForumTopic = function($, id) {
 	var header = $(".page-header > h3");
-	var title = ex.getText(header).escapeSpecialChars();
+	var title = exp.getText(header).escapeSpecialChars();
 	var creator = header.find("a").text();
 	var t = {
 		id: id,
@@ -185,7 +185,7 @@ exp.parseForumTopic = function($, id) {
 	var rows = $(".span9 > div[id]");
 
 	for (var i = 0; i < rows.length; i++) {
-		var post = ex.parsePost($, $(rows[i]));
+		var post = exp.parsePost($, $(rows[i]));
 
 		posts.push(post);
 	}
