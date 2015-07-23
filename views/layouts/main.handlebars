@@ -19,12 +19,40 @@
 	<link rel="icon" href="/assets/favicon.ico" />
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/assets/css/main.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="/assets/css/main.css">
 </head>
 <body>
 
+	<header>
+		<div class="navbar navbar-default navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<a href="/" class="navbar-brand"><mark><i class="fa fa-sun-o"></i></mark> Sunshine</a>
+				</div>
+				<div class="navbar-header pull-right">
+					<p class="navbar-brand">Bringing light to the developers of <a href="//oc.tc" target="_blank">OCN</a></p>
+				</div>
+			</div>
+		</div>
+		<a href="//github.com/SunshineAPI/SunshineWebAPI" target="_blank" class="fork">Fork me on GitHub</a>
+	</header>
+
 	{{{body}}}
+
+	<footer>
+		<div class="container">
+			<hr>
+			<p class="pull-right">&copy; Sunshine 2015</p>
+		</div>
+	</footer>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script>
+		$(function () {
+			$('[data-toggle="tooltip"]').tooltip()
+		})
+	</script>
 
 </body>
 </html>

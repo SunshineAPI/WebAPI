@@ -111,6 +111,7 @@ exp.authed_req = function(options, cookie, callback) {
 	options.headers.Cookie = "_ProjectAres_sess=" + cookie;
 	request(options, function(error, response, body) {
 		if (error) {
+			console.error(error);
 			callback({
 				status: 500,
 				message: "failed to make oc.tc API request"
