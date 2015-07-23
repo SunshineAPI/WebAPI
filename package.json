@@ -23,6 +23,7 @@
   ],
   "scripts": {
     "start": "node bin/www",
+    "forever": "forever start -l logs/log.log -o logs/out.log -e logs/error.log -p ./ -a --minUptime 8000 --spinSleepTime 1500 bin/www",
     "test": ""
   },
   "dependencies": {
