@@ -4,15 +4,19 @@ var exphbs = require("express-handlebars");
 var bodyParser = require("body-parser");
 var app = express();
 
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({
+	extended: false
+}));
 app.use(bodyParser.json());
-app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.engine('handlebars', exphbs({
+	defaultLayout: 'main'
+}));
 app.set('view engine', 'handlebars');
 app.set("json spaces", 4);
 
-app.use(function (req, res, next) {
-  res.removeHeader("x-powered-by");
-  next();
+app.use(function(req, res, next) {
+	res.removeHeader("x-powered-by");
+	next();
 });
 
 var index = require("./routes/index");
@@ -43,16 +47,32 @@ app.use("/punishments", punishments);
 app.use("/staff", staff);
 app.use("/maps", maps);
 app.use("/servers", servers);
-app.use("/friends",friends);
+app.use("/friends", friends);
+
+app.use(function(req, res, next) {
+	var err = new Error('Not Found');
+	err.status = 404;
+	next(err);
+});
+
+app.use(function(err, req, res, next) {
+	res.status(err.status || 500);
+	if (err.status === 404) {
+		res.send("404 not found");
+	} else {
+		console.error(err);
+		res.send("500 server error");
+	}
+});
 
 String.prototype.escapeSpecialChars = function() {
-    return this.replace(new RegExp("\\n", "g"), "", "");
+	return this.replace(new RegExp("\\n", "g"), "", "");
 };
 
 // for some reason cheerio parses various lines with 
 // spaces as new lines, rather than spaces
 String.prototype.spaceSpecialChars = function() {
-    return this.replace(new RegExp("\\n", "g"), " ", " ");
+	return this.replace(new RegExp("\\n", "g"), " ", " ");
 };
 
 
