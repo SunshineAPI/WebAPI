@@ -39,7 +39,7 @@ exp.get_hash = function(email, password) {
 	obtain a new cookie, which may result in a 401
  */
 exp.getCookie = function(email, password, cb) {
-	var hash = ex.get_hash(email, password);
+	var hash = exp.get_hash(email, password);
 
 	instance.get(hash, function(err, reply) {
 		if (err) {
@@ -89,7 +89,7 @@ var requestCookie = function(email, password, cb) {
 		}
 		var cookies = parseCookies(cHeader[1]);
 		var cookie = cookies._ProjectAres_sess;
-		var hash = ex.get_hash(email, password);
+		var hash = exp.get_hash(email, password);
 		if (cookie) {
 			instance.set(hash, cookie);
 		}
@@ -158,7 +158,7 @@ exp.authorize = function(req, res, next) {
 		header = header.replace("Bearer", "").trim();
 		var token = header;
 
-		ex.getCookieFromHash(token, function(err, cookie) {
+		exp.getCookieFromHash(token, function(err, cookie) {
 			if (err || cookie === null) {
 				res.status(403).json({
 					errors: ["Invalid authentication token"]
@@ -178,7 +178,7 @@ exp.authorize = function(req, res, next) {
 		var email = split[0];
 		var password = split[1];
 
-		ex.getCookie(email, password, function(err, cookie, hash) {
+		exp.getCookie(email, password, function(err, cookie, hash) {
 			if (err && err === 401) {
 				res.status(401).json({
 					errors: ["Invalid email or password"]
@@ -201,7 +201,7 @@ exp.authorize = function(req, res, next) {
 			errors: ["Provide authentication credentials"]
 		});
 	}
-}
+};
 
 
 connect_redis();
