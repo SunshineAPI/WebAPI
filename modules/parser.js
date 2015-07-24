@@ -55,7 +55,6 @@ exp.scrapeFromProfile = function(name, cb) {
 		playerArray.joins = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(6)").text().escapeSpecialChars().replace("server joins", "");
 		playerArray.time = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(7)").text().escapeSpecialChars().replace("days played", "");
 		playerArray.raindrops = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(8)").attr("title").escapeSpecialChars().replace(" raindrops", "");
-		console.log(playerArray.raindrops);
 		playerArray.bottomObj = $("#objectives > div:nth-child(5) > div > h2").text().escapeSpecialChars();
 		playerArray.midObj = $("#objectives > div:nth-child(3) > div > h2").text().escapeSpecialChars();
 		playerArray.topObj = $("#objectives > div:nth-child(1) > div > h2").text().escapeSpecialChars();
