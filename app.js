@@ -82,6 +82,6 @@ String.prototype.escapeSpecialChars = function() {
 String.prototype.spaceSpecialChars = function() {
 	return this.replace(new RegExp("\\n", "g"), " ", " ");
 };
-
+String.prototype.contains = function(it) { return this.indexOf(it) != -1; };
 
 module.exports = app;
