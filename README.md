@@ -1,4 +1,4 @@
-# Sunshine [![travis](https://img.shields.io/travis/SunshineAPI/SunshineWebAPI/master.svg?style=flat-square)](https://travis-ci.org/SunshineAPI/SunshineWebAPI/)
+# Sunshine [![travis](https://img.shields.io/travis/SunshineAPI/SunshineWebAPI/master.svg?style=flat-square)](https://travis-ci.org/SunshineAPI/WebAPI/)
 
 Sunshine is a REST API for interaction with the [Overcast Network](https://oc.tc) and all related services including the forums, servers, maps, and authenticated endpoints.
 
