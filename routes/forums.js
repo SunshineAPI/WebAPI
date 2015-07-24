@@ -189,7 +189,7 @@ router.get("/posts/:id", function(req, res) {
 
 router.post("/topics/:category", auth.authorize, function(req, res) {
     var key = req.params.category;
-    
+
 
     var options = {
         method: "POST",
@@ -216,9 +216,16 @@ router.post("/topics/:category", auth.authorize, function(req, res) {
         var $ = cheerio.load(body);
         var erro = $("body > div > div.flash > div").text();
         if (!erro) {
-            res.send("Success!");
+            res.status(201).json({
+                links: parser.setMeta(req),
+                data: {
+                    status: "created"
+                }
+            });
         } else {
-            res.status(500).send("Failed,try again soon");
+            res.status(500).json({
+                errors: ["Failed to complete the forum post"]
+            });
         }
     });
 });
@@ -251,9 +258,16 @@ router.post("/topics/:topic/reply", function(req, res) {
         var $ = cheerio.load(body);
         var erro = $("body > div > div.flash > div").text();
         if (!erro) {
-            res.send("Success!");
+            res.status(201).json({
+                links: parser.setMeta(req),
+                data: {
+                    status: "created"
+                }
+            });
         } else {
-            res.status(500).send("Failed,try again soon");
+            res.status(500).json({
+                errors: ["Failed to complete the forum post"]
+            });
         }
     });
 });
@@ -285,9 +299,16 @@ router.post("/topics/:topic/quote", auth.authorize, function(req, res) {
         var $ = cheerio.load(body);
         var erro = $("body > div > div.flash > div").text();
         if (!erro) {
-            res.send("Success!");
+            res.status(201).json({
+                links: parser.setMeta(req),
+                data: {
+                    status: "created"
+                }
+            });
         } else {
-            res.status(500).send("Failed, try again soon");
+            res.status(500).json({
+                errors: ["Failed to complete the forum post"]
+            });
         }
     });
 });
