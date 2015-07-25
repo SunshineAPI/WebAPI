@@ -7,6 +7,7 @@ var ForumStats = require("../modules/ForumStats.js");
 var ProjectAresStats = require("../modules/ProjectAresStats.js");
 var BlitzStats = require("../modules/BlitzStats.js");
 var GhostSquadronStats = require("../modules/GhostSquadronStats.js");
+var ObjectiveStats = require("../modules/ObjectiveStats.js");
 var Topic = require("../modules/topic");
 var url = require("url");
 var querystring = require("querystring");
@@ -36,8 +37,12 @@ exp.scrapeFromProfile = function(name, cb) {
 		var blitzArray = [];
 		var ghostArray = [];
 		var socialArray = {};
+		var objectivesArray = {};
 		var $ = cheerio.load(body);
 
+		// Get Name
+		playerArray.name = response.request.uri.href.substring(14, response.request.uri.href.length);
+		
 		// Get Status
 		if ($("body > div > section:nth-child(2) > div.row > div.span3 > div").text() !== "") {
 			var toReturn = $("body > div > section:nth-child(2) > div.row > div.span3 > div").text().replace("\\n", "");
@@ -55,9 +60,23 @@ exp.scrapeFromProfile = function(name, cb) {
 		playerArray.friends = $("body > div > section:nth-child(2) > div.row > div.span2 > h2").text().escapeSpecialChars().replace("friends", "");
 
 		// Get Objectives
-		playerArray.bottomObj = $("#objectives > div:nth-child(5) > div > h2").text().escapeSpecialChars();
-		playerArray.midObj = $("#objectives > div:nth-child(3) > div > h2").text().escapeSpecialChars();
-		playerArray.topObj = $("#objectives > div:nth-child(1) > div > h2").text().escapeSpecialChars();
+		var unsorted = [];
+		unsorted.push($("#objectives > div:nth-child(1) > div > h2").text().escapeSpecialChars());
+		unsorted.push($("#objectives > div:nth-child(3) > div > h2").text().escapeSpecialChars());
+		unsorted.push($("#objectives > div:nth-child(5) > div > h2").text().escapeSpecialChars());
+		for(var i = 0; i < unsorted.length; i++) {
+			var current = unsorted[i];
+			if(current.indexOf("cores leaked") > -1) {
+				current = current.replace("cores leaked", "");
+				objectivesArray.cores = current;
+			} else if(current.indexOf("monuments destroyed") > -1) {
+				current = current.replace("monuments destroyed", "");
+				objectivesArray.monuments = current;
+			} else {
+				current = current.replace("wools placed", "");
+				objectivesArray.wools = current;
+			}
+		};
 
 		// Get Social Links
 		$(".span4").each(function(i, elem) {
@@ -116,8 +135,9 @@ exp.scrapeFromProfile = function(name, cb) {
 		var Blitz = new BlitzStats(blitzArray.kills, blitzArray.deaths, blitzArray.kd, blitzArray.kk, blitzArray.played, blitzArray.observed);
 		var ghost = new GhostSquadronStats(ghostArray.kills, ghostArray.deaths, ghostArray.kd, ghostArray.kk, ghostArray.played, ghostArray.observed);
 		var forums = new ForumStats(forumArray.posts, forumArray.topics);
+		var objectives = new ObjectiveStats(objectivesArray.cores, objectivesArray.monuments, objectivesArray.wools);
 		profile = new Profile(socialArray.skype, socialArray.twitter, socialArray.facebook, socialArray.steam, socialArray.youtube, socialArray.twitch, socialArray.github, socialArray.team, profileArray.bio);
-		var player = new Player(response.request.uri.href.substring(14, response.request.uri.href.length), playerArray.status, playerArray.friends, playerArray.cores, playerArray.monuments, playerArray.wools, profile, overall, forums, PAStats, Blitz, ghost);
+		var player = new Player(playerArray.name, playerArray.status, playerArray.friends, profile, overall, objectives, forums, PAStats, Blitz, ghost);
 		cb(player);
 
 	});

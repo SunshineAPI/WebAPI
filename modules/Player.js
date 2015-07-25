@@ -1,14 +1,12 @@
 "use strict";
-function Player(name, status, friends, cores, monuments, wools, profile, OverallStats, ForumStats, ProjectAresStats, BlitzStats, GhostSquadronStats) {
+function Player(name, status, friends, profile, OverallStats, ObjectiveStats, ForumStats, ProjectAresStats, BlitzStats, GhostSquadronStats) {
     this.name = name;
     this.status = status;
     this.friends = friends;
-    this.cores = cores;
-    this.monuments = monuments;
-    this.wools = wools;
     this.profile = profile;
     this.stats = {};
     this.stats.overall = OverallStats;
+    this.stats.objectives = ObjectiveStats;
     this.stats.forum = ForumStats;
     this.stats.project_ares = ProjectAresStats;
     this.stats.blitz = BlitzStats;
