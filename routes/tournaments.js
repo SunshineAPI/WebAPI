@@ -1,7 +1,6 @@
 "use strict";
 var express = require("express");
 var router = express.Router();
-var request = require("request");
 var cheerio = require("cheerio");
 var Tournament = require("../modules/tournament");
 var Team = require("../modules/team");
@@ -11,10 +10,10 @@ router.get("/", function(req, res) {
 
     var options = {
         method: "GET",
-        url: "https://oc.tc/tournaments"
+        url: "/tournaments"
     };
 
-    request(options, function(error, response, body) {
+    helpers.request(options, function(error, response, body) {
         if (error) {
             console.error(error);
             return res.status(500).json({
@@ -60,11 +59,12 @@ router.get("/:id", function(req, res) {
     var name = req.params.id;
     var options = {
         method: "GET",
-        url: "https://oc.tc/tournaments/" + name,
+        url: "/tournaments/" + name,
         followRedirect: false
+
     };
 
-    request(options, function(error, response, body) {
+    helpers.request(options, function(error, response, body) {
         if (error) {
             console.error(error);
             return res.status(500).json({

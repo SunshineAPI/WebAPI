@@ -2,18 +2,18 @@
 var express = require("express");
 var router = express.Router();
 var parser = require("../modules/parser");
-var request = require("request");
 var cheerio = require("cheerio");
+var helpers = require("../modules/helpers");
 
 router.get("/", function(req, res) {
     var page = parseInt(req.query.page) || 1;
 
     var options = {
         method: "GET",
-        url: "https://oc.tc/punishments?page=" + page
+        url: "/punishments?page=" + page
     };
 
-    request(options, function(error, response, body) {
+    helpers.request(options, function(error, response, body) {
         if (error) {
             console.error(error);
             return res.status(500).json({
@@ -78,10 +78,10 @@ router.get("/:id", function(req, res) {
 
     var options = {
         method: "GET",
-        url: "https://oc.tc/punishments/" + id
+        url: "/punishments/" + id
     };
 
-    request(options, function(error, response, body) {
+    helpers.request(options, function(error, response, body) {
         if (error) {
             console.error(error);
             return res.status(500).json({

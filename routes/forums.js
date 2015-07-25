@@ -2,18 +2,18 @@
 var express = require("express");
 var router = express.Router();
 var parser = require("../modules/parser");
-var request = require("request");
 var cheerio = require("cheerio");
 var auth = require("../modules/auth");
+var helpers = require("../modules/helpers");
 
 router.get("/new", function(req, res) {
     var page = parseInt(req.query.page) || 1;
     var options = {
         method: "GET",
-        url: "https://oc.tc/forums" + (page ? "?page=" + page : "")
+        url: "/forums" + (page ? "?page=" + page : "")
     };
 
-    request(options, function(error, response, body) {
+    helpers.helpers.request(options, function(error, response, body) {
         parser.parseForum(body, page, "new", function(err, pages, topics) {
             if (page > pages) {
                 return res.status(422).json({
@@ -34,10 +34,10 @@ router.get("/new", function(req, res) {
 router.get("/categories", function(req, res) {
     var options = {
         method: "GET",
-        url: "https://oc.tc/forums/"
+        url: "/forums/"
     };
 
-    request(options, function(error, response, body) {
+    helpers.helpers.request(options, function(error, response, body) {
         var categories = [];
         var $ = cheerio.load(body);
         var links = parser.setMeta(req);
@@ -78,10 +78,10 @@ router.get("/:id", function(req, res) {
     var page = parseInt(req.query.page) || 1;
     var options = {
         method: "GET",
-        url: "https://oc.tc/forums/" + id + (page ? "?page=" + page : "")
+        url: "/forums/" + id + (page ? "?page=" + page : "")
     };
 
-    request(options, function(error, response, body) {
+    helpers.request(options, function(error, response, body) {
         if (response.statusCode === 404) {
             return res.status(404).json({
                 errors: ["Forum category not found"]
@@ -124,10 +124,10 @@ router.get("/topics/:id", function(req, res) {
     var page = parseInt(req.query.page) || 1;
     var options = {
         method: "GET",
-        url: "https://oc.tc/forums/topics/" + id + (page ? "?page=" + page : "")
+        url: "/forums/topics/" + id + (page ? "?page=" + page : "")
     };
 
-    request(options, function(error, response, body) {
+    helpers.request(options, function(error, response, body) {
         var $ = cheerio.load(body);
 
         var pagination = $(".span9 .btn-group.pull-left");
@@ -154,10 +154,10 @@ router.get("/posts/:id", function(req, res) {
     var page = parseInt(req.query.page) || 1;
     var options = {
         method: "GET",
-        url: "https://oc.tc/forums/posts/" + id + (page ? "?page=" + page : "")
+        url: "/forums/posts/" + id + (page ? "?page=" + page : "")
     };
 
-    request(options, function(error, response, body) {
+    helpers.request(options, function(error, response, body) {
         if (response.statusCode === 404) {
             return res.status(404).json({
                 errors: ["Post not found"]
@@ -193,10 +193,9 @@ router.post("/topics/:category", auth.authorize, function(req, res) {
 
     var options = {
         method: "POST",
-        url: "https://oc.tc/forums/" + key + "/create",
+        url: "/forums/" + key + "/create",
         headers: {
-            "content-type": "x-www-form-urlencoded",
-            "User-Agent": "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/537.36"
+            "content-type": "x-www-form-urlencoded"
         },
         formData: {
             "utf8": "✓",
@@ -236,10 +235,9 @@ router.post("/topics/:topic/reply", function(req, res) {
 
     var options = {
         method: "POST",
-        url: "https://oc.tc/forums/topics/" + topic + "/posts",
+        url: "/forums/topics/" + topic + "/posts",
         headers: {
             "content-type": "x-www-form-urlencoded",
-            "User-Agent": "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/537.36"
         },
         formData: {
             "utf8": "✓",
@@ -276,10 +274,9 @@ router.post("/topics/:topic/quote", auth.authorize, function(req, res) {
     var key = req.params.topic;
     var options = {
         method: "POST",
-        url: "https://oc.tc/forums/topics/" + key + "/posts",
+        url: "/forums/topics/" + key + "/posts",
         headers: {
-            "content-type": "x-www-form-urlencoded",
-            "User-Agent": "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/537.36"
+            "content-type": "x-www-form-urlencoded"
         },
         formData: {
             "utf8": "✓",

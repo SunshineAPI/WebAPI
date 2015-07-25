@@ -4,6 +4,7 @@ var router = express.Router();
 var parser = require("../modules/parser");
 var auth = require("../modules/auth");
 var cheerio = require("cheerio");
+var helpers = require("../modules/helpers");
 
 router.get("/", auth.authorize, function(req, res) {
     
@@ -11,7 +12,7 @@ router.get("/", auth.authorize, function(req, res) {
 
     var options = {
         method: "GET",
-        url: "https://oc.tc/alerts?page=" + page
+        url: "/alerts?page=" + page
     };
 
     auth.authed_req(options, req.authorization.cookie, function(error, response, body) {

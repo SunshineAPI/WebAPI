@@ -1,17 +1,16 @@
 "use strict";
 var express = require("express");
 var router = express.Router();
-var request = require("request");
 var cheerio = require("cheerio");
 var parser = require("../modules/parser");
 
 router.get("/", function(req, res) {
     var options = {
         method: "GET",
-        url: "https://oc.tc/staff"
+        url: "/staff"
     };
 
-    request(options, function(error, response, body) {
+    helpers.request(options, function(error, response, body) {
         if (error) {
             console.error(error);
             return res.status(500).json({

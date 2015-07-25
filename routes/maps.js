@@ -2,8 +2,8 @@
 var express = require("express");
 var router = express.Router();
 var parser = require("../modules/parser");
-var request = require("request");
 var cheerio = require("cheerio");
+var helpers = require("../modules/helpers");
 
 var gamemodes = ["tdm", "ctw", "ctf",
     "dtc", "blitz", "rage", "gs", "mixed"
@@ -12,10 +12,10 @@ var gamemodes = ["tdm", "ctw", "ctf",
 router.get("/playing", function(req, res) {
     var options = {
         method: "GET",
-        url: "https://oc.tc/maps"
+        url: "/maps"
     };
 
-    request(options, function(error, response, body) {
+    helpers.request(options, function(error, response, body) {
         if (error) {
             console.error(error);
             return res.status(500).json({
@@ -39,10 +39,10 @@ router.get("/all", function(req, res) {
     var page = req.query.page || 1;
     var options = {
         method: "GET",
-        url: "https://oc.tc/maps/all?page=" + page
+        url: "/maps/all?page=" + page
     };
 
-    request(options, function(error, response, body) {
+    helpers.request(options, function(error, response, body) {
         if (error) {
             console.error(error);
             return res.status(500).json({
@@ -76,10 +76,10 @@ router.get("/:id", function(req, res) {
     var id = req.params.id;
     var options = {
         method: "GET",
-        url: "https://oc.tc/maps/" + id
+        url: "/maps/" + id
     };
 
-    request(options, function(error, response, body) {
+    helpers.request(options, function(error, response, body) {
         if (error) {
             console.error(error);
             return res.status(500).json({
@@ -175,7 +175,7 @@ router.get("/gamemode/:gamemode", function(req, res) {
     var gamemode = req.params.gamemode;
     var options = {
         method: "GET",
-        url: "https://oc.tc/maps/gamemode/" + gamemode + "/?page=" + page
+        url: "/maps/gamemode/" + gamemode + "/?page=" + page
     };
 
     if (gamemodes.indexOf(gamemode) === -1) {
@@ -184,7 +184,7 @@ router.get("/gamemode/:gamemode", function(req, res) {
             });
     }
 
-    request(options, function(error, response, body) {
+    helpers.request(options, function(error, response, body) {
         var $ = cheerio.load(body);
 
         var data = {};

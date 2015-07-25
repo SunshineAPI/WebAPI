@@ -2,19 +2,19 @@
 var express = require("express");
 var router = express.Router();
 var parser = require("../modules/parser");
-var request = require("request");
 var cheerio = require("cheerio");
+var helpers = require("../modules/helpers");
 
 var regions = ["global", "all", "us", "eu"];
 
 router.get("/rotations", function(req, res) {
     var options = {
         method: "GET",
-        url: "https://oc.tc/maps"
+        url: "/maps"
     };
 
 
-    request(options, function(error, response, body) {
+    helpers.request(options, function(error, response, body) {
         if (error) {
             console.error(error);
             return res.status(500).json({
@@ -58,11 +58,11 @@ router.get("/rotations/:id", function(req, res) {
     var id = req.params.id;
     var options = {
         method: "GET",
-        url: "https://oc.tc/maps/rotation/" + id
+        url: "/maps/rotation/" + id
     };
 
 
-    request(options, function(error, response, body) {
+    helpers.request(options, function(error, response, body) {
         if (error) {
             console.error(error);
             return res.status(500).json({
@@ -93,7 +93,7 @@ router.get("/:region?", function(req, res) {
     var region = req.params.region || "all";
     var options = {
         method: "GET",
-        url: "https://oc.tc/play/" + region
+        url: "/play/" + region
     };
 
     if (regions.indexOf(region) === -1) {
@@ -102,7 +102,7 @@ router.get("/:region?", function(req, res) {
         });
     }
 
-    request(options, function(error, response, body) {
+    helpers.request(options, function(error, response, body) {
         if (error) {
             console.error(error);
             return res.status(500).json({

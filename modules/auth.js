@@ -1,7 +1,7 @@
 "use strict";
 var redis = require("redis");
-var request = require("request");
 var crypto = require("crypto");
+var helpers = require("./helpers");
 var instance = null;
 
 var exp = {};
@@ -70,7 +70,7 @@ var requestCookie = function(email, password, cb) {
 
 	var options = {
 		method: "POST",
-		url: "https://oc.tc/login",
+		url: "/login",
 		headers: {
 			"content-type": "multipart/form-data;"
 		},
@@ -80,7 +80,7 @@ var requestCookie = function(email, password, cb) {
 		}
 	};
 
-	request(options, function(error, response, body) {
+	helpers.request(options, function(error, response, body) {
 		var cHeader = response.headers["set-cookie"];
 		if (error) {
 			return cb(error || response.statusCode, null);
@@ -109,7 +109,7 @@ exp.authed_req = function(options, cookie, callback) {
 		options.headers = {};
 	}
 	options.headers.Cookie = "_ProjectAres_sess=" + cookie;
-	request(options, function(error, response, body) {
+	helpers.request(options, function(error, response, body) {
 		if (error) {
 			console.error(error);
 			callback({

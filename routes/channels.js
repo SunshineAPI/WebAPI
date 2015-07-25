@@ -2,18 +2,18 @@
 var express = require("express");
 var router = express.Router();
 var parser = require("../modules/parser");
-var request = require("request");
 var cheerio = require("cheerio");
+var helpers = require("../modules/helpers");
 
 router.get("/", function(req, res) {
     var page = parseInt(req.query.page) || 1;
     var sort = req.query.sort;
     var options = {
         method: "GET",
-        url: "https://oc.tc/channels" + "?page=" + page + (sort ? "&sort=" + sort : "")
+        url: "/channels" + "?page=" + page + (sort ? "&sort=" + sort : "")
     };
 
-    request(options, function(error, response, body) {
+    helpers.request(options, function(error, response, body) {
         if (error) {
             console.error(error);
             return res.status(500).json({

@@ -3,15 +3,14 @@ var express = require("express");
 var router = express.Router();
 var cheerio = require("cheerio");
 var auth = require("../modules/auth");
-var request = require("request");
+var helpers = require("../modules/helpers");
 
 var getFriendStatus = function(player, authe, cb) {
     var options = {
         method: "GET",
-        url: "https://oc.tc/" + player,
+        url: "/" + player,
         headers: {
             "content-type": "x-www-form-urlencoded",
-            "User-Agent": "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/537.36"
         }
     };
     auth.authed_req(options, authe, function(error, response, body) {
@@ -31,10 +30,9 @@ var getFriendStatus = function(player, authe, cb) {
 router.get("/all", auth.authorize, function(req, res) {
     var options = {
         method: "GET",
-        url: "https://oc.tc/friendships",
+        url: "/friendships",
         headers: {
             "content-type": "x-www-form-urlencoded",
-            "User-Agent": "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/537.36"
         }
 
     };
@@ -61,10 +59,9 @@ router.get("/all", auth.authorize, function(req, res) {
 router.get("/offline", auth.authorize, function(req, res) {
     var options = {
         method: "GET",
-        url: "https://oc.tc/friendships",
+        url: "/friendships",
         headers: {
             "content-type": "x-www-form-urlencoded",
-            "User-Agent": "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/537.36"
         }
     };
 
@@ -91,10 +88,9 @@ router.get("/offline", auth.authorize, function(req, res) {
 router.get("/online", auth.authorize, function(req, res) {
     var options = {
         method: "GET",
-        url: "https://oc.tc/friendships",
+        url: "/friendships",
         headers: {
             "content-type": "x-www-form-urlencoded",
-            "User-Agent": "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/537.36"
         }
     };
 
@@ -134,10 +130,9 @@ router.post("/add/:player", auth.authorize, function(req, res) {
             var link = aelem.attr("href");
             var requestoptions = {
                 method: "POST",
-                url: "https://oc.tc" + link,
+                url: link,
                 headers: {
                     "content-type": "x-www-form-urlencoded",
-                    "User-Agent": "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/537.36"
                 },
                 formdata: {
                     "_method": "post"

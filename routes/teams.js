@@ -1,20 +1,20 @@
 "use strict";
 var express = require("express");
 var router = express.Router();
-var request = require("request");
 var cheerio = require("cheerio");
 var Team = require("../modules/team");
 var parser = require("../modules/parser");
+var helpers = require("../modules/helpers");
 
 // /teams?page=2
 router.get("/", function(req, res) {
   var page = parseInt(req.query.page) || 1;
   var options = {
     method: "GET",
-    url: "https://oc.tc/teams/" + (page ? "?page=" + page : "")
+    url: "/teams/" + (page ? "?page=" + page : "")
   };
 
-  request(options, function(error, response, body) {
+  helpers.request(options, function(error, response, body) {
     if (error) {
       console.error(error);
       return res.status(500).json({
@@ -65,10 +65,9 @@ router.get("/", function(req, res) {
 // /teams/korea
 router.get("/:team", function(req, res) {
   var team = req.params.team;
-  var base = "https://oc.tc/teams/" + team;
   var options = {
     method: "GET",
-    url: base
+    url: "/teams/" + team
   };
 
   var players = [];
@@ -98,7 +97,7 @@ router.get("/:team", function(req, res) {
     }
   }
 
-  request(options, function(error, response, body) {
+  helpers.request(options, function(error, response, body) {
     var data = {};
 
     var $ = cheerio.load(body);
@@ -134,7 +133,7 @@ router.get("/:team", function(req, res) {
 
     function getNextPage(page, cb) {
       options.url = base + "?page=" + page;
-      request(options, function(err, response, body) {
+      helpers.request(options, function(err, response, body) {
         addPlayerData(body, function() {
           cb();
         });

@@ -2,9 +2,9 @@
 var express = require("express");
 var router = express.Router();
 var parser = require("../modules/parser");
-var request = require("request");
 var cheerio = require("cheerio");
 var querystring = require("querystring");
+var helpers = require("../modules/helpers");
 
 var periods = ["day", "week", "eternity"];
 var games = ["all", "projectares", "blitz", "ghostsquadron"];
@@ -31,10 +31,10 @@ router.get("/", function(req, res) {
 
     var options = {
         method: "GET",
-        url: "https://oc.tc/stats?" + query
+        url: "/stats?" + query,
     };
 
-    request(options, function(error, response, body) {
+    helpers.request(options, function(error, response, body) {
         if (error) {
             console.error(error);
             return res.status(500).json({
