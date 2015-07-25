@@ -34,7 +34,7 @@ router.get("/:player", function(req, res) {
     if (player.length > 16) {
         return res.status(422).json({errors: ["Invalid player"]});
     }
-    parser.scrapeFromProfile(player, function(user, status) {
+    parser.parseProfile(player, function(user, status) {
         if (user) {
             var links = parser.setMeta(req);
             res.json({links: links, data: user});

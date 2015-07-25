@@ -1,22 +1,22 @@
 "use strict";
-var cheerio = require("cheerio");
-var Player = require("../modules/Player.js");
-var Profile = require("../modules/Profile.js");
-var OverallStats = require("../modules/OverallStats.js");
-var ForumStats = require("../modules/ForumStats.js");
-var ProjectAresStats = require("../modules/ProjectAresStats.js");
-var BlitzStats = require("../modules/BlitzStats.js");
-var GhostSquadronStats = require("../modules/GhostSquadronStats.js");
-var ObjectiveStats = require("../modules/ObjectiveStats.js");
-var Topic = require("../modules/topic");
-var url = require("url");
-var querystring = require("querystring");
-var config = require("../config");
-var helpers = require("./helpers");
+var cheerio = require("cheerio"),
+	Player = require("../modules/Player.js"),
+	Profile = require("../modules/Profile.js"),
+	OverallStats = require("../modules/OverallStats.js"),
+	ForumStats = require("../modules/ForumStats.js"),
+	ProjectAresStats = require("../modules/ProjectAresStats.js"),
+	BlitzStats = require("../modules/BlitzStats.js"),
+	GhostSquadronStats = require("../modules/GhostSquadronStats.js"),
+	ObjectiveStats = require("../modules/ObjectiveStats.js"),
+	Topic = require("../modules/topic"),
+	url = require("url"),
+	querystring = require("querystring"),
+	config = require("../config"),
+	helpers = require("./helpers");
 
 var exp = {};
 
-exp.scrapeFromProfile = function(name, cb) {
+exp.parseProfile = function(name, cb) {
 	var options = {
 		url: "/stats/" + name,
 		followAllRedirects: true
@@ -130,7 +130,7 @@ exp.scrapeFromProfile = function(name, cb) {
 
 		var totalobserved = parseFloat(paArray.observed) + parseFloat(blitzArray.observed) + parseFloat(ghostArray.observed);
 		// Output
-		var overall = new OverallStats(overallArray.kills, overallArray.deaths, overallArray.kd, overallArray.kk, overallArray.joins, overallArray.played, totalobserved, overallArray.raindrops);
+		var overall = new OverallStats(overallArray.kills, overallArray.deaths, overallArray.kd, overallArray.kk, overallArray.joins, overallArray.played, overallArray.raindrops);
 		var PAStats = new ProjectAresStats(paArray.kills, paArray.deaths, paArray.kd, paArray.kk, paArray.played, paArray.observed);
 		var Blitz = new BlitzStats(blitzArray.kills, blitzArray.deaths, blitzArray.kd, blitzArray.kk, blitzArray.played, blitzArray.observed);
 		var ghost = new GhostSquadronStats(ghostArray.kills, ghostArray.deaths, ghostArray.kd, ghostArray.kk, ghostArray.played, ghostArray.observed);
