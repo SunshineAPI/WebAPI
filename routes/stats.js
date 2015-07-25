@@ -16,7 +16,7 @@ router.get("/", function(req, res) {
     var game = req.query.game || "all";
     var time = req.query.time || "day";
 
-    if (sorts.indexOf(sort) === -1 || games.indexOf(game) === 1 || periods.indexOf(time) === -1) {
+    if (sorts.indexOf(sort) === -1 || games.indexOf(game) === -1 || periods.indexOf(time) === -1) {
         return res.status(422).json({
             errors: ["Invalid sort options"]
         });
