@@ -4,6 +4,7 @@ var request = require("request");
 
 var Player = require("../modules/Player.js");
 var Profile = require("../modules/Profile.js");
+var OverallStats = require("../modules/OverallStats.js");
 var ForumStats = require("../modules/ForumStats.js");
 var ProjectAresStats = require("../modules/ProjectAresStats.js");
 var BlitzStats = require("../modules/BlitzStats.js");
@@ -26,16 +27,18 @@ exp.scrapeFromProfile = function(name, cb) {
 		} else if (response.statusCode !== 200) {
 			return cb(null, 404);
 		}
-		var PAStats;
 		var profile;
 		var playerArray = [];
 		var profileArray = [];
+		var overallArray = [];
 		var forumArray = [];
 		var paArray = [];
 		var blitzArray = [];
 		var ghostArray = [];
 		var socialArray = {};
 		var $ = cheerio.load(body);
+		
+		// Get Status
 		if ($("body > div > section:nth-child(2) > div.row > div.span3 > div").text() !== "") {
 			var toReturn = $("body > div > section:nth-child(2) > div.row > div.span3 > div").text().replace("\\n", "");
 			playerArray.status = toReturn;
@@ -47,18 +50,16 @@ exp.scrapeFromProfile = function(name, cb) {
 			playerArray.status = "Seen " + spanthree + " ago on " + $("body > div > section:nth-child(2) > div.row > div.span3 > span:nth-child(3) > a").text().replace("\\n", "");
 		}
 		playerArray.status = playerArray.status.escapeSpecialChars();
-		playerArray.kills = $("body > div > section:nth-child(2) > div.row > div.span7 > div > div.span8 > div > div.span5 > h2").text().escapeSpecialChars().replace("kills", "");
-		playerArray.deaths = $("body > div > section:nth-child(2) > div.row > div.span7 > div > div.span4 > h2").text().escapeSpecialChars().replace("deaths", "");
+		
+		// Get Friends
 		playerArray.friends = $("body > div > section:nth-child(2) > div.row > div.span2 > h2").text().escapeSpecialChars().replace("friends", "");
-		playerArray.kd = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(4)").text().escapeSpecialChars().replace("kd ratio", "");
-		playerArray.kk = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(5)").text().escapeSpecialChars().replace("kk ratio", "");
-		playerArray.joins = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(6)").text().escapeSpecialChars().replace("server joins", "");
-		playerArray.time = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(7)").text().escapeSpecialChars().replace("days played", "");
-		playerArray.raindrops = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(8)").text().escapeSpecialChars().replace("raindrops", "");
+		
+		// Get Objectives
 		playerArray.bottomObj = $("#objectives > div:nth-child(5) > div > h2").text().escapeSpecialChars();
 		playerArray.midObj = $("#objectives > div:nth-child(3) > div > h2").text().escapeSpecialChars();
 		playerArray.topObj = $("#objectives > div:nth-child(1) > div > h2").text().escapeSpecialChars();
-
+		
+		// Get Social Links
 		$(".span4").each(function(i, elem) {
 			if ($(this).children().length == 4) {
 				//bleh
@@ -68,12 +69,24 @@ exp.scrapeFromProfile = function(name, cb) {
 				socialArray[$(this).children("h6").text()] = $(this).children("blockquote").children("p").text();
 			}
 		});
-
-
+		
+		// Get Bio
 		profileArray.bio = $("#about > div:nth-child(3) > div > pre").text();
+		
+		// Get Overall Stats
+		overallArray.kills = $("body > div > section:nth-child(2) > div.row > div.span7 > div > div.span8 > div > div.span5 > h2").text().escapeSpecialChars().replace("kills", "");
+		overallArray.deaths = $("body > div > section:nth-child(2) > div.row > div.span7 > div > div.span4 > h2").text().escapeSpecialChars().replace("deaths", "");
+		overallArray.kd = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(4)").text().escapeSpecialChars().replace("kd ratio", "");
+		overallArray.kk = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(5)").text().escapeSpecialChars().replace("kk ratio", "");
+		overallArray.joins = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(6)").text().escapeSpecialChars().replace("server joins", "");
+		overallArray.played = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(7)").text().escapeSpecialChars().replace("days played", "");
+		overallArray.raindrops = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(8)").attr("title").escapeSpecialChars().replace(" raindrops", "");
+		
+		// Get Forum stats
 		forumArray.posts = $("#stats > div:nth-child(2) > div > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("forum posts", "");
 		forumArray.topics = $("#stats > div:nth-child(2) > div > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("topics started", "");
 		
+		// Get Project Ares Stats
 		paArray.kills = $("#stats > div:nth-child(4) > div.span4 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kills", "");
 		paArray.deaths = $("#stats > div:nth-child(4) > div.span4 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("deaths", "");
 		paArray.kd = $("#stats > div:nth-child(4) > div.span3 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kd", "");
@@ -81,6 +94,7 @@ exp.scrapeFromProfile = function(name, cb) {
 		paArray.played = $("#stats > div:nth-child(4) > div.span5 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("days played", "");
 		paArray.observed = $("#stats > div:nth-child(4) > div.span5 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("days observed", "");
 		
+		// Get Blitz Stats
 		blitzArray.kills = $("#stats > div:nth-child(6) > div.span4 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kills", "");
 		blitzArray.deaths = $("#stats > div:nth-child(6) > div.span4 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("deaths", "");
 		blitzArray.kd = $("#stats > div:nth-child(6) > div.span3 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kd", "");
@@ -88,6 +102,7 @@ exp.scrapeFromProfile = function(name, cb) {
 		blitzArray.played = $("#stats > div:nth-child(6) > div.span5 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("days played", "");
 		blitzArray.observed = $("#stats > div:nth-child(6) > div.span5 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("days observed", "");
 		
+		// Get Ghost Squadron Stats
 		ghostArray.kills = $("#stats > div:nth-child(8) > div.span4 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kills", "");
 		ghostArray.deaths = $("#stats > div:nth-child(8) > div.span4 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("deaths", "");
 		ghostArray.kd = $("#stats > div:nth-child(8) > div.span3 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kd", "");
@@ -95,12 +110,16 @@ exp.scrapeFromProfile = function(name, cb) {
 		ghostArray.played = $("#stats > div:nth-child(8) > div.span5 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("days played", "");
 		ghostArray.observed = $("#stats > div:nth-child(8) > div.span5 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("days observed", "");
 		
-		PAStats = new ProjectAresStats(paArray.kills, paArray.deaths, paArray.kd, paArray.kk, paArray.played, paArray.observed);
+		
+		var totalobserved = parseFloat(paArray.observed) + parseFloat(blitzArray.observed) + parseFloat(ghostArray.observed);
+		// Output
+		var overall = new OverallStats(overallArray.kills, overallArray.deaths, overallArray.kd, overallArray.kk, overallArray.joins, overallArray.played,totalobserved, overallArray.raindrops);
+		var PAStats = new ProjectAresStats(paArray.kills, paArray.deaths, paArray.kd, paArray.kk, paArray.played, paArray.observed);
 		var Blitz = new BlitzStats(blitzArray.kills, blitzArray.deaths, blitzArray.kd, blitzArray.kk, blitzArray.played, blitzArray.observed);
 		var ghost = new GhostSquadronStats(ghostArray.kills, ghostArray.deaths, ghostArray.kd, ghostArray.kk, ghostArray.played, ghostArray.observed);
 		var forums = new ForumStats(forumArray.posts, forumArray.topics);
 		profile = new Profile(socialArray.Team, socialArray.Skype, socialArray.Twitter, socialArray.Facebook, socialArray.Steam, socialArray.Twitch, socialArray.Github, socialArray.Youtube, profileArray.bio);
-		var player = new Player(response.request.uri.href.substring(14, response.request.uri.href.length), playerArray.status, playerArray.kills, playerArray.deaths, playerArray.friends, playerArray.kd, playerArray.kk, playerArray.joins, playerArray.time, playerArray.raindrops, playerArray.cores, playerArray.monuments, playerArray.wools, profile, forums, PAStats, Blitz, ghost);
+		var player = new Player(response.request.uri.href.substring(14, response.request.uri.href.length), playerArray.status, playerArray.friends, playerArray.cores, playerArray.monuments, playerArray.wools, profile, overall, forums, PAStats, Blitz, ghost);
 		cb(player);
 
 	});
