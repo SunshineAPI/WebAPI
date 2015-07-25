@@ -61,12 +61,10 @@ exp.scrapeFromProfile = function(name, cb) {
 
 		// Get Social Links
 		$(".span4").each(function(i, elem) {
-			if ($(this).children().length == 4) {
-				//bleh
-			} else if ($(this).children("h6").text() == "Team") {
-				socialArray.Team = $(this).children("blockquote").text();
+			if ($(this).children("h6").text() == "Team") {
+				socialArray.team = $(this).children("blockquote").text().escapeSpecialChars();
 			} else {
-				socialArray[$(this).children("h6").text()] = $(this).children("blockquote").children("p").text();
+				socialArray[$(this).children("h6").text().toLowerCase()] = $(this).children("blockquote").children("p").text().escapeSpecialChars();
 			}
 		});
 
@@ -118,7 +116,7 @@ exp.scrapeFromProfile = function(name, cb) {
 		var Blitz = new BlitzStats(blitzArray.kills, blitzArray.deaths, blitzArray.kd, blitzArray.kk, blitzArray.played, blitzArray.observed);
 		var ghost = new GhostSquadronStats(ghostArray.kills, ghostArray.deaths, ghostArray.kd, ghostArray.kk, ghostArray.played, ghostArray.observed);
 		var forums = new ForumStats(forumArray.posts, forumArray.topics);
-		profile = new Profile(socialArray.Team, socialArray.Skype, socialArray.Twitter, socialArray.Facebook, socialArray.Steam, socialArray.Twitch, socialArray.Github, socialArray.Youtube, profileArray.bio);
+		profile = new Profile(socialArray.skype, socialArray.twitter, socialArray.facebook, socialArray.steam, socialArray.youtube, socialArray.twitch, socialArray.github, socialArray.team, profileArray.bio);
 		var player = new Player(response.request.uri.href.substring(14, response.request.uri.href.length), playerArray.status, playerArray.friends, playerArray.cores, playerArray.monuments, playerArray.wools, profile, overall, forums, PAStats, Blitz, ghost);
 		cb(player);
 
