@@ -75,7 +75,7 @@ exp.scrapeFromProfile = function(name, cb) {
 		profileArray.bio = $("#about > div:nth-child(3) > div > pre").text();
 
 		// Get Overall Stats
-		overallArray.kills = $("body > div > section:nth-child(2) > div.row > div.span7 > div > div.span8 > div > div.span5 > h2").text().escapeSpecialChars().replace("kills", "");
+		overallArray.kills = $("body > div > section:nth-child(2) > div.row > div.span7 > div > div.span8 > div > div.span5 > h2").attr("title").escapeSpecialChars().replace(" kills", "");
 		overallArray.deaths = $("body > div > section:nth-child(2) > div.row > div.span7 > div > div.span4 > h2").text().escapeSpecialChars().replace("deaths", "");
 		overallArray.kd = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(4)").text().escapeSpecialChars().replace("kd ratio", "");
 		overallArray.kk = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(5)").text().escapeSpecialChars().replace("kk ratio", "");
