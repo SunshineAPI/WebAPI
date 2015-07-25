@@ -8,7 +8,7 @@ var helpers = require("../modules/helpers");
 
 var periods = ["day", "week", "eternity"];
 var games = ["all", "projectares", "blitz", "ghostsquadron"];
-var sorts = ["kills", "deaths", "kd", "kk", "cores", "wools", "monuments", "playing_time"];
+var sorts = ["kills", "deaths", "kd", "kk", "cores_leaked", "wool_placed", "destroyables_destroyed", "playing_time"];
 
 router.get("/", function(req, res) {
     var page = parseInt(req.query.page) || 1;
@@ -70,9 +70,9 @@ router.get("/", function(req, res) {
             var deaths = parseInt($(cols[3]).text());
             var kd = parseFloat($(cols[3]).text());
             var kk = parseFloat($(cols[4]).text());
-            var wools = parseInt($(cols[5]).text());
-            var cores = parseInt($(cols[6]).text());
-            var monuments = parseInt($(cols[7]).text());
+            var wool_placed = parseInt($(cols[5]).text());
+            var cores_leaked = parseInt($(cols[6]).text());
+            var destroyables_destroyed = parseInt($(cols[7]).text());
             var playing = $(cols[8]).text().escapeSpecialChars();
 
             var player = $(cols[9]).text().escapeSpecialChars();
@@ -86,9 +86,9 @@ router.get("/", function(req, res) {
                     deaths: deaths,
                     kd: kd,
                     kk: kk,
-                    wools: wools,
-                    cores: cores,
-                    monuments: monuments,
+                    wools: wool_placed,
+                    cores: cores_leaked,
+                    monuments: destroyables_destroyed
                 }
             });
 
