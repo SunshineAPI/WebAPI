@@ -96,6 +96,7 @@ exp.parseProfile = function(name, cb) {
 		overallArray.kd = parseFloat($("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(4)").text().escapeSpecialChars().replace("kd ratio", ""));
 		overallArray.kk = parseFloat($("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(5)").text().escapeSpecialChars().replace("kk ratio", ""));
 		overallArray.joins = parseFloat($("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(6)").text().escapeSpecialChars().replace("server joins", ""));
+		overallArray.firstjoin = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(6)").attr("title").escapeSpecialChars().replace("First joined on ", "");
 		overallArray.played = parseFloat($("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(7)").text().escapeSpecialChars().replace("days played", ""));
 		overallArray.raindrops = parseFloat($("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(8)").attr("title").escapeSpecialChars().replace(" raindrops", ""));
 
@@ -130,7 +131,7 @@ exp.parseProfile = function(name, cb) {
 
 		var totalobserved = parseFloat(paArray.observed) + parseFloat(blitzArray.observed) + parseFloat(ghostArray.observed);
 		// Output
-		var overall = new OverallStats(overallArray.kills, overallArray.deaths, overallArray.kd, overallArray.kk, overallArray.joins, overallArray.played, overallArray.raindrops);
+		var overall = new OverallStats(overallArray.kills, overallArray.deaths, overallArray.kd, overallArray.kk, overallArray.joins, overallArray.firstjoin, overallArray.played, overallArray.raindrops);
 		var PAStats = new ProjectAresStats(paArray.kills, paArray.deaths, paArray.kd, paArray.kk, paArray.played, paArray.observed);
 		var Blitz = new BlitzStats(blitzArray.kills, blitzArray.deaths, blitzArray.kd, blitzArray.kk, blitzArray.played, blitzArray.observed);
 		var ghost = new GhostSquadronStats(ghostArray.kills, ghostArray.deaths, ghostArray.kd, ghostArray.kk, ghostArray.played, ghostArray.observed);
