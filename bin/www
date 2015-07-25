@@ -3,7 +3,19 @@
 var app = require("../app");
 app.set("port", process.env.PORT || 3000);
 app.set("bind", process.env.BIND || "0.0.0.0");
+var server;
 
-var server = app.listen(app.get("port"), app.get("bind"), function() {
-	console.log("Express server listening at " + app.get("bind") + ":" + app.get("port"));
-});
+function boot(callback) {
+	server = app.listen(app.get("port"), app.get("bind"), function() {
+		callback("Express server listening at " + app.get("bind") + ":" + app.get("port"));
+		module.exports.server = server;
+	});
+}
+
+module.exports.boot = boot;
+
+if (!module.parent) {
+	boot(function(msg) {
+		console.log(msg);
+	});
+}

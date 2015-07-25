@@ -206,7 +206,7 @@ exp.parsePost = function($, post) {
 		timestamp: change
 	};
 
-	var quote = post.find("blockquote");
+	var quote = post.find(".span9 > blockquote");
 	if (quote.length) {
 		var qInfo = quote.find("span");
 		var qAuthor = $(qInfo[0]).text();

@@ -35,5 +35,8 @@
     "redis": "^0.12.1",
     "request": "^2.58.0"
   },
-  "license": "GPL v3"
+  "license": "GPL v3",
+  "devDependencies": {
+    "mocha": "^2.2.5"
+  }
 }
