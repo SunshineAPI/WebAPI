@@ -17,9 +17,8 @@ var exp = {};
 
 exp.scrapeFromProfile = function(name, cb) {
 	var options = {
-		uri: "/stats/" + name,
-		timeout: 2000,
-		followAllRedirects: true,
+		url: "/stats/" + name,
+		followAllRedirects: true
 	};
 
 	helpers.request(options, function(error, response, body) {
