@@ -57,7 +57,7 @@ exp.parseProfile = function(name, cb) {
 		playerArray.status = playerArray.status.escapeSpecialChars();
 
 		// Get Friends
-		playerArray.friends = $("body > div > section:nth-child(2) > div.row > div.span2 > h2").text().escapeSpecialChars().replace("friends", "");
+		playerArray.friends = parseFloat($("body > div > section:nth-child(2) > div.row > div.span2 > h2").text().escapeSpecialChars().replace("friends", ""));
 
 		// Get Objectives
 		var unsorted = [];
@@ -68,13 +68,13 @@ exp.parseProfile = function(name, cb) {
 			var current = unsorted[i];
 			if(current.indexOf("cores leaked") > -1) {
 				current = current.replace("cores leaked", "");
-				objectivesArray.cores = current;
+				objectivesArray.cores = parseFloat(current);
 			} else if(current.indexOf("monuments destroyed") > -1) {
 				current = current.replace("monuments destroyed", "");
-				objectivesArray.monuments = current;
+				objectivesArray.monuments = parseFloat(current);
 			} else {
 				current = current.replace("wools placed", "");
-				objectivesArray.wools = current;
+				objectivesArray.wools = parseFloat(current);
 			}
 		};
 
@@ -91,41 +91,41 @@ exp.parseProfile = function(name, cb) {
 		profileArray.bio = $("#about > div:nth-child(3) > div > pre").text();
 
 		// Get Overall Stats
-		overallArray.kills = $("body > div > section:nth-child(2) > div.row > div.span7 > div > div.span8 > div > div.span5 > h2").attr("title").escapeSpecialChars().replace(" kills", "");
-		overallArray.deaths = $("body > div > section:nth-child(2) > div.row > div.span7 > div > div.span4 > h2").text().escapeSpecialChars().replace("deaths", "");
-		overallArray.kd = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(4)").text().escapeSpecialChars().replace("kd ratio", "");
-		overallArray.kk = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(5)").text().escapeSpecialChars().replace("kk ratio", "");
-		overallArray.joins = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(6)").text().escapeSpecialChars().replace("server joins", "");
-		overallArray.played = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(7)").text().escapeSpecialChars().replace("days played", "");
-		overallArray.raindrops = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(8)").attr("title").escapeSpecialChars().replace(" raindrops", "");
+		overallArray.kills = parseFloat($("body > div > section:nth-child(2) > div.row > div.span7 > div > div.span8 > div > div.span5 > h2").attr("title").escapeSpecialChars().replace(" kills", ""));
+		overallArray.deaths = parseFloat($("body > div > section:nth-child(2) > div.row > div.span7 > div > div.span4 > h2").text().escapeSpecialChars().replace("deaths", ""));
+		overallArray.kd = parseFloat($("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(4)").text().escapeSpecialChars().replace("kd ratio", ""));
+		overallArray.kk = parseFloat($("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(5)").text().escapeSpecialChars().replace("kk ratio", ""));
+		overallArray.joins = parseFloat($("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(6)").text().escapeSpecialChars().replace("server joins", ""));
+		overallArray.played = parseFloat($("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(7)").text().escapeSpecialChars().replace("days played", ""));
+		overallArray.raindrops = parseFloat($("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(8)").attr("title").escapeSpecialChars().replace(" raindrops", ""));
 
 		// Get Forum stats
-		forumArray.posts = $("#stats > div:nth-child(2) > div > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("forum posts", "");
-		forumArray.topics = $("#stats > div:nth-child(2) > div > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("topics started", "");
+		forumArray.posts = parseFloat($("#stats > div:nth-child(2) > div > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("forum posts", ""));
+		forumArray.topics = parseFloat($("#stats > div:nth-child(2) > div > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("topics started", ""));
 
 		// Get Project Ares Stats
-		paArray.kills = $("#stats > div:nth-child(4) > div.span4 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kills", "");
-		paArray.deaths = $("#stats > div:nth-child(4) > div.span4 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("deaths", "");
-		paArray.kd = $("#stats > div:nth-child(4) > div.span3 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kd", "");
-		paArray.kk = $("#stats > div:nth-child(4) > div.span3 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("kk", "");
-		paArray.played = $("#stats > div:nth-child(4) > div.span5 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("days played", "");
-		paArray.observed = $("#stats > div:nth-child(4) > div.span5 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("days observed", "");
+		paArray.kills = parseFloat($("#stats > div:nth-child(4) > div.span4 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kills", ""));
+		paArray.deaths = parseFloat($("#stats > div:nth-child(4) > div.span4 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("deaths", ""));
+		paArray.kd = parseFloat($("#stats > div:nth-child(4) > div.span3 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kd", ""));
+		paArray.kk = parseFloat($("#stats > div:nth-child(4) > div.span3 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("kk", ""));
+		paArray.played = parseFloat($("#stats > div:nth-child(4) > div.span5 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("days played", ""));
+		paArray.observed = parseFloat($("#stats > div:nth-child(4) > div.span5 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("days observed", ""));
 
 		// Get Blitz Stats
-		blitzArray.kills = $("#stats > div:nth-child(6) > div.span4 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kills", "");
-		blitzArray.deaths = $("#stats > div:nth-child(6) > div.span4 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("deaths", "");
-		blitzArray.kd = $("#stats > div:nth-child(6) > div.span3 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kd", "");
-		blitzArray.kk = $("#stats > div:nth-child(6) > div.span3 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("kk", "");
-		blitzArray.played = $("#stats > div:nth-child(6) > div.span5 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("days played", "");
-		blitzArray.observed = $("#stats > div:nth-child(6) > div.span5 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("days observed", "");
+		blitzArray.kills = parseFloat($("#stats > div:nth-child(6) > div.span4 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kills", ""));
+		blitzArray.deaths = parseFloat($("#stats > div:nth-child(6) > div.span4 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("deaths", ""));
+		blitzArray.kd = parseFloat($("#stats > div:nth-child(6) > div.span3 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kd", ""));
+		blitzArray.kk = parseFloat($("#stats > div:nth-child(6) > div.span3 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("kk", ""));
+		blitzArray.played = parseFloat($("#stats > div:nth-child(6) > div.span5 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("days played", ""));
+		blitzArray.observed = parseFloat($("#stats > div:nth-child(6) > div.span5 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("days observed", ""));
 
 		// Get Ghost Squadron Stats
-		ghostArray.kills = $("#stats > div:nth-child(8) > div.span4 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kills", "");
-		ghostArray.deaths = $("#stats > div:nth-child(8) > div.span4 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("deaths", "");
-		ghostArray.kd = $("#stats > div:nth-child(8) > div.span3 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kd", "");
-		ghostArray.kk = $("#stats > div:nth-child(8) > div.span3 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("kk", "");
-		ghostArray.played = $("#stats > div:nth-child(8) > div.span5 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("days played", "");
-		ghostArray.observed = $("#stats > div:nth-child(8) > div.span5 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("days observed", "");
+		ghostArray.kills = parseFloat($("#stats > div:nth-child(8) > div.span4 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kills", ""));
+		ghostArray.deaths = parseFloat($("#stats > div:nth-child(8) > div.span4 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("deaths", ""));
+		ghostArray.kd = parseFloat($("#stats > div:nth-child(8) > div.span3 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kd", ""));
+		ghostArray.kk = parseFloat($("#stats > div:nth-child(8) > div.span3 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("kk", ""));
+		ghostArray.played = parseFloat($("#stats > div:nth-child(8) > div.span5 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("days played", ""));
+		ghostArray.observed = parseFloat($("#stats > div:nth-child(8) > div.span5 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("days observed", ""));
 
 
 		var totalobserved = parseFloat(paArray.observed) + parseFloat(blitzArray.observed) + parseFloat(ghostArray.observed);
@@ -152,9 +152,9 @@ exp.parseForum = function(body, page, cat, callback) {
 	var last = $(pagination).children().last();
 
 	if ($(last).attr("href")) {
-		maxPage = parseInt($(last).attr("href").split("?page=")[1]);
+		maxPage = parseFloat($(last).attr("href").split("?page=")[1]);
 	} else {
-		maxPage = parseInt($(last).text());
+		maxPage = parseFloat($(last).text());
 	}
 
 	// check for pages above the max page count
@@ -265,9 +265,9 @@ exp.pageCount = function($, pagination) {
 	if ($(last).attr("href")) {
 		var href = url.parse(config.base_url + $(last).attr("href")).query;
 		var parsed = querystring.parse(href);
-		return parseInt(parsed.page);
+		return parseFloat(parsed.page);
 	} else {
-		return parseInt($(last).text());
+		return parseFloat($(last).text());
 	}
 };
 
