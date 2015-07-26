@@ -42,7 +42,7 @@ exp.parseProfile = function(name, cb) {
 
 		// Get Name
 		playerArray.name = $("h1 span").first().text().trim();
-		
+
 		// Get Status
 		if ($("body > div > section:nth-child(2) > div.row > div.span3 > div").text() !== "") {
 			var toReturn = $("body > div > section:nth-child(2) > div.row > div.span3 > div").text().replace("\\n", "");
@@ -64,19 +64,19 @@ exp.parseProfile = function(name, cb) {
 		unsorted.push($("#objectives > div:nth-child(1) > div > h2").text().escapeSpecialChars());
 		unsorted.push($("#objectives > div:nth-child(3) > div > h2").text().escapeSpecialChars());
 		unsorted.push($("#objectives > div:nth-child(5) > div > h2").text().escapeSpecialChars());
-		for(var i = 0; i < unsorted.length; i++) {
+		for (var i = 0; i < unsorted.length; i++) {
 			var current = unsorted[i];
-			if(current.indexOf("cores leaked") > -1) {
+			if (current.indexOf("cores leaked") > -1) {
 				current = current.replace("cores leaked", "");
 				objectivesArray.cores = parseFloat(current);
-			} else if(current.indexOf("monuments destroyed") > -1) {
+			} else if (current.indexOf("monuments destroyed") > -1) {
 				current = current.replace("monuments destroyed", "");
 				objectivesArray.monuments = parseFloat(current);
 			} else {
 				current = current.replace("wools placed", "");
 				objectivesArray.wools = parseFloat(current);
 			}
-		};
+		}
 
 		// Get Social Links
 		$(".span4").each(function(i, elem) {
@@ -158,7 +158,7 @@ exp.parseForum = function(body, page, cat, callback) {
 		maxPage = parseFloat($(last).text());
 	}
 
-	// check for pages above the max page count
+	// check for pages above the max count
 	if (page > maxPage) {
 		return callback("Invalid page number", maxPage, null);
 	}
