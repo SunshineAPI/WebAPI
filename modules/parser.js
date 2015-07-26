@@ -142,7 +142,7 @@ exp.parseProfile = function(name, cb) {
 		var forums = new ForumStats(forumArray.posts, forumArray.topics);
 		var objectives = new ObjectiveStats(objectivesArray.cores, objectivesArray.monuments, objectivesArray.wools);
 		profile = new Profile(socialArray.skype, socialArray.twitter, socialArray.facebook, socialArray.steam, socialArray.youtube, socialArray.twitch, socialArray.github, socialArray.team, profileArray.bio);
-		var player = new Player(playerArray.name, playerArray.previous_username, playerArray.status, playerArray.friends, profile, overall, objectives, forums, PAStats, Blitz, ghost);
+		var player = new Player(playerArray.username, playerArray.previous_username, playerArray.status, playerArray.friends, profile, overall, objectives, forums, PAStats, Blitz, ghost);
 		cb(player);
 
 	});
