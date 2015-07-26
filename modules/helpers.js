@@ -12,7 +12,6 @@ exp.request = function(options, callback) {
 		options = {};
 		options.url = url;
 	}
-	console.log(options.url)
 	if (!options.headers) {
 		options.headers = {};
 	}
