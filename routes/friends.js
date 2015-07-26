@@ -3,7 +3,7 @@ var express = require("express");
 var router = express.Router();
 var cheerio = require("cheerio");
 var auth = require("../modules/auth");
-var helpers = require("../modules/helpers");
+var parser = require("../modules/parser");
 
 var getFriendStatus = function(player, authe, cb) {
     var options = {
@@ -46,13 +46,13 @@ router.get("/all", auth.authorize, function(req, res) {
         var all = [];
         var $ = cheerio.load(body);
         var allfriends = $(".friend-icon");
-        allfriends.each(function(i, elem) {
+        allfriends.each(function(i) {
             all[i] = $(this).children(".thumbnail").attr("href").substring(1, $(this).children(".thumbnail").attr("href").length);
         });
         res.json({
             links: parser.setMeta(req),
             data: all
-        })
+        });
     });
 });
 
@@ -74,13 +74,13 @@ router.get("/offline", auth.authorize, function(req, res) {
         var all = [];
         var $ = cheerio.load(body);
         var allfriends = $(".span1");
-        allfriends.each(function(i, elem) {
+        allfriends.each(function(i) {
             all[i] = $(this).children(".thumbnail").attr("href").substring(1, $(this).children(".thumbnail").attr("href").length);
         });
         res.json({
             links: parser.setMeta(req),
             data: all
-        })
+        });
     });
 
 });
@@ -103,7 +103,7 @@ router.get("/online", auth.authorize, function(req, res) {
         var all = [];
         var $ = cheerio.load(body);
         var allfriends = $(".span2");
-        allfriends.each(function(i, elem) {
+        allfriends.each(function(i) {
             all[i] = $(this).children(".thumbnail").attr("href").substring(1, $(this).children(".thumbnail").attr("href").length);
         });
         res.json({
@@ -139,8 +139,8 @@ router.post("/add/:player", auth.authorize, function(req, res) {
                 }
 
             };
-            auth.authed_req(requestoptions, req.authorization.cookie, function(error, response, body) {
-                if (error) {
+            auth.authed_req(requestoptions, req.authorization.cookie, function(error, response) {
+                if (error || response.statusCode === 500) {
                     return res.status(error.status).json({
                         errors: [error.message]
                     });
