@@ -1,6 +1,6 @@
 # Sunshine [![travis](https://img.shields.io/travis/SunshineAPI/WebAPI/master.svg?style=flat-square)](https://travis-ci.org/SunshineAPI/WebAPI/) [![Coveralls](https://img.shields.io/coveralls/SunshineAPI/WebAPI.svg?style=flat-square)](https://coveralls.io/github/SunshineAPI/WebAPI) [![Code Climate](https://img.shields.io/codeclimate/github//SunshineAPI/WebAPI.svg?style=flat-square)](https://codeclimate.com/github/SunshineAPI/WebAPI)
 
-[![David](https://img.shields.io/david/SunshineAPI/WebAPI.svg?style=flat-square)](https://david-dm.org/SunshineAPI/WebAPI)
+[![Dependencies](https://img.shields.io/david/SunshineAPI/WebAPI.svg?style=flat-square)](https://david-dm.org/SunshineAPI/WebAPI) [![Dev Dependencies](https://img.shields.io/david/dev/SunshineAPI/WebAPI.svg?style=flat-square)](https://david-dm.org/SunshineAPI/WebAPI#info=devDependencies)
 
 Sunshine is a REST API for interaction with the [Overcast Network](https://oc.tc) and all related services including the forums, servers, maps, and authenticated endpoints.
 

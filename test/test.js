@@ -37,7 +37,7 @@ describe("Sunshine", function() {
           assert.strictEqual(res.statusCode, 200);
           var jsonBody = JSON.parse(body);
           assertData(jsonBody, "hash");
-          assert.strictEqual(jsonBody.data.name, username);
+          assert.strictEqual(jsonBody.data.username, username);
           done();
         });
       });
