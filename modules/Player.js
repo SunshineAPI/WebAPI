@@ -1,6 +1,7 @@
 "use strict";
-function Player(name, status, friends, profile, OverallStats, ObjectiveStats, ForumStats, ProjectAresStats, BlitzStats, GhostSquadronStats) {
+function Player(name, previous_username, status, friends, profile, OverallStats, ObjectiveStats, ForumStats, ProjectAresStats, BlitzStats, GhostSquadronStats) {
     this.name = name;
+    this.previous_username = previous_username;
     this.status = status;
     this.friends = friends;
     this.profile = profile;

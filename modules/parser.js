@@ -41,7 +41,11 @@ exp.parseProfile = function(name, cb) {
 		var $ = cheerio.load(body);
 
 		// Get Name
-		playerArray.name = $("h1 span").first().text().trim();
+		playerArray.username = $("h1 span").first().text().trim();
+		var formerUser = $("h1 small");
+		if (formerUser) {
+			playerArray.previous_username = formerUser.first().text().replace(/(|)/gi, "").trim() || null;
+		}
 
 		// Get Status
 		if ($("body > div > section:nth-child(2) > div.row > div.span3 > div").text() !== "") {
@@ -138,7 +142,7 @@ exp.parseProfile = function(name, cb) {
 		var forums = new ForumStats(forumArray.posts, forumArray.topics);
 		var objectives = new ObjectiveStats(objectivesArray.cores, objectivesArray.monuments, objectivesArray.wools);
 		profile = new Profile(socialArray.skype, socialArray.twitter, socialArray.facebook, socialArray.steam, socialArray.youtube, socialArray.twitch, socialArray.github, socialArray.team, profileArray.bio);
-		var player = new Player(playerArray.name, playerArray.status, playerArray.friends, profile, overall, objectives, forums, PAStats, Blitz, ghost);
+		var player = new Player(playerArray.name, playerArray.previous_username, playerArray.status, playerArray.friends, profile, overall, objectives, forums, PAStats, Blitz, ghost);
 		cb(player);
 
 	});
