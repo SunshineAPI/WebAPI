@@ -32,7 +32,7 @@ var staff = require("./routes/staff");
 var maps = require("./routes/maps");
 var servers = require("./routes/servers");
 var friends = require("./routes/friends");
-
+var matches = require("./routes/matches");
 app.use('/assets', express.static('public'));
 
 app.use("/", index);
@@ -48,7 +48,7 @@ app.use("/staff", staff);
 app.use("/maps", maps);
 app.use("/servers", servers);
 app.use("/friends", friends);
-
+app.use("/matches",matches);
 app.use(function(req, res, next) {
 	var err = new Error('Not Found');
 	err.status = 404;
