@@ -88,6 +88,11 @@ router.get("/:id", function(req, res) {
                 errors: ["Unable to complete request"]
             });
         }
+        if (response.statusCode === 404) {
+            return res.status(404).json({
+                errors: ["Punishment not found"]
+            });
+        }
 
         var $ = cheerio.load(body);
         var links = parser.setMeta(req);
@@ -100,8 +105,7 @@ router.get("/:id", function(req, res) {
         var type =  parser.getText($(".type"));
 
         var rows = $(".punishment .row");
-        var middle = $(rows[1]);
-        var middleCols = middle.children();
+        var middleCols = $(rows[1]).children();
         var expires = parser.getText($(middleCols[0]).find("h3"));
         var server = parser.getText($(middleCols[1]).find("h3"));
         var match = $(middleCols[2]).find("h3 a");

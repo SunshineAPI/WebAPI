@@ -5,6 +5,7 @@ var cheerio = require("cheerio");
 var Tournament = require("../modules/tournament");
 var Team = require("../modules/team");
 var parser = require("../modules/parser");
+var helpers = require("../modules/helpers");
 
 router.get("/", function(req, res) {
 
@@ -71,7 +72,7 @@ router.get("/:id", function(req, res) {
                 errors: ["Unable to complete request"]
             });
         }
-        if (response.statusCode === 302) {
+        if (response.statusCode === 302 || response.statusCode === 404) {
             return res.status(404).json({
                 errors: ["Tournament not found"]
             });

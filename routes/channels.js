@@ -21,9 +21,8 @@ router.get("/", function(req, res) {
             });
         }
         var $ = cheerio.load(body);
-        var pagination = $(".span12 .btn-group.pull-left");
+        var pagination = $(".span12 .btn-group.pull-left").first();
         var pages = parser.pageCount($, pagination);
-        var data = {};
         var channels = [];
         if (page > pages) {
             return res.status(422).json({

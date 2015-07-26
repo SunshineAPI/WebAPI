@@ -180,16 +180,17 @@ router.get("/gamemode/:gamemode", function(req, res) {
 
     if (gamemodes.indexOf(gamemode) === -1) {
         return res.status(422).json({
-                errors: ["Invalid gamemode"]
-            });
+            errors: ["Invalid gamemode"]
+        });
     }
 
     helpers.request(options, function(error, response, body) {
         var $ = cheerio.load(body);
 
-        var data = {};
         var pagination = $(".span12 .btn-group.pull-left").first();
         var pages = parser.pageCount($, pagination);
+
+        var links = parser.setMeta(req, page, pages);
 
         if (page > pages) {
             return res.status(422).json({
@@ -197,16 +198,15 @@ router.get("/gamemode/:gamemode", function(req, res) {
             });
         }
 
-        data.page = page;
-        data.pages = pages;
-        data.gamemode = gamemode;
+        var meta = {};
+        meta.gamemode = gamemode;
 
         var maps = parser.parseMapList($);
 
-        data.maps = maps;
-
         res.json({
-            data: data
+            links: links,
+            meta: gamemode,
+            data: maps
         });
     });
 });

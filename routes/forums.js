@@ -13,7 +13,7 @@ router.get("/new", function(req, res) {
         url: "/forums" + (page ? "?page=" + page : "")
     };
 
-    helpers.helpers.request(options, function(error, response, body) {
+    helpers.request(options, function(error, response, body) {
         parser.parseForum(body, page, "new", function(err, pages, topics) {
             if (page > pages) {
                 return res.status(422).json({
@@ -37,7 +37,7 @@ router.get("/categories", function(req, res) {
         url: "/forums/"
     };
 
-    helpers.helpers.request(options, function(error, response, body) {
+    helpers.request(options, function(error, response, body) {
         var categories = [];
         var $ = cheerio.load(body);
         var links = parser.setMeta(req);
@@ -87,18 +87,18 @@ router.get("/:id", function(req, res) {
                 errors: ["Forum category not found"]
             });
         }
+        if (error) {
+            return res.status(500).json({
+                errors: ["Unable to complete request"]
+            });
+        }
         parser.parseForum(body, page, id, function(err, pages, topics, $) {
-            if (error || err) {
-                return res.status(500).json({
-                    errors: ["Unable to complete request"]
-                });
-            }
-            var c = $("#forum-sidebar .active a");
             if (page > pages) {
                 return res.status(422).json({
                     errors: ["Invalid page number"]
                 });
             }
+            var c = $("#forum-sidebar .active a");
             var links = parser.setMeta(req, page, pages);
             var meta = {};
             meta.category = {

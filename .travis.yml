@@ -2,7 +2,7 @@ language: node_js
 node_js:
   - "0.12"
 script:
-  - npm test
+  - npm run-script test-all
 services:
   - redis-server
 cache:

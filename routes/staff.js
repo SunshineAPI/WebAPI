@@ -3,6 +3,7 @@ var express = require("express");
 var router = express.Router();
 var cheerio = require("cheerio");
 var parser = require("../modules/parser");
+var helpers = require("../modules/helpers");
 
 router.get("/", function(req, res) {
     var options = {

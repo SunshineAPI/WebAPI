@@ -11,7 +11,7 @@ router.get("/", function(req, res) {
   var page = parseInt(req.query.page) || 1;
   var options = {
     method: "GET",
-    url: "/teams/" + (page ? "?page=" + page : "")
+    url: "/teams" + (page ? "?page=" + page : "")
   };
 
   helpers.request(options, function(error, response, body) {
@@ -65,9 +65,10 @@ router.get("/", function(req, res) {
 // /teams/korea
 router.get("/:team", function(req, res) {
   var team = req.params.team;
+  var base = "/teams/" + team;
   var options = {
     method: "GET",
-    url: "/teams/" + team
+    url: base
   };
 
   var players = [];
@@ -98,6 +99,11 @@ router.get("/:team", function(req, res) {
   }
 
   helpers.request(options, function(error, response, body) {
+    if (response.statusCode === 404 || response.statusCode === 302) {
+      return res.status(404).json({
+        errors: ["Team not found"]
+      });
+    }
     var data = {};
 
     var $ = cheerio.load(body);
@@ -106,7 +112,7 @@ router.get("/:team", function(req, res) {
     data.name = $("h1").text();
 
     var pagination = $(".span12 .btn-group.pull-left");
-    var pages = parser.pageCount($, pagination);
+    var pages = parser.pageCount($, pagination) || 1;
     var links = parser.setMeta(req);
 
     var top = $(".span12 .span4");

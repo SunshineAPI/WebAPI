@@ -37,6 +37,7 @@ exp.scrapeFromProfile = function(name, cb) {
 		var ghostArray = [];
 		var socialArray = {};
 		var $ = cheerio.load(body);
+		var username = $("h1 span").first().text().trim();
 
 		// Get Status
 		if ($("body > div > section:nth-child(2) > div.row > div.span3 > div").text() !== "") {
@@ -112,14 +113,14 @@ exp.scrapeFromProfile = function(name, cb) {
 
 
 		var totalobserved = parseFloat(paArray.observed) + parseFloat(blitzArray.observed) + parseFloat(ghostArray.observed);
-		// Output
+		// Outputv
 		var overall = new OverallStats(overallArray.kills, overallArray.deaths, overallArray.kd, overallArray.kk, overallArray.joins, overallArray.played, totalobserved, overallArray.raindrops);
 		var PAStats = new ProjectAresStats(paArray.kills, paArray.deaths, paArray.kd, paArray.kk, paArray.played, paArray.observed);
 		var Blitz = new BlitzStats(blitzArray.kills, blitzArray.deaths, blitzArray.kd, blitzArray.kk, blitzArray.played, blitzArray.observed);
 		var ghost = new GhostSquadronStats(ghostArray.kills, ghostArray.deaths, ghostArray.kd, ghostArray.kk, ghostArray.played, ghostArray.observed);
 		var forums = new ForumStats(forumArray.posts, forumArray.topics);
 		profile = new Profile(socialArray.Team, socialArray.Skype, socialArray.Twitter, socialArray.Facebook, socialArray.Steam, socialArray.Twitch, socialArray.Github, socialArray.Youtube, profileArray.bio);
-		var player = new Player(response.request.uri.href.substring(14, response.request.uri.href.length), playerArray.status, playerArray.friends, playerArray.cores, playerArray.monuments, playerArray.wools, profile, overall, forums, PAStats, Blitz, ghost);
+		var player = new Player(username, playerArray.status, playerArray.friends, playerArray.cores, playerArray.monuments, playerArray.wools, profile, overall, forums, PAStats, Blitz, ghost);
 		cb(player);
 
 	});
@@ -141,7 +142,7 @@ exp.parseForum = function(body, page, cat, callback) {
 
 	// check for pages above the max page count
 	if (page > maxPage) {
-		callback("Invalid page number", null, null);
+		return callback("Invalid page number", maxPage, null);
 	}
 
 
@@ -154,7 +155,6 @@ exp.parseForum = function(body, page, cat, callback) {
 		var topic = elm.children()[0];
 		var tdata = $(topic).find("a");
 
-		// todo add id
 		var title = $(tdata[0]).text();
 		var id = $(tdata[0]).attr("href").match(/([0-9a-fA-F]{24})$/)[0];
 		var author = $(tdata[1]).text();
@@ -245,6 +245,7 @@ exp.parsePost = function($, post) {
 exp.pageCount = function($, pagination) {
 	var last = $(pagination).children().last();
 	if ($(last).attr("href")) {
+		// fix this
 		var href = url.parse(config.base_url + $(last).attr("href")).query;
 		var parsed = querystring.parse(href);
 		return parseInt(parsed.page);

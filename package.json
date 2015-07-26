@@ -1,8 +1,8 @@
 {
   "name": "OvercastAPI",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "REST API for the Overcast Network",
-  "main": "app.js",
+  "main": "bin/www",
   "repository": {
     "type": "git",
     "url": "https://github.com/SunshineAPI/WebAPI"
@@ -24,7 +24,9 @@
   "scripts": {
     "start": "node bin/www",
     "forever": "forever start -l logs/log.log -o logs/out.log -e logs/error.log -p ./ -a --minUptime 8000 --spinSleepTime 1500 bin/www",
-    "test": ""
+    "test": "mocha",
+    "test-all": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+    "postinstall": "cp 'config.example.js' 'config.js'"
   },
   "dependencies": {
     "body-parser": "^1.13.2",
@@ -36,7 +38,10 @@
     "request": "^2.58.0"
   },
   "devDependencies": {
-    "mocha": "^2.2.5"
+    "chai": "^3.2.0",
+    "mocha": "^2.2.5",
+    "coveralls": "^2.11.3",
+    "mocha-lcov-reporter": "0.0.2"
   },
   "license": "GPL-3.0"
 }
