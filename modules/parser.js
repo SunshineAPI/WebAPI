@@ -72,7 +72,13 @@ exp.parseProfile = function(name, cb) {
 		profile.bio = $("#about > div:nth-child(3) > div > pre").text();
 
 		player.profile = profile;
-
+		player.friends_sample = {};
+		var friendsArray = new Array();
+		var friendsParent = $(".span2");
+		friendsParent.children("a").each(function(i){
+		friendsArray.push($(this).attr("href").substr(1,$(this).attr("href").length));	
+		});
+		player.friends_sample = friendsArray;
 		var ranks = [];
 		$(".label").each(function() {
 			var rank = {};
@@ -117,7 +123,7 @@ exp.parseProfile = function(name, cb) {
 		overall.raindrops = parseFloat(overallNode.find(".span3 h2:nth-child(8)").attr("title")
 			.replace("raindrops", "").trim());
 		stats.overall = overall;
-
+		
 		var objectiveNodes = $("#objectives h2");
 		var monuments = parseInt(exp.getText($(objectiveNodes[0])));
 		var cores = parseInt(exp.getText($(objectiveNodes[1])));
@@ -149,6 +155,7 @@ exp.parseProfile = function(name, cb) {
 				observed: observed
 			};
 		}
+		
 
 		player.stats = stats;
 
