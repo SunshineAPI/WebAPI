@@ -60,6 +60,12 @@ exp.parseProfile = function(name, cb) {
 		trophyHash["Badass"] = "Sell contraband on the black market";
 		trophyHash["Regular"] = "Exchange five pieces of contraband";
 		trophyHash["Locked up"] = "Get put in the SHU for selling contraband";
+		trophyHash["House of Cores"] = "Win the House of Cores tournament";
+		trophyHash["Boom in a Box"] = "Win Boom in a Box";
+		trophyHash["Conquest"] = "Win the Conquest tournament";
+		trophyHash["Beta Tournament"] = "Win the Beta Tournament";
+		trophyHash["Return of the Hill"] = "Win the Return of the Hill tournament";
+		
         // Get Name
         playerArray.username = $("h1 span").first().text().trim();
         var formerUser = $("h1 small");
@@ -169,6 +175,7 @@ exp.parseProfile = function(name, cb) {
         trophyParent.children("li").each(function(i){
         	var newTrophy = {};
         	newTrophy.name = $(this).children(".thumbnail").children("h4").text();
+        	//need to parse auto
         	newTrophy.description = trophyHash[newTrophy.name];
         	trophiesArray.push(newTrophy);
         });
