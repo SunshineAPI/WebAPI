@@ -44,7 +44,7 @@ exp.parseProfile = function(name, cb) {
         playerArray.username = $("h1 span").first().text().trim();
         var formerUser = $("h1 small");
         if (formerUser) {
-            playerArray.previous_username = formerUser.first().text().replace(/(|)/gi, "").trim() || null;
+            playerArray.previous_username = formerUser.first().text().replace(/\(|\)|formerly/gi, "").trim() || null;;
         }
 
         // Get Status
