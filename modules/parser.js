@@ -1,7 +1,6 @@
 "use strict";
 var cheerio = require("cheerio"),
 	Player = require("../modules/Player.js"),
-	Profile = require("../modules/Profile.js"),
 	OverallStats = require("../modules/OverallStats.js"),
 	ForumStats = require("../modules/ForumStats.js"),
 	ProjectAresStats = require("../modules/ProjectAresStats.js"),
@@ -42,7 +41,7 @@ exp.parseProfile = function(name, cb) {
 		playerMap.username = $("h1 span").first().text().trim();
 		var formerUser = $("h1 small");
 		if (formerUser) {
-			playerMap.previous_username = formerUser.first().text().replace(/\(|\)|formerly/gi, "").trim() || null;;
+			playerMap.previous_username = formerUser.first().text().replace(/\(|\)|formerly/gi, "").trim() || null;
 		}
 
 		// Get Status
@@ -82,9 +81,11 @@ exp.parseProfile = function(name, cb) {
 
 		// Get Social Links
 		profileMap.social = {};
-		$("#about > div.row:nth-child(1) > .span4").each(function(i, elem) {
+		$("#about > div.row:nth-child(1) > .span4").each(function() {
 			if ($(this).children("h6").text() == "Team") {
-				profileMap.team = $(this).children("blockquote").text().escapeSpecialChars();
+				profileMap.team = {};
+				profileMap.team.name = $(this).children("blockquote").text().escapeSpecialChars();
+				profileMap.team.id = $(this).find("a").attr("href").replace("/teams/", "");
 			} else {
 				profileMap.social[$(this).children("h6").text().toLowerCase()] = $(this).children("blockquote").children("p").text().escapeSpecialChars();
 			}
@@ -139,11 +140,8 @@ exp.parseProfile = function(name, cb) {
 		ghostArray.played = parseFloat($("#stats > div:nth-child(8) > div.span5 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("days played", ""));
 		ghostArray.observed = parseFloat($("#stats > div:nth-child(8) > div.span5 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("days observed", ""));
 
-
-		// Output
-
-		var ranksArray = new Array();
-		$(".label").each(function(i) {
+		var ranksArray = [];
+		$(".label").each(function() {
 			var rank = {};
 			rank.name = $(this).text();
 			rank.background = $(this).css("background-color");
@@ -151,15 +149,15 @@ exp.parseProfile = function(name, cb) {
 			ranksArray.push(rank);
 		});
 
-		var trophiesArray = new Array();
+		var trophiesArray = [];
 		var trophyParent = $(".thumbnails").first();
-		trophyParent.children("li").each(function(i) {
+		trophyParent.children("li").each(function() {
 			var thumb = $(this).children(".thumbnail.trophy");
 			var t = {
 				name: thumb.find("h4").text(),
 				description: thumb.attr("title"),
 				icon: thumb.find("i").attr("class").match(/fa-[a-z]*/)[0]
-			}
+			};
 			trophiesArray.push(t);
 		});
 
