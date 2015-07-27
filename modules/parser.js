@@ -150,13 +150,27 @@ exp.parseProfile = function(name, cb) {
 			rank.text = $(this).css("color");
 			ranksArray.push(rank);
 		});
+
+		var trophiesArray = new Array();
+		var trophyParent = $(".thumbnails").first();
+		trophyParent.children("li").each(function(i) {
+			var thumb = $(this).children(".thumbnail.trophy");
+			var t = {
+				name: thumb.find("h4").text(),
+				description: thumb.attr("title"),
+				icon: thumb.find("i").attr("class").match(/fa-[a-z]*/)[0]
+			}
+			trophiesArray.push(t);
+		});
+
+
 		var overall = new OverallStats(overallArray.kills, overallArray.deaths, overallArray.kd, overallArray.kk, overallArray.joins, overallArray.firstjoin, overallArray.played, overallArray.raindrops);
 		var PAStats = new ProjectAresStats(paArray.kills, paArray.deaths, paArray.kd, paArray.kk, paArray.played, paArray.observed);
 		var Blitz = new BlitzStats(blitzArray.kills, blitzArray.deaths, blitzArray.kd, blitzArray.kk, blitzArray.played, blitzArray.observed);
 		var ghost = new GhostSquadronStats(ghostArray.kills, ghostArray.deaths, ghostArray.kd, ghostArray.kk, ghostArray.played, ghostArray.observed);
 		var forums = new ForumStats(forumArray.posts, forumArray.topics);
 		var objectives = new ObjectiveStats(objectivesArray.cores, objectivesArray.monuments, objectivesArray.wools);
-		var player = new Player(playerMap.username, playerMap.previous_username, playerMap.status, playerMap.friends, profileMap, ranksArray, overall, objectives, forums, PAStats, Blitz, ghost);
+		var player = new Player(playerMap.username, playerMap.previous_username, playerMap.status, playerMap.friends, profileMap, ranksArray, trophiesArray, overall, objectives, forums, PAStats, Blitz, ghost);
 		cb(player);
 
 	});
