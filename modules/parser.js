@@ -293,7 +293,6 @@ exp.parsePost = function($, post) {
 exp.pageCount = function($, pagination) {
 	var last = $(pagination).children().last();
 	if ($(last).attr("href")) {
-		// fix this
 		var href = url.parse(config.base_url + $(last).attr("href")).query;
 		var parsed = querystring.parse(href);
 		return parseFloat(parsed.page);
