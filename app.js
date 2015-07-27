@@ -8,10 +8,10 @@ app.use(bodyParser.urlencoded({
 	extended: false
 }));
 app.use(bodyParser.json());
-app.engine('handlebars', exphbs({
+app.engine("handlebars", exphbs({
 	defaultLayout: 'main'
 }));
-app.set('view engine', 'handlebars');
+app.set("view engine", "handlebars");
 app.set("json spaces", 4);
 
 app.use(function(req, res, next) {
@@ -33,7 +33,7 @@ var maps = require("./routes/maps");
 var servers = require("./routes/servers");
 var friends = require("./routes/friends");
 
-app.use('/assets', express.static('public'));
+app.use("/assets", express.static("public"));
 
 app.use("/", index);
 app.use("/players", players);
@@ -50,7 +50,7 @@ app.use("/servers", servers);
 app.use("/friends", friends);
 
 app.use(function(req, res, next) {
-	var err = new Error('Not Found');
+	var err = new Error("Not Found");
 	err.status = 404;
 	next(err);
 });
