@@ -27,17 +27,17 @@ var getFriendStatus = function(player, authe, cb) {
     });
 };
 
+var opts = {
+    method: "GET",
+    url: "/friendships",
+    headers: {
+        "content-type": "x-www-form-urlencoded",
+    }
+};
+
 router.get("/all", auth.authorize, function(req, res) {
-    var options = {
-        method: "GET",
-        url: "/friendships",
-        headers: {
-            "content-type": "x-www-form-urlencoded",
-        }
 
-    };
-
-    auth.authed_req(options, req.authorization.cookie, function(error, response, body) {
+    auth.authed_req(opts, req.authorization.cookie, function(error, response, body) {
         if (error) {
             return res.status(error.status).json({
                 errors: [error.message]
@@ -57,15 +57,7 @@ router.get("/all", auth.authorize, function(req, res) {
 });
 
 router.get("/offline", auth.authorize, function(req, res) {
-    var options = {
-        method: "GET",
-        url: "/friendships",
-        headers: {
-            "content-type": "x-www-form-urlencoded",
-        }
-    };
-
-    auth.authed_req(options, req.authorization.cookie, function(error, response, body) {
+    auth.authed_req(opts, req.authorization.cookie, function(error, response, body) {
         if (error) {
             return res.status(error.status).json({
                 errors: [error.message]
@@ -86,15 +78,7 @@ router.get("/offline", auth.authorize, function(req, res) {
 });
 
 router.get("/online", auth.authorize, function(req, res) {
-    var options = {
-        method: "GET",
-        url: "/friendships",
-        headers: {
-            "content-type": "x-www-form-urlencoded",
-        }
-    };
-
-    auth.authed_req(options, req.auhorization.cookie, function(error, response, body) {
+    auth.authed_req(opts, req.auhorization.cookie, function(error, response, body) {
         if (error) {
             return res.status(error.status).json({
                 errors: [error.message]
