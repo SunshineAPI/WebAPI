@@ -5,7 +5,7 @@ var config = require("../config");
 var exp = {};
 
 exp.request = function(options, callback) {
-	if (!(typeof options === 'string')) {
+	if (!(typeof options === "string")) {
 		options.url = config.base_url + options.url;
 	} else {
 		var url = options;

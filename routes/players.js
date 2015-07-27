@@ -3,7 +3,6 @@ var express = require("express");
 var router = express.Router();
 var parser = require("../modules/parser");
 var auth = require("../modules/auth");
-var helpers = require("../modules/helpers");
 
 /*
     Post email and password registered to Overcast

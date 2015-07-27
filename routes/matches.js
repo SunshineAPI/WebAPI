@@ -4,6 +4,7 @@ var router = express.Router();
 var cheerio = require("cheerio");
 var helpers = require("../modules/helpers");
 var parser = require("../modules/parser");
+
 router.get("/:id", function(req, res) {
     var options = {
         url: "/matches/" + req.params.id,
@@ -21,11 +22,11 @@ router.get("/:id", function(req, res) {
         match.most_common = $("body > div.container > section > div:nth-child(2) > div:nth-child(3) > h2:nth-child(3)").text().spaceSpecialChars().replace(" most common weapon", "").trim();
         match.least_common = $("body > div.container > section > div:nth-child(2) > div:nth-child(3) > h2:nth-child(4)").text().spaceSpecialChars().replace(" least common weapon", "").trim();
         var teamsnode = $("body > div > section > div:nth-child(4)");
-        match.teams = new Array();
-        teamsnode.children(".span4").each(function(i) {
+        match.teams = [];
+        teamsnode.children(".span4").each(function() {
             var newteam = {};
-            var players = new Array();
-            $(this).children("h4").each(function(ii) {
+            var players = [];
+            $(this).children("h4").each(function() {
                 newteam.name = $(this).text().spaceSpecialChars().trim().split(" ").slice(0, 1).join("");
                 newteam.won = $(this).children("span").text().spaceSpecialChars().trim();
                 if (newteam.won === "") {
@@ -34,10 +35,10 @@ router.get("/:id", function(req, res) {
                     newteam.won = false;
                 } else if (newteam.won === "Winning Team") {
                     newteam.won = true;
-                } 
+                }
                 newteam.count = parseInt($(this).children("small").text().spaceSpecialChars().trim());
             });
-            $(this).children("a").each(function(ii) {
+            $(this).children("a").each(function() {
                 players.push($(this).attr("href").replace("/", ""));
             });
             newteam.players = players;

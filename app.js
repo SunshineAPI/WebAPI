@@ -9,13 +9,13 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 app.engine("handlebars", exphbs({
-	defaultLayout: 'main'
+	defaultLayout: "main"
 }));
 app.set("view engine", "handlebars");
 app.set("json spaces", 4);
 
 app.use(function(req, res, next) {
-	res.removeHeader("x-powered-by");
+	res.removeHeader('x-powered-by');
 	next();
 });
 
