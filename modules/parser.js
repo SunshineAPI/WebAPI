@@ -1,12 +1,5 @@
 "use strict";
 var cheerio = require("cheerio"),
-	Player = require("../modules/Player.js"),
-	OverallStats = require("../modules/OverallStats.js"),
-	ForumStats = require("../modules/ForumStats.js"),
-	ProjectAresStats = require("../modules/ProjectAresStats.js"),
-	BlitzStats = require("../modules/BlitzStats.js"),
-	GhostSquadronStats = require("../modules/GhostSquadronStats.js"),
-	ObjectiveStats = require("../modules/ObjectiveStats.js"),
 	Topic = require("../modules/topic"),
 	url = require("url"),
 	querystring = require("querystring"),
@@ -22,72 +15,48 @@ exp.parseProfile = function(name, cb) {
 	};
 
 	helpers.request(options, function(error, response, body) {
-		if (error) {
-			return cb(null, 500);
-		} else if (response.statusCode !== 200) {
+		if (error || response.statusCode !== 200) {
 			return cb(null, 404);
 		}
-		var playerMap = {};
-		var profileMap = {};
-		var overallArray = {};
-		var forumArray = {};
-		var paArray = {};
-		var blitzArray = {};
-		var ghostArray = {};
-		var objectivesArray = {};
+		var player = {};
+		var profile = {};
 		var $ = cheerio.load(body);
 
 		// Get Name
-		playerMap.username = $("h1 span").first().text().trim();
+		player.username = $("h1 span").first().text().trim();
 		var formerUser = $("h1 small");
-		if (formerUser) {
-			playerMap.previous_username = formerUser.first().text().replace(/\(|\)|formerly/gi, "").trim() || null;
+		var previous = null;
+		if (formerUser.length) {
+			player.previous_username = formerUser.first().text().replace(/\(|\)|formerly/gi, "").trim();
 		}
+		player.previous_username = previous;
 
 		// Get Status
+		var status;
 		if ($("body > div > section:nth-child(2) > div.row > div.span3 > div").text() !== "") {
-			var toReturn = $("body > div > section:nth-child(2) > div.row > div.span3 > div").text().replace("\\n", "");
-			playerMap.status = toReturn;
+			status = $("body > div > section:nth-child(2) > div.row > div.span3 > div").text();
 		} else if ($("body > div > section:nth-child(2) > div.row > div.span3 > span:nth-child(3)").children().length === 0) {
 			var spanthree = $("body > div > section:nth-child(2) > div.row > div.span3 > strong").text();
-			playerMap.status = "Seen " + spanthree + " ago".escapeSpecialChars();
+			status = "Seen " + spanthree + " ago";
 		} else {
-			var spanthree = $("body > div > section:nth-child(2) > div.row > div.span3 > strong").text();
-			playerMap.status = "Seen " + spanthree + " ago on " + $("body > div > section:nth-child(2) > div.row > div.span3 > span:nth-child(3) > a").text().replace("\\n", "");
+			var spthree = $("body > div > section:nth-child(2) > div.row > div.span3 > strong").text();
+			status = "Seen " + spthree + " ago on " + $("body > div > section:nth-child(2) > div.row > div.span3 > span:nth-child(3) > a").text();
 		}
-		playerMap.status = playerMap.status.escapeSpecialChars();
+		status = status.escapeSpecialChars();
+		player.status = status;
 
 		// Get Friends
-		playerMap.friends = parseFloat($("body > div > section:nth-child(2) > div.row > div.span2 > h2").text().escapeSpecialChars().replace("friends", ""));
-
-		// Get Objectives
-		var unsorted = [];
-		unsorted.push($("#objectives > div:nth-child(1) > div > h2").text().escapeSpecialChars());
-		unsorted.push($("#objectives > div:nth-child(3) > div > h2").text().escapeSpecialChars());
-		unsorted.push($("#objectives > div:nth-child(5) > div > h2").text().escapeSpecialChars());
-		for (var i = 0; i < unsorted.length; i++) {
-			var current = unsorted[i];
-			if (current.indexOf("cores leaked") > -1) {
-				current = current.replace("cores leaked", "");
-				objectivesArray.cores = parseFloat(current);
-			} else if (current.indexOf("monuments destroyed") > -1) {
-				current = current.replace("monuments destroyed", "");
-				objectivesArray.monuments = parseFloat(current);
-			} else {
-				current = current.replace("wools placed", "");
-				objectivesArray.wools = parseFloat(current);
-			}
-		}
+		player.friends_count = parseInt($("body > div > section:nth-child(2) > div.row > div.span2 > h2").text().escapeSpecialChars().replace("friends", ""));
 
 		// Get Social Links
-		profileMap.social = {};
+		profile.social = {};
 		$("#about > div.row:nth-child(1) > .span4").each(function() {
 			if ($(this).children("h6").text() == "Team") {
-				profileMap.team = {};
-				profileMap.team.name = $(this).children("blockquote").text().escapeSpecialChars();
-				profileMap.team.id = $(this).find("a").attr("href").replace("/teams/", "");
+				profile.team = {};
+				profile.team.name = $(this).children("blockquote").text().escapeSpecialChars();
+				profile.team.id = $(this).find("a").attr("href").replace("/teams/", "");
 			} else {
-				profileMap.social[$(this).children("h6").text().toLowerCase()] = $(this).children("blockquote").children("p").text().escapeSpecialChars();
+				profile.social[$(this).children("h6").text().toLowerCase()] = $(this).children("blockquote").children("p").text().escapeSpecialChars();
 			}
 		});
 
@@ -96,60 +65,25 @@ exp.parseProfile = function(name, cb) {
 			var elem = $(this);
 			var title = elem.find("h6").text().toLowerCase();
 			var text = elem.find("pre").text();
-			profileMap[title] = text;
+			profile[title] = text;
 		});
 
 		// Get Bio
-		profileMap.bio = $("#about > div:nth-child(3) > div > pre").text();
+		profile.bio = $("#about > div:nth-child(3) > div > pre").text();
 
-		// Get Overall Stats
-		overallArray.kills = parseFloat($("body > div > section:nth-child(2) > div.row > div.span7 > div > div.span8 > div > div.span5 > h2").attr("title").escapeSpecialChars().replace(" kills", ""));
-		overallArray.deaths = parseFloat($("body > div > section:nth-child(2) > div.row > div.span7 > div > div.span4 > h2").text().escapeSpecialChars().replace("deaths", ""));
-		overallArray.kd = parseFloat($("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(4)").text().escapeSpecialChars().replace("kd ratio", ""));
-		overallArray.kk = parseFloat($("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(5)").text().escapeSpecialChars().replace("kk ratio", ""));
-		overallArray.joins = parseFloat($("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(6)").text().escapeSpecialChars().replace("server joins", ""));
-		overallArray.firstjoin = $("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(6)").attr("title").escapeSpecialChars().replace("First joined on ", "");
-		overallArray.played = parseFloat($("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(7)").text().escapeSpecialChars().replace("days played", ""));
-		overallArray.raindrops = parseFloat($("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(8)").attr("title").escapeSpecialChars().replace(" raindrops", ""));
+		player.profile = profile;
 
-		// Get Forum stats
-		forumArray.posts = parseFloat($("#stats > div:nth-child(2) > div > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("forum posts", ""));
-		forumArray.topics = parseFloat($("#stats > div:nth-child(2) > div > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("topics started", ""));
-
-		// Get Project Ares Stats
-		paArray.kills = parseFloat($("#stats > div:nth-child(4) > div.span4 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kills", ""));
-		paArray.deaths = parseFloat($("#stats > div:nth-child(4) > div.span4 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("deaths", ""));
-		paArray.kd = parseFloat($("#stats > div:nth-child(4) > div.span3 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kd", ""));
-		paArray.kk = parseFloat($("#stats > div:nth-child(4) > div.span3 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("kk", ""));
-		paArray.played = parseFloat($("#stats > div:nth-child(4) > div.span5 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("days played", ""));
-		paArray.observed = parseFloat($("#stats > div:nth-child(4) > div.span5 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("days observed", ""));
-
-		// Get Blitz Stats
-		blitzArray.kills = parseFloat($("#stats > div:nth-child(6) > div.span4 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kills", ""));
-		blitzArray.deaths = parseFloat($("#stats > div:nth-child(6) > div.span4 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("deaths", ""));
-		blitzArray.kd = parseFloat($("#stats > div:nth-child(6) > div.span3 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kd", ""));
-		blitzArray.kk = parseFloat($("#stats > div:nth-child(6) > div.span3 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("kk", ""));
-		blitzArray.played = parseFloat($("#stats > div:nth-child(6) > div.span5 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("days played", ""));
-		blitzArray.observed = parseFloat($("#stats > div:nth-child(6) > div.span5 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("days observed", ""));
-
-		// Get Ghost Squadron Stats
-		ghostArray.kills = parseFloat($("#stats > div:nth-child(8) > div.span4 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kills", ""));
-		ghostArray.deaths = parseFloat($("#stats > div:nth-child(8) > div.span4 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("deaths", ""));
-		ghostArray.kd = parseFloat($("#stats > div:nth-child(8) > div.span3 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("kd", ""));
-		ghostArray.kk = parseFloat($("#stats > div:nth-child(8) > div.span3 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("kk", ""));
-		ghostArray.played = parseFloat($("#stats > div:nth-child(8) > div.span5 > div > div:nth-child(1) > h3").text().escapeSpecialChars().replace("days played", ""));
-		ghostArray.observed = parseFloat($("#stats > div:nth-child(8) > div.span5 > div > div:nth-child(2) > h3").text().escapeSpecialChars().replace("days observed", ""));
-
-		var ranksArray = [];
+		var ranks = [];
 		$(".label").each(function() {
 			var rank = {};
 			rank.name = $(this).text();
 			rank.background = $(this).css("background-color");
 			rank.text = $(this).css("color");
-			ranksArray.push(rank);
+			ranks.push(rank);
 		});
+		player.ranks = ranks;
 
-		var trophiesArray = [];
+		var trophies = [];
 		var trophyParent = $(".thumbnails").first();
 		trophyParent.children("li").each(function() {
 			var thumb = $(this).children(".thumbnail.trophy");
@@ -158,17 +92,67 @@ exp.parseProfile = function(name, cb) {
 				description: thumb.attr("title"),
 				icon: thumb.find("i").attr("class").match(/fa-[a-z]*/)[0]
 			};
-			trophiesArray.push(t);
+			trophies.push(t);
 		});
+		player.trophies = trophies;
+
+		var stats = {};
+
+		var statsNodes = $("#stats > div");
+		var forums = {};
+		var forumsNode = $(statsNodes[0]);
+		forums.posts = parseInt(exp.getText($(forumsNode.find("h3")[0])));
+		forums.topics = parseInt(exp.getText($(forumsNode.find("h3")[1])));
+		stats.forums = forums;
+
+		var overall = {};
+		var overallNode = $("section:nth-child(2) > div.row");
+		overall.kills = parseInt(exp.getText(overallNode.find(".span5 h2")));
+		overall.deaths = parseInt(exp.getText(overallNode.find(".span4 h2")));
+		overall.kd = parseFloat(exp.getText(overallNode.find(".span3 h2:nth-child(4)")));
+		overall.kk = parseFloat(exp.getText(overallNode.find(".span3 h2:nth-child(5)")));
+		overall.joins = parseInt(exp.getText(overallNode.find(".span3 h2:nth-child(6)")));
+		overall.joined = overallNode.find(".span3 h2:nth-child(6)").attr("title");
+		overall.played = parseFloat(exp.getText(overallNode.find(".span3 h2:nth-child(7)")));
+		overall.raindrops = parseFloat(overallNode.find(".span3 h2:nth-child(8)").attr("title")
+			.replace("raindrops", "").trim());
+		stats.overall = overall;
+
+		var objectiveNodes = $("#objectives h2");
+		var monuments = parseInt(exp.getText($(objectiveNodes[0])));
+		var cores = parseInt(exp.getText($(objectiveNodes[1])));
+		var wools = parseInt(exp.getText($(objectiveNodes[2])));
+		stats.objectives = {
+			monuments: monuments,
+			cores: cores,
+			wools: wools
+		};
+
+		var gamemodes = ["project_ares", "blitz", "ghost_squadron"];
+		for (var i = 1; i < statsNodes.length; i++) {
+			var elm = $(statsNodes[i]);
+
+			var headers = elm.find("h3");
+			var kills = parseInt(exp.getText($(headers[0])));
+			var deaths = parseInt(exp.getText($(headers[1])));
+			var kd = parseFloat(exp.getText($(headers[2])));
+			var kk = parseFloat(exp.getText($(headers[3])));
+			var played = parseFloat(exp.getText($(headers[4])));
+			var observed = parseFloat(exp.getText($(headers[5])));
+
+			stats[gamemodes[i - 1]] = {
+				kills: kills,
+				deaths: deaths,
+				kd: kd,
+				kk: kk,
+				played: played,
+				observed: observed
+			};
+		}
+
+		player.stats = stats;
 
 
-		var overall = new OverallStats(overallArray.kills, overallArray.deaths, overallArray.kd, overallArray.kk, overallArray.joins, overallArray.firstjoin, overallArray.played, overallArray.raindrops);
-		var PAStats = new ProjectAresStats(paArray.kills, paArray.deaths, paArray.kd, paArray.kk, paArray.played, paArray.observed);
-		var Blitz = new BlitzStats(blitzArray.kills, blitzArray.deaths, blitzArray.kd, blitzArray.kk, blitzArray.played, blitzArray.observed);
-		var ghost = new GhostSquadronStats(ghostArray.kills, ghostArray.deaths, ghostArray.kd, ghostArray.kk, ghostArray.played, ghostArray.observed);
-		var forums = new ForumStats(forumArray.posts, forumArray.topics);
-		var objectives = new ObjectiveStats(objectivesArray.cores, objectivesArray.monuments, objectivesArray.wools);
-		var player = new Player(playerMap.username, playerMap.previous_username, playerMap.status, playerMap.friends, profileMap, ranksArray, trophiesArray, overall, objectives, forums, PAStats, Blitz, ghost);
 		cb(player);
 
 	});
