@@ -6,55 +6,127 @@
                 Sunshine is an unofficial API for the  <a href="//oc.tc" target="_blank">Overcast Network</a>.<br>
                 Created by <a href="//github.com/gilrosenthal" target="_blank">Gil</a>, <a href="//github.com/Jake0oo0" target="_blank">Jake</a>, and <a href="//github.com/jacobbearden" target="_blank">Jacob</a> using <a href="//nodejs.org" target="_blank">node.js</a>.<br>
                 Documentation by <a href="//github.com/szboy" target="_blank">Shawn</a>.<br><br>
-                
+
                 Sunshine uses a technique called "web scraping" to index information from Overcast Network's website.<br>
                 This information includes stats, forum posts, teams, etc.<br>
                 All data is returned in a JSON format.
             </p>
         </section>
+
         <section id="documentation">
             <h1>Documentation</h2>
-            <div class="nonauth">
-                <h2>Endpoints not requiring Authentication</h3>
+              <br>
+              <section>
+                  <h2>General API Elements</h2>
+                  <h3>Pagination</h3>
+                  <p class="note">To retrive a specific page of something use the follow parameter:</p>
+                  <div class="code">?page=<mark>page_number</mark></div>
+                  <p class="note">For example this link will get me the 2nd page of the "What's New" forum category.</p>
+                  <div class="code">{{domain}}/forums/new?page=2</div>
+                  <p class="note" id="id">The following endpoints use pagination: <mark>Stats</mark>, <mark>Forum Topics</mark>, <mark>Teams</mark> and, <mark>Punishments</mark>.</p>
+              </section>
+              <br>
+              <section>
+                  <h3>Id</h3>
+                  <p class="note">Some endpoints use ids to retrive information. The <mark>id</mark> in this case is a <a href="//www.mongodb.org">MongoDB</a> hash. An <mark>id</mark> looks something like this.</p>
+                  <div class="code"><mark>557e21685f35b92506006f9e</mark></div>
+              </section>
+              <div class="nonauth">
+                  <h2>Non-Authentication Dependent Endpoints</h2>
                 <section>
-                    <h3>Player Statistics and Info</h3>
-                    <div class="code">{{domain}}/players/<mark>username</mark></div>
-                <section>
-                    <h3>Forum Topic</h3>
-                    <div class="code">{{domain}}/forums/topics/<mark>topic_id</mark></div>
+                    <h3>Stats</h3>
+                    <p class="note">By default the stats endpoint will return the top kills in the last 24 hours in all gamemodes.</p>
+                    <div class="code">{{domain}}/stats</div>
+                    <p class="note">Stats has three parameters <mark>time</mark>, <mark>game</mark>, and, <mark>sort</mark>.</p>
+                    <p class="note">This example retrives the top stats on wool captures for the past week in all gametypes.</p>
+                    <div class="code">{{domain}}/stats/?time=week&game=all&sort=wool_placed</div>
+                    <p class="note">All the properties for the three parameters are down below.</p>
+                    <table class="table">
+                       <thead>
+                           <tr>
+                              <td><strong>Parameter</strong></td>
+                              <td><strong>Properties</strong></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>time</td>
+                              <td>day, week, eternity</td>
+                            </tr>
+                            <tr>
+                              <td>game</td>
+                              <td>all, projectares, ghostsquadron</td>
+                            </tr>
+                            <tr>
+                              <td>sort</td>
+                              <td>kills, deaths, kd, kk, cores_leaked, wool_placed, destroyed_destroyables, playing_time</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </section>
+                <br>
                 <section>
-                    <h3>Forum Post</h3>
-                    <div class="code">{{domain}}/forums/<mark>post_id</mark></div>
+                  <h3>Player Information and Statistics</h3>
+                  <p class="note">To find a specific player's stats and information use the following format below.</p>
+                  <div class="code">{{domain}}/players/<mark>Username</mark></div>
+                  <p class="note">For example, the code below will retrive the player information for the player  <a href="//oc.tc/Cubist">Cubist</a>.</p>
+                  <div class="code">{{domain}}/players/<mark>Cubist</mark></div>
                 </section>
+                <br>
                 <section>
                     <h3>Teams</h3>
-                    <h4>All teams</h4>
-                    <div class="code">{{domain}}/teams/</div>
-                    <h4>Specific Team</h4>
-                    <div class="code">{{domain}}/teams/<mark>team_id</mark></div>
+                    <p class="note">Specify a team's name to retrive their information.</p>
+                     <div class="code">{{domain}}/teams/<mark>name</mark></div>
+                     <p class="note">Not specifing a team will retrive a list of all the teams.</p>
+                     <div class="code">{{domain}}/teams</div>
+                     <p class="note">The following link will retrive information for the team <mark>Drifters.</mark></p>
+                     <div class="code">{{domain}}/teams/<mark>Drifters</mark></div>
                 </section>
+                <br>
                 <section>
                     <h3>Tournaments</h3>
-                    <h4>All tournaments</h4>
-                    <div class="code">{{domain}}/tournaments/</div>
-                    <h4>Specific Tournament</h4>
-                    <div class="code">{{domain}}/teams/<mark>tournament_name</mark></div>
+                    <p class="note">To obtain a list of all tournaments do not specify a tournament.</p>
+                    <div class="code">{{domain}}/tournaments</div>
+                    <p class="note">For example, this snippet will parse the tournament <mark>Attack of the Cores.</mark></p>
+                    <div class="code">{{domain}}/tournaments/<mark>attack-of-the-cores</mark></div>
+                    <p class><strong class="text-success">Remeber</strong> to use '-' instead of spaces when dealing with tournaments.</p>
                 </section>
+                <br>
+                <section>
+                  <h3>Forum Topics</h3>
+                  <p class="note">To get a specifc forum topic you are going to need the thread's <mark>id</mark>. Please refer to the <a href="#id">id</a> part of this Documentation.</p>
+                  <div class="code">{{domain}}/forums/topics/<mark>id</mark></div>
+                  <p class="note">For example, this will get you the topic <ahref="https://oc.tc/forums/topics/50494e68b944ec59bc00596c">Awesome Music Thread.</a></p>
+                  <div class="code">{{domain}}/forums/topics/<mark>50494e68b944ec59bc00596c</mark></div>
+                </section>
+                <br>
+                <section>
+                  <h3>Forum Categories</h3>
+                  <p class="note">Specifying nothing except for what is below will return all* the categories of the forums and their ids.</p>
+                  <div class="code">{{domain}}/forums</div>
+                  <h6>* does not return private categories</h6>
+                  <p class="note">Giving an id will give you the first page of the forum category specified.</p>
+                  <div class="code">{{domain}}/forums/<mark>id</mark></div>
+                  <p class="note">This example will return the first page of the forum category <mark>Announcements</mark>.</p>
+                  <div class="code">{{domain}}/forums/<mark>4fc17119c463751492000018</mark></div>
+                  <p class="note">Finally, using the keyword <mark>new</mark> will return the front page of the What's New category; the most recent threads.</p>
+                  <div class="code">{{domain}}/forums/<mark>new</mark></div>
+                </section>
+                <br>
                 <section>
                     <h3>Punishments</h3>
-                    <h4>All recent punishments</h4>
-                    <div class="code">{{domain}}/punishments/<small>(optional)</small>?page=<mark>page_number</mark></div>
-                    <h4>Specific Punishment</h4>
-                    <div class="code">{{domain}}/punishments/<mark>punishment_id</mark></div>
+                    <p class="note">To retrive a list of the most recent punishments use:</p>
+                    <div class="code">{{domain}}/punishments</div>
+                    <p class="docs-note">If you want to retrive a specific punishment use its <mark>id</mark>.</p>
+                    <div class="code">{{domain}}/punishments/<mark>id</mark></div>
                 </section>
             </div>
             <div class="auth">
-                <h2>Endpoints requiring Authentication</h3>
-                
+                <h2>Authentication Dependent Endpoints</h3>
+                <p>Coming Soon!</p>
             </div>
         </section>
-       
+
          <section id="contributors">
             <h1>Contributors</h2>
             <div class="thumbnail" data-toggle="tooltip" title="Initial idea, Development">
@@ -66,7 +138,7 @@
             <div class="thumbnail" data-toggle="tooltip" title="Development, Hosting">
                 <img src="//crafatar.com/avatars/149cf470051a49b99ab0e731a8d20f8e?helm&size=75">
             </div>
-            <div class="thumbnail" data-toggle="tooltip" title="Favicon, Documentation">
+            <div class="thumbnail" data-toggle="tooltip" title="Minor Fixes, Documentation">
                 <img src="//crafatar.com/avatars/94812eb711604db4b349c2eac0792218?helm&size=75">
             </div>
         </section>
