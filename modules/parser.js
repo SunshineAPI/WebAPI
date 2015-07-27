@@ -110,27 +110,27 @@ exp.parseProfile = function(name, cb) {
 		var statsNodes = $("#stats > div");
 		var forums = {};
 		var forumsNode = $(statsNodes[0]);
-		forums.posts = parseInt(exp.getText($(forumsNode.find("h3")[0])));
-		forums.topics = parseInt(exp.getText($(forumsNode.find("h3")[1])));
+		forums.posts = parseInt(getText($(forumsNode.find("h3")[0])));
+		forums.topics = parseInt(getText($(forumsNode.find("h3")[1])));
 		stats.forums = forums;
 
 		var overall = {};
 		var overallNode = $("section:nth-child(2) > div.row");
-		overall.kills = parseInt(exp.getText(overallNode.find(".span5 h2")));
-		overall.deaths = parseInt(exp.getText(overallNode.find(".span4 h2")));
-		overall.kd = parseFloat(exp.getText(overallNode.find(".span3 h2:nth-child(4)")));
-		overall.kk = parseFloat(exp.getText(overallNode.find(".span3 h2:nth-child(5)")));
-		overall.joins = parseInt(exp.getText(overallNode.find(".span3 h2:nth-child(6)")));
+		overall.kills = parseInt(getText(overallNode.find(".span5 h2")));
+		overall.deaths = parseInt(getText(overallNode.find(".span4 h2")));
+		overall.kd = parseFloat(getText(overallNode.find(".span3 h2:nth-child(4)")));
+		overall.kk = parseFloat(getText(overallNode.find(".span3 h2:nth-child(5)")));
+		overall.joins = parseInt(getText(overallNode.find(".span3 h2:nth-child(6)")));
 		overall.joined = overallNode.find(".span3 h2:nth-child(6)").attr("title");
-		overall.played = parseFloat(exp.getText(overallNode.find(".span3 h2:nth-child(7)")));
+		overall.played = parseFloat(getText(overallNode.find(".span3 h2:nth-child(7)")));
 		overall.raindrops = parseFloat(overallNode.find(".span3 h2:nth-child(8)").attr("title")
 			.replace("raindrops", "").trim());
 		stats.overall = overall;
 
 		var objectiveNodes = $("#objectives h2");
-		var monuments = parseInt(exp.getText($(objectiveNodes[0])));
-		var cores = parseInt(exp.getText($(objectiveNodes[1])));
-		var wools = parseInt(exp.getText($(objectiveNodes[2])));
+		var monuments = parseInt(getText($(objectiveNodes[0])));
+		var cores = parseInt(getText($(objectiveNodes[1])));
+		var wools = parseInt(getText($(objectiveNodes[2])));
 		stats.objectives = {
 			monuments: monuments,
 			cores: cores,
@@ -142,12 +142,12 @@ exp.parseProfile = function(name, cb) {
 			var elm = $(statsNodes[i]);
 
 			var headers = elm.find("h3");
-			var kills = parseInt(exp.getText($(headers[0])));
-			var deaths = parseInt(exp.getText($(headers[1])));
-			var kd = parseFloat(exp.getText($(headers[2])));
-			var kk = parseFloat(exp.getText($(headers[3])));
-			var played = parseFloat(exp.getText($(headers[4])));
-			var observed = parseFloat(exp.getText($(headers[5])));
+			var kills = parseInt(getText($(headers[0])));
+			var deaths = parseInt(getText($(headers[1])));
+			var kd = parseFloat(getText($(headers[2])));
+			var kk = parseFloat(getText($(headers[3])));
+			var played = parseFloat(getText($(headers[4])));
+			var observed = parseFloat(getText($(headers[5])));
 
 			stats[gamemodes[i - 1]] = {
 				kills: kills,
@@ -226,7 +226,7 @@ exp.parseForum = function(body, page, cat, callback) {
 
 exp.parseForumTopic = function($, id) {
 	var header = $(".page-header > h3");
-	var title = exp.getText(header).escapeSpecialChars();
+	var title = getText(header).escapeSpecialChars();
 	var creator = header.find("a").text();
 	var t = {
 		id: id,
@@ -347,11 +347,14 @@ exp.setMeta = function(req, page, pages) {
 	return links;
 };
 
-exp.getText = function(elm) {
+
+var getText = function(elm) {
 	return elm.contents().filter(function() {
 		return this.type === "text";
 	}).text().escapeSpecialChars();
 };
+
+getText = getText;
 
 exp.getTextNodes = function(elm) {
 	return elm.contents().filter(function() {
