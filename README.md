@@ -13,6 +13,7 @@ Sunshine is *not* affiliated with the Overcast Network, and will not be held lia
 ## Installing
 0. Install [redis](http://redis.io/) and [NodeJS](https://nodejs.org/)
 0. Run ```npm install```.
+0. If it was not done automatically, copy ```config.example.js``` to ```config.js```. You can configure the app as you want.
 0. Start redis and run ```npm start```
 
 
