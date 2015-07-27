@@ -21,7 +21,7 @@ exp.parseProfile = function(name, cb) {
         url: "/stats/" + name,
         followAllRedirects: true
     };
-
+	
     helpers.request(options, function(error, response, body) {
         if (error) {
             return cb(null, 500);
@@ -39,7 +39,27 @@ exp.parseProfile = function(name, cb) {
         var socialArray = {};
         var objectivesArray = {};
         var $ = cheerio.load(body);
-
+		var trophyHash = {};
+		trophyHash["Oooh, kill em!"] = "Reach 10k kills";
+		trophyHash["One Giant Leap_"] = "Reach 100k kills";
+		trophyHash["Sign Me Up"] = "Register and confirm email address";
+		trophyHash["Ref"] = "Referee a tournament";
+		trophyHash["Official Business"] = "Be a member of the staff";
+		trophyHash["Language Savant"] = "Help translate the Overcast Network";
+		trophyHash["Sapper"] = "Licensed TNT handler";
+		trophyHash["Chick Magnet"] = "Have the cutest skin on Overcast";
+		trophyHash["Decryption Master"] = "Destroy apple's decryption challenge";
+		trophyHash["Harcour Parkour"] = "Won the parkour challenge";
+		trophyHash["War Wars"] = "Win the April Fool's Tournament";
+		trophyHash["Rudolph"] = "Deliver one gift on the 2013 Secret Santa";
+		trophyHash["Busy Elf"] = "Deliver five gifts on the 2013 Secret Santa";
+		trophyHash["Santa Clause"] = "Deliver ten gifts on the 2013 Secret Santa";
+		trophyHash["Let it Rain"] = "Deliver one gift on the 2014 Secret Santa";
+		trophyHash["A Storm is Brewing"] = "Deliver five gifts on the 2014 Secret Santa";
+		trophyHash["Downpour"] = "Deliver ten gifts on the 2014 Secret Santa";
+		trophyHash["Badass"] = "Sell contraband on the black market";
+		trophyHash["Regular"] = "Exchange five pieces of contraband";
+		trophyHash["Locked up"] = "Get put in the SHU for selling contraband";
         // Get Name
         playerArray.username = $("h1 span").first().text().trim();
         var formerUser = $("h1 small");
@@ -143,6 +163,16 @@ exp.parseProfile = function(name, cb) {
             rank.text = $(this).css("color");
             ranksArray.push(rank);
         });
+        
+        var trophiesArray = new Array();
+        var trophyParent = $(".thumbnails");
+        trophyParent.children("li").each(function(i){
+        	var newTrophy = {};
+        	newTrophy.name = $(this).children(".thumbnail").children("h4").text();
+        	newTrophy.description = trophyHash[newTrophy.name];
+        	trophiesArray.push(newTrophy);
+        });
+        
         var overall = new OverallStats(overallArray.kills, overallArray.deaths, overallArray.kd, overallArray.kk, overallArray.joins, overallArray.firstjoin, overallArray.played, overallArray.raindrops);
         var PAStats = new ProjectAresStats(paArray.kills, paArray.deaths, paArray.kd, paArray.kk, paArray.played, paArray.observed);
         var Blitz = new BlitzStats(blitzArray.kills, blitzArray.deaths, blitzArray.kd, blitzArray.kk, blitzArray.played, blitzArray.observed);
@@ -150,7 +180,7 @@ exp.parseProfile = function(name, cb) {
         var forums = new ForumStats(forumArray.posts, forumArray.topics);
         var objectives = new ObjectiveStats(objectivesArray.cores, objectivesArray.monuments, objectivesArray.wools);
         profile = new Profile(socialArray.skype, socialArray.twitter, socialArray.facebook, socialArray.steam, socialArray.youtube, socialArray.twitch, socialArray.github, socialArray.team, profileArray.bio);
-        var player = new Player(playerArray.username, playerArray.previous_username, playerArray.status, playerArray.friends, profile, ranksArray, overall, objectives, forums, PAStats, Blitz, ghost);
+        var player = new Player(playerArray.username, playerArray.previous_username, playerArray.status, playerArray.friends, profile, ranksArray,trophiesArray, overall, objectives, forums, PAStats, Blitz, ghost);
         cb(player);
 
     });
