@@ -45,9 +45,6 @@ exp.parseProfile = function(name, cb) {
 		status = status.escapeSpecialChars();
 		player.status = status;
 
-		// Get Friends
-		player.friends_count = parseInt($("body > div > section:nth-child(2) > div.row > div.span2 > h2").text().escapeSpecialChars().replace("friends", ""));
-
 		// Get Social Links
 		profile.social = {};
 		$("#about > div.row:nth-child(1) > .span4").each(function() {
@@ -72,13 +69,19 @@ exp.parseProfile = function(name, cb) {
 		profile.bio = $("#about > div:nth-child(3) > div > pre").text();
 
 		player.profile = profile;
-		player.friends_sample = {};
-		var friendsArray = new Array();
-		var friendsParent = $(".span2");
-		friendsParent.children("a").each(function(i){
-		friendsArray.push($(this).attr("href").substr(1,$(this).attr("href").length));	
+
+		// Get Friends
+		player.friends = {};
+		var friendsParent = $("body > div > section:nth-child(2) > div.row > div.span2");
+		player.friends.count = parseInt(friendsParent.find("> h2").text().escapeSpecialChars().replace("friends", ""));
+
+		var friends = [];
+		var friendNodes = friendsParent.find("a img");
+		friendNodes.each(function() {
+			friends.push($(this).attr("alt"));
 		});
-		player.friends_sample = friendsArray;
+		player.friends.sample = friends;
+
 		var ranks = [];
 		$(".label").each(function() {
 			var rank = {};
@@ -123,7 +126,7 @@ exp.parseProfile = function(name, cb) {
 		overall.raindrops = parseFloat(overallNode.find(".span3 h2:nth-child(8)").attr("title")
 			.replace("raindrops", "").trim());
 		stats.overall = overall;
-		
+
 		var objectiveNodes = $("#objectives h2");
 		var monuments = parseInt(exp.getText($(objectiveNodes[0])));
 		var cores = parseInt(exp.getText($(objectiveNodes[1])));
@@ -155,13 +158,9 @@ exp.parseProfile = function(name, cb) {
 				observed: observed
 			};
 		}
-		
 
 		player.stats = stats;
-
-
 		cb(player);
-
 	});
 };
 
