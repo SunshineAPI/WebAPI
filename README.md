@@ -6,7 +6,7 @@ Sunshine is a REST API for interaction with the [Overcast Network](https://oc.tc
 
 Sunshine provides these services, both authenticated, and non-authenticated through a JSON Web API served by [NodeJS](https://nodejs.org/), with data scraped from the Overcast Network with [Cheerio](https://github.com/cheeriojs/cheerio).
 
-View the documentation for Sunshine on the [website](http://sunshine.bearden.io/)
+View the documentation for Sunshine on the [website](https://sunshine-api.com/)
 
 Sunshine is *not* affiliated with the Overcast Network, and will not be held liable for the actions performed through the API.
 
