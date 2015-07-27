@@ -1,7 +1,7 @@
 <main>
     <div class="container">
         <section id="about">
-            <h2>About</h2>
+            <h1>About</h2>
             <p>
                 Sunshine is an unofficial API for the  <a href="//oc.tc" target="_blank">Overcast Network</a>.<br>
                 Created by <a href="//github.com/gilrosenthal" target="_blank">Gil</a>, <a href="//github.com/Jake0oo0" target="_blank">Jake</a>, and <a href="//github.com/jacobbearden" target="_blank">Jacob</a> using <a href="//nodejs.org" target="_blank">node.js</a>.<br>
@@ -13,34 +13,50 @@
             </p>
         </section>
         <section id="documentation">
-            <h2>Documentation</h2>
-            <section>
-                <h3>Stats</h3>
-                <div class="code">{{domain}}/players/<mark>username</mark></div>
-            </section>
-            <section>
-                <h3>Player Info</h3>
-                <div class="code"></div>
-            </section>
-            <section>
-                <h3>Forum Topic</h3>
-                <div class="code"></div>
-            </section>
-            <section>
-                <h3>Forum Post</h3>
-                <div class="code"></div>
-            </section>
-            <section>
-                <h3>Teams</h3>
-                <div class="code"></div>
-            </section>
-            <section>
-                <h3>Tournaments</h3>
-                <div class="code"></div>
-            </section>
+            <h1>Documentation</h2>
+            <div class="nonauth">
+                <h2>Endpoints not requiring Authentication</h3>
+                <section>
+                    <h3>Player Statistics and Info</h3>
+                    <div class="code">{{domain}}/players/<mark>username</mark></div>
+                <section>
+                    <h3>Forum Topic</h3>
+                    <div class="code">{{domain}}/forums/topics/<mark>topic_id</mark></div>
+                </section>
+                <section>
+                    <h3>Forum Post</h3>
+                    <div class="code">{{domain}}/forums/<mark>post_id</mark></div>
+                </section>
+                <section>
+                    <h3>Teams</h3>
+                    <h4>All teams</h4>
+                    <div class="code">{{domain}}/teams/</div>
+                    <h4>Specific Team</h4>
+                    <div class="code">{{domain}}/teams/<mark>team_id</mark></div>
+                </section>
+                <section>
+                    <h3>Tournaments</h3>
+                    <h4>All tournaments</h4>
+                    <div class="code">{{domain}}/tournaments/</div>
+                    <h4>Specific Tournament</h4>
+                    <div class="code">{{domain}}/teams/<mark>tournament_name</mark></div>
+                </section>
+                <section>
+                    <h3>Punishments</h3>
+                    <h4>All recent punishments</h4>
+                    <div class="code">{{domain}}/punishments/<small>(optional)</small>?page=<mark>page_number</mark></div>
+                    <h4>Specific Punishment</h4>
+                    <div class="code">{{domain}}/punishments/<mark>punishment_id</mark></div>
+                </section>
+            </div>
+            <div class="auth">
+                <h2>Endpoints requiring Authentication</h3>
+                
+            </div>
         </section>
+       
          <section id="contributors">
-            <h2>Contributors</h2>
+            <h1>Contributors</h2>
             <div class="thumbnail" data-toggle="tooltip" title="Initial idea, Development">
                 <img src="//crafatar.com/avatars/0401f604541c4b288e7ee0679c454f2c?helm&size=75">
             </div>
