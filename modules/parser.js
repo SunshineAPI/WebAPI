@@ -121,7 +121,8 @@ exp.parseProfile = function(name, cb) {
 		overall.kd = parseFloat(getText(overallNode.find(".span3 h2:nth-child(4)")));
 		overall.kk = parseFloat(getText(overallNode.find(".span3 h2:nth-child(5)")));
 		overall.joins = parseInt(getText(overallNode.find(".span3 h2:nth-child(6)")));
-		overall.joined = overallNode.find(".span3 h2:nth-child(6)").attr("title");
+		overall.joined = overallNode.find(".span3 h2:nth-child(6)").attr("title")
+			.replace("First joined on", "").trim();
 		overall.played = parseFloat(getText(overallNode.find(".span3 h2:nth-child(7)")));
 		overall.raindrops = parseFloat(overallNode.find(".span3 h2:nth-child(8)").attr("title")
 			.replace("raindrops", "").trim());
