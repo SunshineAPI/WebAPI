@@ -1,21 +1,39 @@
 #!/usr/bin/env node
 
-var app = require("../app");
-app.set("port", process.env.PORT || 3000);
-app.set("bind", process.env.BIND || "0.0.0.0");
 var server;
-
+var port = process.env.SUNSHINE_PORT || 3000;
+var bind = process.env.SUNSHINE_BIND || "0.0.0.0";
 function boot(callback) {
+	var app = require("../app");
+	
+	app.set("port", port);
+	app.set("bind", bind);
+
 	server = app.listen(app.get("port"), app.get("bind"), function() {
-		callback("Express server listening at " + app.get("bind") + ":" + app.get("port"));
+		console.log("Express server listening at " + bind + ":" + port);
+		callback();
 		module.exports.server = server;
 	});
 }
 
+function checkConfig() {
+	try {
+		require("../config");
+	} catch (err) {
+		if (err.code === 'MODULE_NOT_FOUND') {
+			console.error("config.js was not found. Copy config.example.js to config.js and start the server again.");
+			process.exit(5);
+		}
+	}
+}
+
+module.exports.checkConfig = checkConfig;
+
 module.exports.boot = boot;
 
 if (!module.parent) {
-	boot(function(msg) {
-		console.log(msg);
-	});
+	checkConfig();
+	boot(function() {});
+} else {
+	checkConfig();
 }
