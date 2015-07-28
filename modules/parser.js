@@ -137,7 +137,7 @@ exp.parseProfile = function(name, cb) {
 			cores: cores,
 			wools: wools
 		};
-
+		var total_obs = 0.0;
 		var gamemodes = ["project_ares", "blitz", "ghost_squadron"];
 		for (var i = 1; i < statsNodes.length; i++) {
 			var elm = $(statsNodes[i]);
@@ -149,7 +149,7 @@ exp.parseProfile = function(name, cb) {
 			var kk = parseFloat(getText($(headers[3])));
 			var played = parseFloat(getText($(headers[4])));
 			var observed = parseFloat(getText($(headers[5])));
-
+			total_obs += observed;
 			stats[gamemodes[i - 1]] = {
 				kills: kills,
 				deaths: deaths,
@@ -159,6 +159,8 @@ exp.parseProfile = function(name, cb) {
 				observed: observed
 			};
 		}
+
+		stats.overall.total_observed = total_obs;
 
 		player.stats = stats;
 		cb(player);
