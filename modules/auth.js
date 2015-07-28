@@ -1,32 +1,9 @@
 "use strict";
-var redis = require("redis");
 var crypto = require("crypto");
 var helpers = require("./helpers");
-var instance = null;
+var instance = require("./cache").getRedis();
 
 var exp = {};
-
-exp.getRedis = function() {
-	return instance;
-};
-
-var connect_redis = function() {
-	console.log("Connecting to redis...");
-
-	instance = redis.createClient(6379, "localhost");
-
-	instance.on("ready", function() {
-		console.log("Established redis connection.");
-	});
-
-	instance.on("error", function(err) {
-		console.error(err);
-	});
-
-	instance.on("end", function() {
-		console.error("Lost redis connection!");
-	});
-};
 
 exp.get_hash = function(email, password) {
 	return crypto.createHash("md5").update(email + ":" + password).digest("hex");
@@ -204,7 +181,5 @@ exp.authorize = function(req, res, next) {
 	}
 };
 
-
-connect_redis();
 
 module.exports = exp;

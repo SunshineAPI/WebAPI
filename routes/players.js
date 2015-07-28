@@ -3,6 +3,7 @@ var express = require("express");
 var router = express.Router();
 var parser = require("../modules/parser");
 var auth = require("../modules/auth");
+var cache = require("../modules/cache");
 
 /*
     Post email and password registered to Overcast
@@ -24,7 +25,6 @@ router.post("/auth", function(req, res) {
 
         res.json({token: hash});
     });
-   
 });
 
 
@@ -36,7 +36,9 @@ router.get("/:player", function(req, res) {
     parser.parseProfile(player, function(user, status) {
         if (user) {
             var links = parser.setMeta(req);
-            res.json({links: links, data: user});
+            var response = {links: links, data: user};
+            res.json(response);
+            cache.cache_response(res, response, "player");
         } else {
             res.status(404).json({errors: ["Player not found"]});
         }

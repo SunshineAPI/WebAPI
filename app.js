@@ -3,6 +3,7 @@ var express = require("express");
 var exphbs = require("express-handlebars");
 var bodyParser = require("body-parser");
 var app = express();
+var crypto = require("crypto");
 
 app.use(bodyParser.urlencoded({
 	extended: false
@@ -33,6 +34,21 @@ var maps = require("./routes/maps");
 var servers = require("./routes/servers");
 var friends = require("./routes/friends");
 var matches = require("./routes/matches");
+var redis = require("./modules/cache");
+var instance = redis.getRedis();
+
+function checkCache(req, res, next) {
+	var key = crypto.createHash("md5").update(req.originalUrl).digest("hex");
+	instance.hgetall(key, function(err, obj) {
+		if (err || !obj) {
+			return next();
+		}
+		res.setHeader("X-Response-Type", "cached");
+		return res.status(obj.status).json(JSON.parse(obj.body)); // parse the JSON so it's formatted
+	});
+}
+
+app.use(checkCache);
 
 app.use("/assets", express.static("public"));
 
@@ -49,7 +65,8 @@ app.use("/staff", staff);
 app.use("/maps", maps);
 app.use("/servers", servers);
 app.use("/friends", friends);
-app.use("/matches",matches);
+app.use("/matches", matches);
+
 app.use(function(req, res, next) {
 	var err = new Error("Not Found");
 	err.status = 404;
@@ -61,18 +78,17 @@ app.use(function(err, req, res, next) {
 	if (err.status === 404) {
 		res.send("404 not found");
 	} else {
-		console.error(err);
+		console.error(err, err.stack);
 		res.send("500 server error");
 	}
 });
 
 // enable CORS
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	next();
 });
-
 
 String.prototype.escapeSpecialChars = function() {
 	return this.replace(new RegExp("\\n", "g"), "", "");
@@ -83,6 +99,9 @@ String.prototype.escapeSpecialChars = function() {
 String.prototype.spaceSpecialChars = function() {
 	return this.replace(new RegExp("\\n", "g"), " ", " ");
 };
-String.prototype.contains = function(it) { return this.indexOf(it) != -1; };
+
+String.prototype.contains = function(it) {
+	return this.indexOf(it) != -1;
+};
 
 module.exports = app;
