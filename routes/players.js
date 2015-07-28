@@ -40,7 +40,7 @@ router.get("/:player", function(req, res) {
             res.json(response);
             cache.cache_response(res, response, "player");
         } else {
-            res.status(404).json({errors: ["Player not found"]});
+            res.status(status || 404).json({errors: ["Player not found"]});
         }
     });
 });

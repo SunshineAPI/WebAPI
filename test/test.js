@@ -218,7 +218,7 @@ describe("Sunshine", function() {
       });
 
       it("should not find 'archived' punishment", function(done) {
-        helpers.request(url + "/punishments/5104c5bbe4b0ab5151e10de8", function(error, res, body) {
+        helpers.request(url + "/punishments/5104c5bbe4b0ab5151e10de8", function(error, res) {
           assert.strictEqual(res.statusCode, 404);
           done();
         });
@@ -358,7 +358,7 @@ describe("Sunshine", function() {
 
     describe("Handlebars Documentation", function() {
       it("should return the index", function(done) {
-        helpers.request(url + "/", function(error, res, body) {
+        helpers.request(url + "/", function(error, res) {
           assert.strictEqual(res.statusCode, 200);
           done();
         });
