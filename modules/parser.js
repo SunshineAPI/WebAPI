@@ -355,7 +355,7 @@ var getText = function(elm) {
 	}).text().escapeSpecialChars();
 };
 
-getText = getText;
+exp.getText = getText;
 
 exp.getTextNodes = function(elm) {
 	return elm.contents().filter(function() {
