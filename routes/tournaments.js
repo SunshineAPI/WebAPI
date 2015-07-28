@@ -2,7 +2,6 @@
 var express = require("express");
 var router = express.Router();
 var cheerio = require("cheerio");
-var Tournament = require("../modules/tournament");
 var Team = require("../modules/team");
 var parser = require("../modules/parser");
 var helpers = require("../modules/helpers");
@@ -36,7 +35,10 @@ router.get("/", function(req, res) {
             var current = $(tournaments).find(".tournament-banner");
             var link = $(current[0]).attr("href");
             var image = $(current[1]).attr("src");
-            var tourney = new Tournament(link, image);
+            var tourney = {
+                link: link,
+                image: image
+            };
             data.current = tourney;
         }
         data.past = [];
@@ -45,7 +47,10 @@ router.get("/", function(req, res) {
             var currentList = tourneyList.find(".tournament-banner");
             var linkList = $(currentList[0]).attr("href");
             var imageList = $(currentList[1]).attr("src");
-            var newToruney = new Tournament(linkList, imageList);
+            var newToruney = {
+                link: linkList,
+                image: imageList
+            };
             data.past.push(newToruney);
         }
 
