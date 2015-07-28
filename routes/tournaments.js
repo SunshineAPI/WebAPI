@@ -113,7 +113,7 @@ router.get("/:id", function(req, res) {
 
             var id = cols.first().text();
             var name = $(cols[1]).text().escapeSpecialChars();
-            var path = $(cols[1]).find("a").attr("href");
+            var teamId = $(cols[1]).find("a").attr("href").replace("/teams/", "");
             var leader = $(cols[2]).text().escapeSpecialChars();
             var memberCount = parseInt($(cols[3]).text());
             var members = $(cols[3]).attr("title").replace("and", " ").replace(/,/g, " ").replace(/\s\s+/g, " ");
@@ -121,7 +121,7 @@ router.get("/:id", function(req, res) {
             var status = $(cols[4]).text().escapeSpecialChars();
             var registered = $(cols[5]).text().escapeSpecialChars();
 
-            var t = new Team(name, path, leader, memberCount, members.split(" "), id, status, registered);
+            var t = new Team(name, teamId, leader, memberCount, members.split(" "), id, status, registered);
 
             teams.push(t);
         });
