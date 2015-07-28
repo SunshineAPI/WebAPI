@@ -1,10 +1,10 @@
 "use strict";
-var cheerio = require("cheerio"),
-	Topic = require("../modules/topic"),
-	url = require("url"),
-	querystring = require("querystring"),
-	config = require("../config.example"),
-	helpers = require("./helpers");
+var cheerio = require("cheerio");
+var Topic = require("../modules/topic");
+var url = require("url");
+var querystring = require("querystring");
+var config = require("../config.example");
+var helpers = require("./helpers");
 
 var exp = {};
 
