@@ -116,8 +116,8 @@ exp.parseProfile = function(name, cb) {
 
 		var overall = {};
 		var overallNode = $("section:nth-child(2) > div.row");
-		overall.kills = parseInt(getText(overallNode.find(".span5 h2")));
-		overall.deaths = parseInt(getText(overallNode.find(".span4 h2")));
+		overall.kills = parseInt(overallNode.find(".span5 h2").attr("title").replace(" kills", ""));
+		overall.deaths = parseInt(overallNode.find(".span4 h2").attr("title").replace(" kills", ""));
 		overall.kd = parseFloat(getText(overallNode.find(".span3 h2:nth-child(4)")));
 		overall.kk = parseFloat(getText(overallNode.find(".span3 h2:nth-child(5)")));
 		overall.joins = parseInt(getText(overallNode.find(".span3 h2:nth-child(6)")));
