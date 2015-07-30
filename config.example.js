@@ -28,6 +28,10 @@ var config = {
 		team: 60 * 60,
 		tournaments: 60 * 60 * 6,
 		tournament: 60 * 30
+	},
+	redis: {
+		host: "localhost",
+		port: 6379
 	}
 };
 
