@@ -55,13 +55,13 @@ router.get("/", function(req, res) {
       teams.push(t);
     }
 
-    var response = {
+    var teamsResponse = {
       links: links,
       data: teams
     };
 
-    res.json(response);
-    cache.cache_response(res, response, "teams");
+    res.json(teamsResponse);
+    cache.cache_response(res, teamsResponse, "teams");
   });
 
 });
@@ -182,13 +182,13 @@ router.get("/:team", function(req, res) {
       data.member_count = players.length;
       data.players = players;
 
-      var response = {
+      var teamResponse = {
         links: links,
         data: data
       };
 
-      res.json(response);
-      cache.cache_response(res, response, "teams");
+      res.json(teamResponse);
+      cache.cache_response(res, teamResponse, "teams");
     }
   });
 });

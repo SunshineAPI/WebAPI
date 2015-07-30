@@ -18,12 +18,18 @@ router.post("/auth", function(req, res) {
 
     auth.getCookie(email, password, function(error, cookie, hash) {
         if (error && error === 401) {
-            return res.status(401).json({errors: ["Invalid email or password"]});
+            return res.status(401).json({
+                errors: ["Invalid email or password"]
+            });
         } else if (error) {
-            return res.status(500).json({errors: ["Unable to login to the Overcast Network"]});
+            return res.status(500).json({
+                errors: ["Unable to login to the Overcast Network"]
+            });
         }
 
-        res.json({token: hash});
+        res.json({
+            token: hash
+        });
     });
 });
 
@@ -31,16 +37,23 @@ router.post("/auth", function(req, res) {
 router.get("/:player", function(req, res) {
     var player = req.params.player;
     if (player.length > 16) {
-        return res.status(422).json({errors: ["Invalid player"]});
+        return res.status(422).json({
+            errors: ["Invalid player"]
+        });
     }
     parser.parseProfile(player, function(user, status) {
         if (user) {
             var links = parser.setMeta(req);
-            var response = {links: links, data: user};
-            res.json(response);
-            cache.cache_response(res, response, "player");
+            var playerResponse = {
+                links: links,
+                data: user
+            };
+            res.json(playerResponse);
+            cache.cache_response(res, playerResponse, "player");
         } else {
-            res.status(status || 404).json({errors: ["Player not found"]});
+            res.status(status || 404).json({
+                errors: ["Player not found"]
+            });
         }
     });
 });

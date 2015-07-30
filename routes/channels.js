@@ -65,14 +65,14 @@ router.get("/", function(req, res) {
 
         }
 
-        var response = {
+        var channelsResponse = {
             links: links,
             meta: meta,
             data: channels
         };
 
-        res.json(response);
-        cache.cache_response(res, response, "channels");
+        res.json(channelsResponse);
+        cache.cache_response(res, channelsResponse, "channels");
     });
 });
 

@@ -64,12 +64,12 @@ router.get("/", function(req, res) {
             });
         }
 
-        var response = {
+        var punishmentsResponse = {
             links: links,
             data: punishments
         };
-        res.json(response);
-        cache.cache_response(res, response, "punishments");
+        res.json(punishmentsResponse);
+        cache.cache_response(res, punishmentsResponse, "punishments");
     });
 });
 
@@ -146,13 +146,13 @@ router.get("/:id", function(req, res) {
             automatic: automatic
         };
 
-        var response = {
+        var punishmentResponse = {
             links: links,
             data: punishment
         };
 
-        res.json(response);
-        cache.cache_response(res, response, "punishment");
+        res.json(punishmentResponse);
+        cache.cache_response(res, punishmentResponse, "punishment");
     });
 });
 

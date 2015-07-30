@@ -48,12 +48,12 @@ router.get("/", function(req, res) {
         }
 
 
-        var response = {
+        var staffResponse = {
             links: links,
             data: staff
         };
-        res.json(response);
-        cache.cache_response(res, response, "staff");
+        res.json(staffResponse);
+        cache.cache_response(res, staffResponse, "staff");
     });
 });
 

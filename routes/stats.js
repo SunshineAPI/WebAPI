@@ -92,16 +92,15 @@ router.get("/", function(req, res) {
                     monuments: destroyables_destroyed
                 }
             });
-
         }
-        var response = {
+        var statsResponse = {
             links: links,
             meta: meta,
             data: players
         };
 
-        res.json(response);
-        cache.cache_response(res, response, "stats");
+        res.json(statsResponse);
+        cache.cache_response(res, statsResponse, "stats");
     });
 });
 

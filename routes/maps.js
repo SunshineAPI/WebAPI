@@ -29,12 +29,12 @@ router.get("/playing", function(req, res) {
         var maps = parser.parseMapList($);
         var links = parser.setMeta(req);
 
-        var response = {
+        var playingResponse = {
             links: links,
             data: maps
         };
-        res.json(response);
-        cache.cache_response(res, response, "maps_playing");
+        res.json(playingResponse);
+        cache.cache_response(res, playingResponse, "maps_playing");
     });
 });
 
@@ -67,13 +67,13 @@ router.get("/all", function(req, res) {
         var links = parser.setMeta(req, page, pages);
         var maps = parser.parseMapList($);
 
-        var response = {
+        var allResponse = {
             links: links,
             data: maps
         };
 
-        res.json(response);
-        cache.cache_response(res, response, "maps_all");
+        res.json(allResponse);
+        cache.cache_response(res, allResponse, "maps_all");
     });
 });
 
@@ -168,13 +168,13 @@ router.get("/:id", function(req, res) {
             }
         };
 
-        var response = {
+        var mapResponse = {
             links: links,
             data: map
         };
 
-        res.json(response);
-        cache.cache_response(res, response, "map");
+        res.json(mapResponse);
+        cache.cache_response(res, mapResponse, "map");
     });
 });
 
@@ -211,13 +211,13 @@ router.get("/gamemode/:gamemode", function(req, res) {
 
         var maps = parser.parseMapList($);
 
-        var response = {
+        var gmResponse = {
             links: links,
             meta: gamemode,
             data: maps
         };
-        res.json(response);
-        cache.cache_response(res, response, "gamemode");
+        res.json(gmResponse);
+        cache.cache_response(res, gmResponse, "gamemode");
 
     });
 });

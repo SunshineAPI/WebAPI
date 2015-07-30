@@ -55,12 +55,12 @@ router.get("/", function(req, res) {
             data.past.push(newToruney);
         }
 
-        var response = {
+        var tournamentsResponse = {
             links: links,
             data: data
         };
-        res.json(response);
-        cache.cache_response(res, response, "tournaments");
+        res.json(tournamentsResponse);
+        cache.cache_response(res, tournamentsResponse, "tournaments");
     });
 });
 
@@ -131,13 +131,13 @@ router.get("/:id", function(req, res) {
 
         data.teams = teams;
 
-        var response = {
+        var tourneyResponse = {
             links: links,
             data: data
         };
 
-        res.json(response);
-        cache.cache_response(res, response, "tournaments");
+        res.json(tourneyResponse);
+        cache.cache_response(res, tourneyResponse, "tournaments");
     });
 });
 

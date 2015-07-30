@@ -47,13 +47,13 @@ router.get("/rotations", function(req, res) {
             });
         }
 
-        var response = {
+        var rotationsResponse = {
             links: links,
             data: data
         };
 
-        res.json(response);
-        cache.cache_response(res, response, "rotations");
+        res.json(rotationsResponse);
+        cache.cache_response(res, rotationsResponse, "rotations");
     });
 });
 
@@ -86,13 +86,13 @@ router.get("/rotations/:id", function(req, res) {
         data.rotation.server = server;
         data.rotation.maps = maps;
 
-        var response = {
+        var rotResponse = {
             links: links,
             data: data
         };
 
-        res.json(response);
-        cache.cache_response(res, response, "rotation");
+        res.json(rotResponse);
+        cache.cache_response(res, rotResponse, "rotation");
     });
 });
 
@@ -178,14 +178,14 @@ router.get("/:region?", function(req, res) {
             servers.push(server);
         });
 
-        var response = {
+        var regResponse = {
             links: links,
             meta: meta,
             data: servers
         };
 
-        res.json(response);
-        cache.cache_response(res, response, "region");
+        res.json(regResponse);
+        cache.cache_response(res, regResponse, "region");
     });
 });
 

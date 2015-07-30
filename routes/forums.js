@@ -24,12 +24,12 @@ router.get("/new", function(req, res) {
 
             var links = parser.setMeta(req, page, pages);
 
-            var response = {
+            var newResponse = {
                 links: links,
                 data: topics
             };
-            res.json(response);
-            cache.cache_response(res, response, "forums_new");
+            res.json(newResponse);
+            cache.cache_response(res, newResponse, "forums_new");
         });
     });
 });
@@ -68,12 +68,12 @@ router.get("/categories", function(req, res) {
             });
             categories.push(cat);
         });
-        var response = {
+        var catsResponse = {
             links: links,
             data: categories
         };
-        res.json(response);
-        cache.cache_response(res, response, "categories");
+        res.json(catsResponse);
+        cache.cache_response(res, catsResponse, "categories");
     });
 });
 
@@ -112,13 +112,13 @@ router.get("/:id", function(req, res) {
                     name: c.parent().parent().prev().text()
                 }
             };
-            var response = {
+            var catResponse = {
                 links: links,
                 meta: meta,
                 data: topics
             };
-            res.json(response);
-            cache.cache_response(res, response, "category");
+            res.json(catResponse);
+            cache.cache_response(res, catResponse, "category");
         });
     });
 });
@@ -147,12 +147,12 @@ router.get("/topics/:id", function(req, res) {
 
         var topic = parser.parseForumTopic($, id);
 
-        var response = {
+        var topicResponse = {
             links: links,
             data: topic
         };
-        res.json(response);
-        cache.cache_response(res, response, "topic");
+        res.json(topicResponse);
+        cache.cache_response(res, topicResponse, "topic");
     });
 });
 
@@ -187,12 +187,12 @@ router.get("/posts/:id", function(req, res) {
 
         var links = parser.setMeta(req, page, pages);
 
-        var response = {
+        var postResponse = {
             links: links,
             data: post
         };
-        res.json(response);
-        cache.cache_response(res, response, "post");
+        res.json(postResponse);
+        cache.cache_response(res, postResponse, "post");
     });
 });
 

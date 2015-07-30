@@ -45,12 +45,12 @@ router.get("/:id", function(req, res) {
             newteam.players = players;
             match.teams.push(newteam);
         });
-        var response = {
+        var matchesResponse = {
             links: parser.setMeta(req),
             data: match
         };
-        res.json(response);
-        cache.cache_response(res, response, "match");
+        res.json(matchesResponse);
+        cache.cache_response(res, matchesResponse, "match");
     });
 });
 
