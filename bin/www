@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 var server;
-var port = process.env.SUNSHINE_PORT || 3000;
-var bind = process.env.SUNSHINE_BIND || "0.0.0.0";
+var port = process.env.PORT || 3000;
+var bind = process.env.BIND || "0.0.0.0";
 function boot(callback) {
 	var app = require("../app");
 	
