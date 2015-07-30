@@ -38,7 +38,8 @@ var redis = require("./modules/cache");
 var instance = redis.getRedis();
 
 function checkCache(req, res, next) {
-	var key = crypto.createHash("md5").update(req.originalUrl).digest("hex");
+	var cacheKey = req.originalUrl;
+	var key = crypto.createHash("md5").update(cacheKey).digest("hex");
 	instance.hgetall(key, function(err, obj) {
 		if (err || !obj) {
 			return next();
