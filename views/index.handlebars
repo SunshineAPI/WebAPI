@@ -19,7 +19,7 @@
               <section>
                   <h2>General API Elements</h2>
                   <h3>Pagination</h3>
-                  <p class="note">To retrive a specific page of something use the follow parameter:</p>
+                  <p class="note">To retrieve a specific page of something use the follow parameter:</p>
                   <div class="code">?page=<mark>page_number</mark></div>
                   <p class="note">For example this link will get me the 2nd page of the "What's New" forum category.</p>
                   <div class="code">{{domain}}/forums/new?page=2</div>
@@ -28,7 +28,7 @@
               <br>
               <section>
                   <h3>Id</h3>
-                  <p class="note">Some endpoints use ids to retrive information. The <mark>id</mark> in this case is a <a href="//www.mongodb.org">MongoDB</a> hash. An <mark>id</mark> looks something like this.</p>
+                  <p class="note">Some endpoints use ids to retrieve information. The <mark>id</mark> in this case is a <a href="//www.mongodb.org">MongoDB</a> ObjectID. An <mark>id</mark> looks something like this.</p>
                   <div class="code"><mark>557e21685f35b92506006f9e</mark></div>
               </section>
               <div class="nonauth">
@@ -68,18 +68,18 @@
                 <section>
                   <h3>Player Information and Statistics</h3>
                   <p class="note">To find a specific player's stats and information use the following format below.</p>
-                  <div class="code">{{domain}}/players/<mark>Username</mark></div>
-                  <p class="note">For example, the code below will retrive the player information for the player  <a href="//oc.tc/Cubist">Cubist</a>.</p>
+                  <div class="code">{{domain}}/players/<mark>username</mark></div>
+                  <p class="note">For example, the code below will retrieve the player information for the player  <a href="//oc.tc/Cubist">Cubist</a>.</p>
                   <div class="code">{{domain}}/players/<mark>Cubist</mark></div>
                 </section>
                 <br>
                 <section>
                     <h3>Teams</h3>
-                    <p class="note">Specify a team's name to retrive their information.</p>
+                    <p class="note">Specify a team's name to retrieve their information.</p>
                      <div class="code">{{domain}}/teams/<mark>name</mark></div>
                      <p class="note">Not specifing a team will retrive a list of all the teams.</p>
                      <div class="code">{{domain}}/teams</div>
-                     <p class="note">The following link will retrive information for the team <mark>Drifters.</mark></p>
+                     <p class="note">The following link will retrieve information for the team <mark>Drifters.</mark></p>
                      <div class="code">{{domain}}/teams/<mark>Drifters</mark></div>
                 </section>
                 <br>
@@ -89,7 +89,7 @@
                     <div class="code">{{domain}}/tournaments</div>
                     <p class="note">For example, this snippet will parse the tournament <mark>Attack of the Cores.</mark></p>
                     <div class="code">{{domain}}/tournaments/<mark>attack-of-the-cores</mark></div>
-                    <p class><strong class="text-success">Remeber</strong> to use '-' instead of spaces when dealing with tournaments.</p>
+                    <p><strong class="text-success">Remember</strong> to use '-' instead of spaces when dealing with tournaments.</p>
                 </section>
                 <br>
                 <section>
@@ -103,7 +103,7 @@
                 <section>
                   <h3>Forum Categories</h3>
                   <p class="note">Specifying nothing except for what is below will return all* the categories of the forums and their ids.</p>
-                  <div class="code">{{domain}}/forums</div>
+                  <div class="code">{{domain}}/forums/categories</div>
                   <h6>* does not return private categories</h6>
                   <p class="note">Giving an id will give you the first page of the forum category specified.</p>
                   <div class="code">{{domain}}/forums/<mark>id</mark></div>
@@ -115,11 +115,43 @@
                 <br>
                 <section>
                     <h3>Punishments</h3>
-                    <p class="note">To retrive a list of the most recent punishments use:</p>
+                    <p class="note">To retrieve a list of the most recent punishments use:</p>
                     <div class="code">{{domain}}/punishments</div>
-                    <p class="docs-note">If you want to retrive a specific punishment use its <mark>id</mark>.</p>
+                    <p class="docs-note">If you want to retrieve a specific punishment use its <mark>id</mark>.</p>
                     <div class="code">{{domain}}/punishments/<mark>id</mark></div>
                 </section>
+                <section>
+                    <h3>Channels</h3>
+                    <p class="note">To retrieve a list of player Youtube channels:</p>
+                    <div class="code">{{domain}}/channels</div>
+                </section>
+                <section>
+                    <h3>Servers</h3>
+                    <p class="note">To retrieve a list of all public servers:</p>
+                    <div class="code">{{domain}}/servers</div>
+                    <p class="note">To retrieve a list of the servers for a specific region:</p>
+                    <div class="code">{{domain}}/servers/<mark>region</mark></div>
+                    <p>Valid regions include <mark>us</mark> and <mark>eu</mark>.</p>
+                    <p class="note">To retrieve a list of server names and their matching rotations:</p>
+                    <div class="code">{{domain}}/servers/rotations</div>
+                    <p class="note">To retrieve a specific rotation:</p>
+                    <div class="code">{{domain}}/servers/rotations/<mark>id</mark></div>
+                    <p>The rotation IDs can only be found by calling the first endpoint.</p>
+                </section>
+                <section>
+                    <h3>Maps</h3>
+                    <p class="note">To retrieve a list of all maps:</p>
+                    <div class="code">{{domain}}/maps/all</div>
+                    <p class="note">To retrieve a list of all maps currently being played:</p>
+                    <div class="code">{{domain}}/maps/playing</div>
+                    <p class="note">To retrieve a specific map:</p>
+                    <div class="code">{{domain}}/maps/<mark>name</mark></div>
+                    <p><strong class="text-success">Remember</strong> that the names are dependent on the map. The map <a href="https://oc.tc/maps/lost_world_ctf">Lost World: CTF</a> has the ID <mark>lost_world_ctf</mark></p>
+                    <p class="note">To retrieve all maps for a specific gamemode:</p>
+                    <div class="code">{{domain}}/servers/gamemode/<mark>gamemode</mark></div>
+                    <p>The list of gamemodes can change, and should use the <mark>short</mark> id. All IDs can be found <a href="https://oc.tc/maps">here</a>.</p>
+                </section>
+
             </div>
             <div class="auth">
                 <h2>Authentication Dependent Endpoints</h3>
