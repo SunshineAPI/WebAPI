@@ -4,6 +4,7 @@ var router = express.Router();
 var cheerio = require("cheerio");
 var parser = require("../modules/parser");
 var helpers = require("../modules/helpers");
+var cache = require("../modules/cache");
 
 router.get("/", function(req, res) {
     var options = {
@@ -47,10 +48,12 @@ router.get("/", function(req, res) {
         }
 
 
-        res.json({
+        var response = {
             links: links,
             data: staff
-        });
+        };
+        res.json(response);
+        cache.cache_response(res, response, "staff");
     });
 });
 

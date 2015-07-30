@@ -4,6 +4,7 @@ var router = express.Router();
 var cheerio = require("cheerio");
 var helpers = require("../modules/helpers");
 var parser = require("../modules/parser");
+var cache = require("../modules/cache");
 
 router.get("/:id", function(req, res) {
     var options = {
@@ -44,10 +45,12 @@ router.get("/:id", function(req, res) {
             newteam.players = players;
             match.teams.push(newteam);
         });
-        res.json({
+        var response = {
             links: parser.setMeta(req),
             data: match
-        });
+        };
+        res.json(response);
+        cache.cache_response(res, response, "match");
     });
 });
 

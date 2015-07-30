@@ -4,6 +4,7 @@ var router = express.Router();
 var parser = require("../modules/parser");
 var cheerio = require("cheerio");
 var helpers = require("../modules/helpers");
+var cache = require("../modules/cache");
 
 router.get("/", function(req, res) {
     var page = parseInt(req.query.page) || 1;
@@ -63,12 +64,12 @@ router.get("/", function(req, res) {
             });
         }
 
-
-
-        res.json({
+        var response = {
             links: links,
             data: punishments
-        });
+        };
+        res.json(response);
+        cache.cache_response(res, response, "punishments");
     });
 });
 
@@ -145,12 +146,13 @@ router.get("/:id", function(req, res) {
             automatic: automatic
         };
 
-
-
-        res.json({
+        var response = {
             links: links,
             data: punishment
-        });
+        };
+
+        res.json(response);
+        cache.cache_response(res, response, "punishment");
     });
 });
 

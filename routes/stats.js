@@ -5,6 +5,7 @@ var parser = require("../modules/parser");
 var cheerio = require("cheerio");
 var querystring = require("querystring");
 var helpers = require("../modules/helpers");
+var cache = require("../modules/cache");
 
 var periods = ["day", "week", "eternity"];
 var games = ["all", "projectares", "blitz", "ghostsquadron"];
@@ -93,11 +94,14 @@ router.get("/", function(req, res) {
             });
 
         }
-        res.json({
+        var response = {
             links: links,
             meta: meta,
             data: players
-        });
+        };
+
+        res.json(response);
+        cache.cache_response(res, response, "stats");
     });
 });
 

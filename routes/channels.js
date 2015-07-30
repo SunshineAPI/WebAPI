@@ -4,6 +4,7 @@ var router = express.Router();
 var parser = require("../modules/parser");
 var cheerio = require("cheerio");
 var helpers = require("../modules/helpers");
+var cache = require("../modules/cache");
 
 router.get("/", function(req, res) {
     var page = parseInt(req.query.page) || 1;
@@ -64,11 +65,14 @@ router.get("/", function(req, res) {
 
         }
 
-        res.json({
+        var response = {
             links: links,
             meta: meta,
             data: channels
-        });
+        };
+
+        res.json(response);
+        cache.cache_response(res, response, "channels");
     });
 });
 

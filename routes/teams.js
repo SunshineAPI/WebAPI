@@ -5,6 +5,7 @@ var cheerio = require("cheerio");
 var Team = require("../modules/team");
 var parser = require("../modules/parser");
 var helpers = require("../modules/helpers");
+var cache = require("../modules/cache");
 
 // /teams?page=2
 router.get("/", function(req, res) {
@@ -54,10 +55,13 @@ router.get("/", function(req, res) {
       teams.push(t);
     }
 
-    res.json({
+    var response = {
       links: links,
       data: teams
-    });
+    };
+
+    res.json(response);
+    cache.cache_response(res, response, "teams");
   });
 
 });
@@ -178,14 +182,15 @@ router.get("/:team", function(req, res) {
       data.member_count = players.length;
       data.players = players;
 
-
-      res.json({
+      var response = {
         links: links,
         data: data
-      });
+      };
+
+      res.json(response);
+      cache.cache_response(res, response, "teams");
     }
   });
-
 });
 
 

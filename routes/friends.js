@@ -4,6 +4,7 @@ var router = express.Router();
 var cheerio = require("cheerio");
 var auth = require("../modules/auth");
 var parser = require("../modules/parser");
+var cache = require("../modules/cache");
 
 var getFriendStatus = function(player, authe, cb) {
     var options = {

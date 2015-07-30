@@ -4,6 +4,7 @@ var router = express.Router();
 var parser = require("../modules/parser");
 var auth = require("../modules/auth");
 var cheerio = require("cheerio");
+var cache = require("../modules/cache");
 
 router.get("/", auth.authorize, function(req, res) {
     
@@ -51,10 +52,13 @@ router.get("/", auth.authorize, function(req, res) {
             });
         }
 
-        res.json({
+        var response = {
             links: links,
             data: alerts,
-        });
+        }
+        res.json(response);
+        // need to implement caching for authed endpoints
+        //cache.cache_response(res, response, "alerts");
     });
 });
 

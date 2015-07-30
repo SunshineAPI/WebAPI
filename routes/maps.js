@@ -4,6 +4,7 @@ var router = express.Router();
 var parser = require("../modules/parser");
 var cheerio = require("cheerio");
 var helpers = require("../modules/helpers");
+var cache = require("../modules/cache");
 
 var gamemodes = ["tdm", "ctw", "ctf",
     "dtc", "blitz", "rage", "gs", "mixed"
@@ -28,10 +29,12 @@ router.get("/playing", function(req, res) {
         var maps = parser.parseMapList($);
         var links = parser.setMeta(req);
 
-        res.json({
+        var response = {
             links: links,
             data: maps
-        });
+        };
+        res.json(response);
+        cache.cache_response(res, response, "maps_playing");
     });
 });
 
@@ -64,11 +67,13 @@ router.get("/all", function(req, res) {
         var links = parser.setMeta(req, page, pages);
         var maps = parser.parseMapList($);
 
-
-        res.json({
+        var response = {
             links: links,
             data: maps
-        });
+        };
+
+        res.json(response);
+        cache.cache_response(res, response, "maps_all");
     });
 });
 
@@ -163,10 +168,13 @@ router.get("/:id", function(req, res) {
             }
         };
 
-        res.json({
+        var response = {
             links: links,
             data: map
-        });
+        };
+
+        res.json(response);
+        cache.cache_response(res, response, "map");
     });
 });
 
@@ -203,11 +211,14 @@ router.get("/gamemode/:gamemode", function(req, res) {
 
         var maps = parser.parseMapList($);
 
-        res.json({
+        var response = {
             links: links,
             meta: gamemode,
             data: maps
-        });
+        };
+        res.json(response);
+        cache.cache_response(res, response, "gamemode");
+
     });
 });
 

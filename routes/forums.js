@@ -5,6 +5,7 @@ var parser = require("../modules/parser");
 var cheerio = require("cheerio");
 var auth = require("../modules/auth");
 var helpers = require("../modules/helpers");
+var cache = require("../modules/cache");
 
 router.get("/new", function(req, res) {
     var page = parseInt(req.query.page) || 1;
@@ -23,10 +24,12 @@ router.get("/new", function(req, res) {
 
             var links = parser.setMeta(req, page, pages);
 
-            res.json({
+            var response = {
                 links: links,
                 data: topics
-            });
+            };
+            res.json(response);
+            cache.cache_response(res, response, "forums_new");
         });
     });
 });
@@ -65,11 +68,12 @@ router.get("/categories", function(req, res) {
             });
             categories.push(cat);
         });
-        res.json({
+        var response = {
             links: links,
             data: categories
-        });
-
+        };
+        res.json(response);
+        cache.cache_response(res, response, "categories");
     });
 });
 
@@ -108,12 +112,13 @@ router.get("/:id", function(req, res) {
                     name: c.parent().parent().prev().text()
                 }
             };
-
-            res.json({
+            var response = {
                 links: links,
                 meta: meta,
                 data: topics
-            });
+            };
+            res.json(response);
+            cache.cache_response(res, response, "category");
         });
     });
 });
@@ -142,10 +147,12 @@ router.get("/topics/:id", function(req, res) {
 
         var topic = parser.parseForumTopic($, id);
 
-        res.json({
+        var response = {
             links: links,
             data: topic
-        });
+        };
+        res.json(response);
+        cache.cache_response(res, response, "topic");
     });
 });
 
@@ -180,10 +187,12 @@ router.get("/posts/:id", function(req, res) {
 
         var links = parser.setMeta(req, page, pages);
 
-        res.json({
+        var response = {
             links: links,
             data: post
-        });
+        };
+        res.json(response);
+        cache.cache_response(res, response, "post");
     });
 });
 

@@ -5,6 +5,7 @@ var cheerio = require("cheerio");
 var Team = require("../modules/team");
 var parser = require("../modules/parser");
 var helpers = require("../modules/helpers");
+var cache = require("../modules/cache");
 
 router.get("/", function(req, res) {
 
@@ -54,10 +55,12 @@ router.get("/", function(req, res) {
             data.past.push(newToruney);
         }
 
-        res.json({
+        var response = {
             links: links,
             data: data
-        });
+        };
+        res.json(response);
+        cache.cache_response(res, response, "tournaments");
     });
 });
 
@@ -128,10 +131,13 @@ router.get("/:id", function(req, res) {
 
         data.teams = teams;
 
-        res.json({
+        var response = {
             links: links,
             data: data
-        });
+        };
+
+        res.json(response);
+        cache.cache_response(res, response, "tournaments");
     });
 });
 

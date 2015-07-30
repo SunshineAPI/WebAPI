@@ -4,6 +4,7 @@ var router = express.Router();
 var parser = require("../modules/parser");
 var cheerio = require("cheerio");
 var helpers = require("../modules/helpers");
+var cache = require("../modules/cache");
 
 var regions = ["global", "all", "us", "eu"];
 
@@ -46,10 +47,13 @@ router.get("/rotations", function(req, res) {
             });
         }
 
-        res.json({
+        var response = {
             links: links,
             data: data
-        });
+        };
+
+        res.json(response);
+        cache.cache_response(res, response, "rotations");
     });
 });
 
@@ -82,10 +86,13 @@ router.get("/rotations/:id", function(req, res) {
         data.rotation.server = server;
         data.rotation.maps = maps;
 
-        res.json({
+        var response = {
             links: links,
             data: data
-        });
+        };
+
+        res.json(response);
+        cache.cache_response(res, response, "rotation");
     });
 });
 
@@ -171,11 +178,14 @@ router.get("/:region?", function(req, res) {
             servers.push(server);
         });
 
-        res.json({
+        var response = {
             links: links,
             meta: meta,
             data: servers
-        });
+        };
+
+        res.json(response);
+        cache.cache_response(res, response, "region");
     });
 });
 
