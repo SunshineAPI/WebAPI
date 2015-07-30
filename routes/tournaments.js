@@ -137,7 +137,7 @@ router.get("/:id", function(req, res) {
         };
 
         res.json(tourneyResponse);
-        cache.cache_response(res, tourneyResponse, "tournaments");
+        cache.cache_response(res, tourneyResponse, "tournament");
     });
 });
 
