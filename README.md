@@ -16,6 +16,10 @@ Sunshine is *not* affiliated with the Overcast Network, and will not be held lia
 0. If it was not done automatically, copy ```config.example.js``` to ```config.js```. You can configure the app as you want.
 0. Start redis and run ```npm start```
 
+### Redis Configuration
+* You have the option to configure the **redis** connection in the ```config.js``` file.
+* You can also set the environment variable ```REDIS_ENV``` that has the value of the environment variable that should be used with the redis connection.
+  * Ex: If you wanted to use Sunshine on **Heroku** you could set ```REDIS_ENV=REDISCLOUD_URL``` and the [Redis Cloud](https://addons.heroku.com/rediscloud) URL would be automatically set by the addon.
 
 ## Testing
 
