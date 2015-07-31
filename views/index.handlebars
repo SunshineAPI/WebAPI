@@ -23,26 +23,26 @@
                   <div class="code">?page=<mark>page_number</mark></div>
                   <p class="note">For example this link will get me the 2nd page of the "What's New" forum category.</p>
                   <div class="code">{{domain}}/forums/new?page=2</div>
-                  <p class="note" id="id">The following endpoints use pagination: <mark>Stats</mark>, <mark>Forum Topics</mark>, <mark>Teams</mark> and, <mark>Punishments</mark>.</p>
+                  <p class="note" id="id">The following endpoints use pagination: <mark>Stats</mark>, <mark>Forum Topics</mark>, <mark>Teams</mark>, <mark>Channels</mark>, <mark>Maps</mark> and, <mark>Punishments</mark>.</p>
               </section>
               <br>
               <section>
                   <h3>Id</h3>
                   <p class="note">Some endpoints use ids to retrieve information. The <mark>id</mark> in this case is a <a href="//www.mongodb.org">MongoDB</a> ObjectID. An <mark>id</mark> looks something like this.</p>
-                  <div class="code"><mark>557e21685f35b92506006f9e</mark></div>
+                  <div class="code">557e21685f35b92506006f9e</div>
               </section>
               <div class="nonauth">
                   <h2>Non-Authentication Dependent Endpoints</h2>
                 <section>
                     <h3>Stats</h3>
-                    <p class="note">By default the stats endpoint will return the top kills in the last 24 hours in all gamemodes.</p>
-                    <div class="code">{{domain}}/stats</div>
-                    <p class="note">Stats has three parameters <mark>time</mark>, <mark>game</mark>, and, <mark>sort</mark>.</p>
-                    <p class="note">This example retrives the top stats on wool captures for the past week in all gametypes.</p>
-                    <div class="code">{{domain}}/stats/?time=week&game=all&sort=wool_placed</div>
-                    <p class="note">All the properties for the three parameters are down below.</p>
-                    <table class="table">
-                       <thead>
+                      <p class="note">By default the stats endpoint will return the top kills in the last 24 hours in all gamemodes.</p>
+                      <div class="code">{{domain}}/stats</div>
+                      <p class="note">Stats has three parameters <mark>time</mark>, <mark>game</mark>, and, <mark>sort</mark>.</p>
+                      <p class="note">This example retrives the top stats on wool captures for the past week in all gametypes.</p>
+                      <div class="code">{{domain}}/stats/?time=week&game=all&sort=wool_placed</div>
+                      <p class="note">All the properties for the three parameters are down below.</p>
+                      <table class="table">
+                        <thead>
                            <tr>
                               <td><strong>Parameter</strong></td>
                               <td><strong>Properties</strong></td>
@@ -70,7 +70,7 @@
                   <p class="note">To find a specific player's stats and information use the following format below.</p>
                   <div class="code">{{domain}}/players/<mark>username</mark></div>
                   <p class="note">For example, the code below will retrieve the player information for the player  <a href="//oc.tc/Cubist">Cubist</a>.</p>
-                  <div class="code">{{domain}}/players/<mark>Cubist</mark></div>
+                  <div class="code">{{domain}}/players/Cubist</div>
                 </section>
                 <br>
                 <section>
@@ -80,7 +80,7 @@
                      <p class="note">Not specifing a team will retrive a list of all the teams.</p>
                      <div class="code">{{domain}}/teams</div>
                      <p class="note">The following link will retrieve information for the team <mark>Drifters.</mark></p>
-                     <div class="code">{{domain}}/teams/<mark>Drifters</mark></div>
+                     <div class="code">{{domain}}/teams/Drifters</div>
                 </section>
                 <br>
                 <section>
@@ -88,7 +88,7 @@
                     <p class="note">To obtain a list of all tournaments do not specify a tournament.</p>
                     <div class="code">{{domain}}/tournaments</div>
                     <p class="note">For example, this snippet will parse the tournament <mark>Attack of the Cores.</mark></p>
-                    <div class="code">{{domain}}/tournaments/<mark>attack-of-the-cores</mark></div>
+                    <div class="code">{{domain}}/tournaments/attack-of-the-cores</div>
                     <p><strong class="text-success">Remember</strong> to use '-' instead of spaces when dealing with tournaments.</p>
                 </section>
                 <br>
@@ -97,7 +97,7 @@
                   <p class="note">To get a specifc forum topic you are going to need the thread's <mark>id</mark>. Please refer to the <a href="#id">id</a> part of this Documentation.</p>
                   <div class="code">{{domain}}/forums/topics/<mark>id</mark></div>
                   <p class="note">For example, this will get you the topic <ahref="https://oc.tc/forums/topics/50494e68b944ec59bc00596c">Awesome Music Thread.</a></p>
-                  <div class="code">{{domain}}/forums/topics/<mark>50494e68b944ec59bc00596c</mark></div>
+                  <div class="code">{{domain}}/forums/topics/50494e68b944ec59bc00596c</div>
                 </section>
                 <br>
                 <section>
@@ -108,9 +108,9 @@
                   <p class="note">Giving an id will give you the first page of the forum category specified.</p>
                   <div class="code">{{domain}}/forums/<mark>id</mark></div>
                   <p class="note">This example will return the first page of the forum category <mark>Announcements</mark>.</p>
-                  <div class="code">{{domain}}/forums/<mark>4fc17119c463751492000018</mark></div>
+                  <div class="code">{{domain}}/forums/4fc17119c463751492000018</div>
                   <p class="note">Finally, using the keyword <mark>new</mark> will return the front page of the What's New category; the most recent threads.</p>
-                  <div class="code">{{domain}}/forums/<mark>new</mark></div>
+                  <div class="code">{{domain}}/forums/new</div>
                 </section>
                 <br>
                 <section>
@@ -120,11 +120,13 @@
                     <p class="docs-note">If you want to retrieve a specific punishment use its <mark>id</mark>.</p>
                     <div class="code">{{domain}}/punishments/<mark>id</mark></div>
                 </section>
+                <br>
                 <section>
                     <h3>Channels</h3>
                     <p class="note">To retrieve a list of player Youtube channels:</p>
                     <div class="code">{{domain}}/channels</div>
                 </section>
+                <br>
                 <section>
                     <h3>Servers</h3>
                     <p class="note">To retrieve a list of all public servers:</p>
@@ -138,6 +140,7 @@
                     <div class="code">{{domain}}/servers/rotations/<mark>id</mark></div>
                     <p>The rotation IDs can only be found by calling the first endpoint.</p>
                 </section>
+                <br>
                 <section>
                     <h3>Maps</h3>
                     <p class="note">To retrieve a list of all maps:</p>
