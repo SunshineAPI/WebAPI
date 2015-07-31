@@ -15,6 +15,11 @@ var cache = require("../modules/cache");
 router.post("/auth", function(req, res) {
     var email = req.body.email;
     var password = req.body.password;
+    if (!email || !password) {
+        return res.status(422).json({
+            errors: ["Provide authorization header"]
+        });
+    }
 
     auth.getCookie(email, password, function(error, cookie, hash) {
         if (error && error === 401) {
