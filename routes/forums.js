@@ -279,7 +279,7 @@ router.post("/topics/:topic/reply", function(req, res) {
     });
 });
 
-router.post("/topics/:topic/quote", auth.authorize, function(req, res) {
+router.post("/topics/:topic/:id/quote", auth.authorize, function(req, res) {
     var key = req.params.topic;
     var options = {
         method: "POST",
@@ -291,7 +291,7 @@ router.post("/topics/:topic/quote", auth.authorize, function(req, res) {
             "utf8": "✓",
             "post[text]": req.body.contents,
             "post[converted]": "true",
-            "post[reply_to_id]": req.body.parentpost,
+            "post[reply_to_id]": req.params.id,
             "commit": "Reply"
         }
     };

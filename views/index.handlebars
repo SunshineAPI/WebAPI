@@ -33,7 +33,7 @@
                   <br>
               </section>
               <section>
-                  <h3>Authentication</h3>
+                  <h3><i class="fa fa-key"></i>Authentication</h3>
                   <p class="note">Some other endpoints need authentication to retrieve or post the information</p>
                   <h4>How to get your token</h4>
                   <p class="note">To get your token is a 1-step process<br>
@@ -88,7 +88,7 @@
                     You make a GET request to <div class="code">{{domain}}/friends/online</div>
                     In this, you set the <strong>Authorization</strong> header to  <div class="code">Bearer 557e21685f35b92506006f9e</div>
                     </p>
-                    
+                    <p class="note" id="id">The following endpoints use authentication: <mark>Alerts</mark>, <mark>Friends</mark>, and <mark>Forum Posting & Replying</mark>.</p>
                   </p>
                   <br>
               </section>
@@ -219,7 +219,95 @@
             </div>
             <div class="auth">
                 <h2>Authentication Dependent Endpoints</h3>
-                <p>Coming Soon!</p>
+                <section>
+                    <h3> <i class="fa fa-key"></i>Alerts</h3>
+                    <h4>Please note this endpoint requires Authentication</h4>
+                    <p class="note">To retrieve a list of all of your alerts:</p>
+                    <div class="code">{{domain}}/alerts/all</div>
+                </section>
+                <section>
+                    <h3> <i class="fa fa-key"></i>Friends</h3>
+                    <h4>Please note this endpoint requires Authentication</h4>
+                    <p class="note">To retrieve a list of all of your friends:</p>
+                    <div class="code">{{domain}}/friends/all</div>
+                    <p class="note">To retrieve a list of all friends currently playing:</p>
+                    <div class="code">{{domain}}/friends/online</div>
+                    <p class="note">To retrieve a list of all friends currently offline:</p>
+                    <div class="code">{{domain}}/friends/offline</div>
+                    <p class="note">To add a friend, send a POST request to: 
+                        <div class="code">
+                            {{domain}}/friends/add/<mark>Playername</mark>
+                        </div>
+                    </p>
+                </section>
+                <section>
+                    <h3> <i class="fa fa-key"></i>Forum Posting & Replying</h3>
+                    <h4>Please note this endpoint requires Authentication</h4>
+                    <p class="note">To post a new thread in a topic, send a POST request to:</p>
+                        <div class="code">
+                            {{domain}}/forums/<mark>categoryid</mark>
+                        </div>
+                        With the POST body as follows:
+                        <table class="table">
+                        <tbody>
+                            <thead>
+                           <tr>
+                              <td><strong>POST data name</strong></td>
+                              <td><strong>Description</strong></td>
+                            </tr>
+                        </thead>
+                            <tr>
+                              <td>topic</td>
+                              <td>Name of new post</td>
+                            </tr>
+                            <tr>
+                              <td>contents</td>
+                              <td>The contents of each post, in markdown format</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </p>
+                     <p class="note">To post a reply to a topic, send a POST request to:</p>
+                        <div class="code">
+                            {{domain}}/topics/<mark>topicid</mark>/reply
+                        </div>
+                        With the POST body as follows:
+                        <table class="table">
+                        <tbody>
+                            <thead>
+                           <tr>
+                              <td><strong>POST data name</strong></td>
+                              <td><strong>Description</strong></td>
+                            </tr>
+                        </thead>
+                            <tr>
+                              <td>contents</td>
+                              <td>Contents of the reply</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </p>
+                     <p class="note">To quote a post, send a POST request to:</p>
+                        <div class="code">
+                            {{domain}}/forums/<mark>postid</mark>/<mark>replyid</mark>/quote
+                        </div>
+                        With the POST body as follows:
+                        <table class="table">
+                        <tbody>
+                            <thead>
+                           <tr>
+                              <td><strong>POST data name</strong></td>
+                              <td><strong>Description</strong></td>
+                            </tr>
+                        </thead>
+                            <tr>
+                              <td>contents</td>
+                              <td>Contents of the quote</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </p>
+                </section>
             </div>
         </section>
 
