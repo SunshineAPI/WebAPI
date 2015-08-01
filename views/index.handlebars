@@ -30,6 +30,67 @@
                   <h3>Id</h3>
                   <p class="note">Some endpoints use ids to retrieve information. The <mark>id</mark> in this case is a <a href="//www.mongodb.org">MongoDB</a> ObjectID. An <mark>id</mark> looks something like this.</p>
                   <div class="code">557e21685f35b92506006f9e</div>
+                  <br>
+              </section>
+              <section>
+                  <h3>Authentication</h3>
+                  <p class="note">Some other endpoints need authentication to retrieve or post the information</p>
+                  <h4>How to get your token</h4>
+                  <p class="note">To get your token is a 1-step process<br>
+                  Make a POST request to <div class="code">{{domain}}/players/auth</div> with the following data:
+                  <table class="table">
+                        <thead>
+                           <tr>
+                              <td><strong>Post Data</strong></td>
+                              <td><strong>Description</strong></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>email</td>
+                              <td>User's Email</td>
+                            </tr>
+                            <tr>
+                              <td>password</td>
+                              <td>User's Password</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <p class="note">Don't worry, the data is kept super securely in a salted hash system where not even we could read it if we tried.
+                    <br>
+                    The response should be in JSON format, like this example (It's not a real auth token):
+                    <div class="code">
+                        {                                              <br>
+                            "token": "557e21685f35b92506006f9e"<br>
+                        }                                              
+                    </div>
+                    </p>
+                    <h4>How to use authentication in API Calls</h4>
+                    <p class="note">
+                        In calls that need authentication to work, using auth is very easy.
+                        In the header section of your request, simply put
+                        <table class="table">
+                        <tbody>
+                            <tr>
+                              <td>The name of the Header</td>
+                              <td>Authorization</td>
+                            </tr>
+                            <tr>
+                              <td>Header value</td>
+                              <td>Bearer <mark>User's token</mark></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </p>
+                    <p class="note">Here is an example:
+                    <br>
+                    You make a GET request to <div class="code">{{domain}}/friends/online</div>
+                    In this, you set the <strong>Authorization</strong> header to  <div class="code">Bearer 557e21685f35b92506006f9e</div>
+                    </p>
+                    
+                  </p>
+                  <br>
               </section>
               <div class="nonauth">
                   <h2>Non-Authentication Dependent Endpoints</h2>
