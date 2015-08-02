@@ -27,7 +27,7 @@
               </section>
               <br>
               <section>
-                  <h3>Id</h3>
+                  <h3>ID</h3>
                   <p class="note">Some endpoints use ids to retrieve information. The <mark>id</mark> in this case is a <a href="//www.mongodb.org">MongoDB</a> ObjectID. An <mark>id</mark> looks something like this.</p>
                   <div class="code">557e21685f35b92506006f9e</div>
                   <br>
@@ -162,7 +162,7 @@
                 </section>
                 <br>
                 <section>
-                  <h3>Forum Categories</h3>
+                  <h3 id="categories">Forum Categories</h3>
                   <p class="note">Specifying nothing except for what is below will return all* the categories of the forums and their ids.</p>
                   <div class="code">{{domain}}/forums/categories</div>
                   <h6>* does not return private categories</h6>
@@ -234,9 +234,9 @@
                     <div class="code">{{domain}}/friends/online</div>
                     <p class="note">To retrieve a list of all friends currently offline:</p>
                     <div class="code">{{domain}}/friends/offline</div>
-                    <p class="note">To add a friend, send a POST request to: 
+                    <p class="note">To add a friend, POST to: 
                         <div class="code">
-                            {{domain}}/friends/add/<mark>Playername</mark>
+                            {{domain}}/friends/add/<mark>username</mark>
                         </div>
                     </p>
                 </section>
@@ -245,14 +245,15 @@
                     <h4>Please note this endpoint requires Authentication</h4>
                     <p class="note">To post a new thread in a topic, send a POST request to:</p>
                         <div class="code">
-                            {{domain}}/forums/<mark>categoryid</mark>
+                            {{domain}}/forums/<mark>categoryId</mark>
                         </div>
-                        With the POST body as follows:
+                        <p>The <mark>categoryId</mark> can be obtained in the <a href="#categories">categories</a> list endpoint.</p>
+                        The POST <b>body</b> should contain the following values:
                         <table class="table">
                         <tbody>
                             <thead>
                            <tr>
-                              <td><strong>POST data name</strong></td>
+                              <td><strong>Key</strong></td>
                               <td><strong>Description</strong></td>
                             </tr>
                         </thead>
@@ -269,14 +270,15 @@
                     </p>
                      <p class="note">To post a reply to a topic, send a POST request to:</p>
                         <div class="code">
-                            {{domain}}/topics/<mark>topicid</mark>/reply
+                            {{domain}}/topics/<mark>topicId</mark>/reply
                         </div>
-                        With the POST body as follows:
+                        <p>The <mark>topicId</mark> is the ID of the topic that contains the post.</p>
+                        The POST <b>body</b> should contain the following values:
                         <table class="table">
                         <tbody>
                             <thead>
                            <tr>
-                              <td><strong>POST data name</strong></td>
+                              <td><strong>Key</strong></td>
                               <td><strong>Description</strong></td>
                             </tr>
                         </thead>
@@ -289,14 +291,15 @@
                     </p>
                      <p class="note">To quote a post, send a POST request to:</p>
                         <div class="code">
-                            {{domain}}/forums/<mark>postid</mark>/<mark>replyid</mark>/quote
+                            {{domain}}/forums/<mark>topicId</mark>/<mark>postId</mark>/quote
                         </div>
-                        With the POST body as follows:
+                        <p>The <mark>postId</mark> is the ID of the post that you are quoting, while the <mark>topicId</mark> is the ID of the topic that contains the post.</p>
+                        The POST <b>body</b> should contain the following values:
                         <table class="table">
                         <tbody>
                             <thead>
                            <tr>
-                              <td><strong>POST data name</strong></td>
+                              <td><strong>Key</strong></td>
                               <td><strong>Description</strong></td>
                             </tr>
                         </thead>
