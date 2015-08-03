@@ -160,7 +160,7 @@ exp.parseProfile = function(name, cb) {
 			};
 		}
 
-		stats.overall.total_observed = total_obs;
+		stats.overall.observed = total_obs;
 
 		player.stats = stats;
 		cb(player);
