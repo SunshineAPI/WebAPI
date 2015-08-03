@@ -66,7 +66,7 @@ exp.parseProfile = function(name, cb) {
 		});
 
 		// Get Bio
-		profile.bio = $("#about > div:nth-child(3) > div > pre").text();
+		profile.bio = $("#about > div:nth-child(3) > div > pre").html().replace(/"/g, "'");
 
 		player.profile = profile;
 
@@ -121,11 +121,13 @@ exp.parseProfile = function(name, cb) {
 		overall.kd = parseFloat(getText(overallNode.find(".span3 h2:nth-child(4)")));
 		overall.kk = parseFloat(getText(overallNode.find(".span3 h2:nth-child(5)")));
 		overall.joins = parseInt(getText(overallNode.find(".span3 h2:nth-child(6)")));
-		overall.joined = overallNode.find(".span3 h2:nth-child(6)").attr("title")
-			.replace("First joined on", "").trim();
+		overall.joined = overallNode.find(".span3 h2:nth-child(6)").attr("title").replace("First joined on", "").trim();
 		overall.played = parseFloat(getText(overallNode.find(".span3 h2:nth-child(7)")));
-		overall.raindrops = parseFloat($("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(8)").attr("title")
-			.replace("raindrops", "").trim());
+		if(player.status.indexOf("Seen") > -1) {
+			overall.raindrops = parseFloat($("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(8)").attr("title").replace("raindrops", "").trim());
+		} else {
+			overall.raindrops = parseFloat($("body > div.container > section:nth-child(2) > div.row > div.span3 > h2:nth-child(6)").attr("title").replace("raindrops", "").trim());
+		}
 		stats.overall = overall;
 
 		var objectiveNodes = $("#objectives h2");
