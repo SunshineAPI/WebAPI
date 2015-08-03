@@ -1,5 +1,6 @@
 "use strict";
 var express = require("express");
+var hbs = require("handlebars");
 var exphbs = require("express-handlebars");
 var bodyParser = require("body-parser");
 var app = express();
@@ -10,7 +11,12 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 app.engine("handlebars", exphbs({
-	defaultLayout: "main"
+	defaultLayout: "main",
+  helpers: {
+    authenticated: function() {
+      return new hbs.SafeString("<i class=\"fa fa-key\" title=\"Authenticated Endpoint\"></i>");
+    }
+  }
 }));
 app.set("view engine", "handlebars");
 app.set("json spaces", 4);

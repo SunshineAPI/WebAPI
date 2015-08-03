@@ -34,14 +34,14 @@
               </section>
               <section>
                   <h3><i class="fa fa-key"></i>Authentication</h3>
-                  <p class="note">Some other endpoints need authentication to retrieve or post the information</p>
-                  <h4>How to get your token</h4>
-                  <p class="note">To get your token is a 1-step process<br>
+                  <p class="note">Some endpoints need authentication to make valid requests.</p>
+                  <h4>Obtaining a Token</h4>
+                  <p class="note">Getting your authentication token is a simple process:<br>
                   Make a POST request to <div class="code">{{domain}}/players/auth</div> with the following data:
                   <table class="table">
                         <thead>
                            <tr>
-                              <td><strong>Post Data</strong></td>
+                              <td><strong>Post Body</strong></td>
                               <td><strong>Description</strong></td>
                             </tr>
                         </thead>
@@ -57,43 +57,41 @@
                         </tbody>
                     </table>
                     <br>
-                    <p class="note">Don't worry, the data is kept super securely in a salted hash system where not even we could read it if we tried.
+                    <p class="note">Don't worry, the username and password are hashed and are not accessible to the developers or other users</p>
                     <br>
-                    The response should be in JSON format, like this example (It's not a real auth token):
+                    The JSON response will include a token, similar to this example:
                     <div class="code">
-                        {                                              <br>
-                            "token": "557e21685f35b92506006f9e"<br>
-                        }                                              
+                      <code>
+                        {                                              
+                            "token": "557e21685f35b92506006f9e"
+                        }       
+                      </code>                                       
                     </div>
                     </p>
-                    <h4>How to use authentication in API Calls</h4>
+                    <h4>Making Authenticated API Requests</h4>
                     <p class="note">
                         In calls that need authentication to work, using auth is very easy.
                         In the header section of your request, simply put
                         <table class="table">
                         <tbody>
                             <tr>
-                              <td>The name of the Header</td>
+                              <td>Header Key</td>
                               <td>Authorization</td>
                             </tr>
                             <tr>
-                              <td>Header value</td>
-                              <td>Bearer <mark>User's token</mark></td>
+                              <td>Header Value</td>
+                              <td>Bearer <mark>user token</mark></td>
                             </tr>
                         </tbody>
                     </table>
                     </p>
-                    <p class="note">Here is an example:
-                    <br>
-                    You make a GET request to <div class="code">{{domain}}/friends/online</div>
-                    In this, you set the <strong>Authorization</strong> header to  <div class="code">Bearer 557e21685f35b92506006f9e</div>
-                    </p>
-                    <p class="note" id="id">The following endpoints use authentication: <mark>Alerts</mark>, <mark>Friends</mark>, and <mark>Forum Posting & Replying</mark>.</p>
+                    <p class="note">Example:
+                    <div class="code">curl -H "Authorization: Bearer <mark>557e21685f35b92506006f9e</mark>" localhost:3000/alerts</div>
                   </p>
                   <br>
               </section>
               <div class="nonauth">
-                  <h2>Non-Authentication Dependent Endpoints</h2>
+                  <h2>Unauthenticated Endpoints</h2>
                 <section>
                     <h3>Stats</h3>
                       <p class="note">By default the stats endpoint will return the top kills in the last 24 hours in all gamemodes.</p>
@@ -218,16 +216,14 @@
 
             </div>
             <div class="auth">
-                <h2>Authentication Dependent Endpoints</h3>
+                <h2>Authenticated Endpoints</h3>
                 <section>
-                    <h3> <i class="fa fa-key"></i>Alerts</h3>
-                    <h4>Please note this endpoint requires Authentication</h4>
+                    <h3>{{authenticated}} Alerts</h3>
                     <p class="note">To retrieve a list of all of your alerts:</p>
                     <div class="code">{{domain}}/alerts/all</div>
                 </section>
                 <section>
-                    <h3> <i class="fa fa-key"></i>Friends</h3>
-                    <h4>Please note this endpoint requires Authentication</h4>
+                    <h3>{{authenticated}} Friends</h3>
                     <p class="note">To retrieve a list of all of your friends:</p>
                     <div class="code">{{domain}}/friends/all</div>
                     <p class="note">To retrieve a list of all friends currently playing:</p>
@@ -241,8 +237,7 @@
                     </p>
                 </section>
                 <section>
-                    <h3> <i class="fa fa-key"></i>Forum Posting & Replying</h3>
-                    <h4>Please note this endpoint requires Authentication</h4>
+                    <h3>{{authenticated}} Forum Posting & Replying</h3>
                     <p class="note">To post a new thread in a topic, send a POST request to:</p>
                         <div class="code">
                             {{domain}}/forums/<mark>categoryId</mark>
