@@ -124,9 +124,9 @@ exp.parseProfile = function(name, cb) {
 		overall.joined = overallNode.find(".span3 h2:nth-child(6)").attr("title").replace("First joined on", "").trim();
 		overall.played = parseFloat(getText(overallNode.find(".span3 h2:nth-child(7)")));
 		if(player.status.indexOf("Seen") > -1) {
-			overall.raindrops = parseFloat($("body > div > section:nth-child(2) > div.row > div.span3 > h2:nth-child(8)").attr("title").replace("raindrops", "").trim());
+			overall.raindrops = parseInt(overallNode.find("div.row > div.span3 > h2:nth-child(8)").attr("title").replace("raindrops", "").trim());
 		} else {
-			overall.raindrops = parseFloat($("body > div.container > section:nth-child(2) > div.row > div.span3 > h2:nth-child(6)").attr("title").replace("raindrops", "").trim());
+			overall.raindrops = parseInt(overallNode.find("div.row > div.span3 > h2:nth-child(6)").attr("title").replace("raindrops", "").trim());
 		}
 		stats.overall = overall;
 
@@ -161,7 +161,7 @@ exp.parseProfile = function(name, cb) {
 				observed: observed
 			};
 		}
-
+		total_obs = parseFloat(total_obs.toFixed(2));
 		stats.overall.observed = total_obs;
 
 		player.stats = stats;
