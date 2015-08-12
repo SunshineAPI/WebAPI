@@ -22,7 +22,7 @@
                   <p class="note">To retrieve a specific page of something use the follow parameter:</p>
                   <div class="code">?page=<mark>page_number</mark></div>
                   <p class="note">For example this link will get me the 2nd page of the "What's New" forum category.</p>
-                  <div class="code">{{domain}}/forums/new?page=2</div>
+                  <div class="code">https://sunshine-api.com/forums/new?page=2</div>
                   <p class="note" id="id">The following endpoints use pagination: <mark>Stats</mark>, <mark>Forum Topics</mark>, <mark>Teams</mark>, <mark>Channels</mark>, <mark>Maps</mark> and, <mark>Punishments</mark>.</p>
               </section>
               <br>
@@ -37,7 +37,7 @@
                   <p class="note">Some endpoints need authentication to make valid requests.</p>
                   <h4>Obtaining a Token</h4>
                   <p class="note">Getting your authentication token is a simple process:<br>
-                  Make a POST request to <div class="code">{{domain}}/players/auth</div> with the following data:
+                  Make a POST request to <div class="code">https://sunshine-api.com/players/auth</div> with the following data:
                   <table class="table">
                         <thead>
                            <tr>
@@ -95,10 +95,10 @@
                 <section>
                     <h3>Stats</h3>
                       <p class="note">By default the stats endpoint will return the top kills in the last 24 hours in all gamemodes.</p>
-                      <div class="code">{{domain}}/stats</div>
+                      <div class="code">https://sunshine-api.com/stats</div>
                       <p class="note">Stats has three parameters <mark>time</mark>, <mark>game</mark>, and, <mark>sort</mark>.</p>
                       <p class="note">This example retrives the top stats on wool captures for the past week in all gametypes.</p>
-                      <div class="code">{{domain}}/stats/?time=week&game=all&sort=wool_placed</div>
+                      <div class="code">https://sunshine-api.com/stats/?time=week&game=all&sort=wool_placed</div>
                       <p class="note">All the properties for the three parameters are down below.</p>
                       <table class="table">
                         <thead>
@@ -127,90 +127,90 @@
                 <section>
                   <h3>Player Information and Statistics</h3>
                   <p class="note">To find a specific player's stats and information use the following format below.</p>
-                  <div class="code">{{domain}}/players/<mark>username</mark></div>
+                  <div class="code">https://sunshine-api.com/players/<mark>username</mark></div>
                   <p class="note">For example, the code below will retrieve the player information for the player  <a href="//oc.tc/Cubist">Cubist</a>.</p>
-                  <div class="code">{{domain}}/players/Cubist</div>
+                  <div class="code">https://sunshine-api.com/players/Cubist</div>
                 </section>
                 <br>
                 <section>
                     <h3>Teams</h3>
                     <p class="note">Specify a team's name to retrieve their information.</p>
-                     <div class="code">{{domain}}/teams/<mark>name</mark></div>
+                     <div class="code">https://sunshine-api.com/teams/<mark>name</mark></div>
                      <p class="note">Not specifing a team will retrive a list of all the teams.</p>
-                     <div class="code">{{domain}}/teams</div>
+                     <div class="code">https://sunshine-api.com/teams</div>
                      <p class="note">The following link will retrieve information for the team <mark>Drifters.</mark></p>
-                     <div class="code">{{domain}}/teams/Drifters</div>
+                     <div class="code">https://sunshine-api.com/teams/Drifters</div>
                 </section>
                 <br>
                 <section>
                     <h3>Tournaments</h3>
                     <p class="note">To obtain a list of all tournaments do not specify a tournament.</p>
-                    <div class="code">{{domain}}/tournaments</div>
+                    <div class="code">https://sunshine-api.com/tournaments</div>
                     <p class="note">For example, this snippet will parse the tournament <mark>Attack of the Cores.</mark></p>
-                    <div class="code">{{domain}}/tournaments/attack-of-the-cores</div>
+                    <div class="code">https://sunshine-api.com/tournaments/attack-of-the-cores</div>
                     <p><strong class="text-success">Remember</strong> to use '-' instead of spaces when dealing with tournaments.</p>
                 </section>
                 <br>
                 <section>
                   <h3>Forum Topics</h3>
                   <p class="note">To get a specifc forum topic you are going to need the thread's <mark>id</mark>. Please refer to the <a href="#id">id</a> part of this Documentation.</p>
-                  <div class="code">{{domain}}/forums/topics/<mark>id</mark></div>
+                  <div class="code">https://sunshine-api.com/forums/topics/<mark>id</mark></div>
                   <p class="note">For example, this will get you the topic <ahref="https://oc.tc/forums/topics/50494e68b944ec59bc00596c">Awesome Music Thread.</a></p>
-                  <div class="code">{{domain}}/forums/topics/50494e68b944ec59bc00596c</div>
+                  <div class="code">https://sunshine-api.com/forums/topics/50494e68b944ec59bc00596c</div>
                 </section>
                 <br>
                 <section>
                   <h3 id="categories">Forum Categories</h3>
                   <p class="note">Specifying nothing except for what is below will return all* the categories of the forums and their ids.</p>
-                  <div class="code">{{domain}}/forums/categories</div>
+                  <div class="code">https://sunshine-api.com/forums/categories</div>
                   <h6>* does not return private categories</h6>
                   <p class="note">Giving an id will give you the first page of the forum category specified.</p>
-                  <div class="code">{{domain}}/forums/<mark>id</mark></div>
+                  <div class="code">https://sunshine-api.com/forums/<mark>id</mark></div>
                   <p class="note">This example will return the first page of the forum category <mark>Announcements</mark>.</p>
-                  <div class="code">{{domain}}/forums/4fc17119c463751492000018</div>
+                  <div class="code">https://sunshine-api.com/forums/4fc17119c463751492000018</div>
                   <p class="note">Finally, using the keyword <mark>new</mark> will return the front page of the What's New category; the most recent threads.</p>
-                  <div class="code">{{domain}}/forums/new</div>
+                  <div class="code">https://sunshine-api.com/forums/new</div>
                 </section>
                 <br>
                 <section>
                     <h3>Punishments</h3>
                     <p class="note">To retrieve a list of the most recent punishments use:</p>
-                    <div class="code">{{domain}}/punishments</div>
+                    <div class="code">https://sunshine-api.com/punishments</div>
                     <p class="docs-note">If you want to retrieve a specific punishment use its <mark>id</mark>.</p>
-                    <div class="code">{{domain}}/punishments/<mark>id</mark></div>
+                    <div class="code">https://sunshine-api.com/punishments/<mark>id</mark></div>
                 </section>
                 <br>
                 <section>
                     <h3>Channels</h3>
                     <p class="note">To retrieve a list of player Youtube channels:</p>
-                    <div class="code">{{domain}}/channels</div>
+                    <div class="code">https://sunshine-api.com/channels</div>
                 </section>
                 <br>
                 <section>
                     <h3>Servers</h3>
                     <p class="note">To retrieve a list of all public servers:</p>
-                    <div class="code">{{domain}}/servers</div>
+                    <div class="code">https://sunshine-api.com/servers</div>
                     <p class="note">To retrieve a list of the servers for a specific region:</p>
-                    <div class="code">{{domain}}/servers/<mark>region</mark></div>
+                    <div class="code">https://sunshine-api.com/servers/<mark>region</mark></div>
                     <p>Valid regions include <mark>us</mark> and <mark>eu</mark>.</p>
                     <p class="note">To retrieve a list of server names and their matching rotations:</p>
-                    <div class="code">{{domain}}/servers/rotations</div>
+                    <div class="code">https://sunshine-api.com/servers/rotations</div>
                     <p class="note">To retrieve a specific rotation:</p>
-                    <div class="code">{{domain}}/servers/rotations/<mark>id</mark></div>
+                    <div class="code">https://sunshine-api.com/servers/rotations/<mark>id</mark></div>
                     <p>The rotation IDs can only be found by calling the first endpoint.</p>
                 </section>
                 <br>
                 <section>
                     <h3>Maps</h3>
                     <p class="note">To retrieve a list of all maps:</p>
-                    <div class="code">{{domain}}/maps/all</div>
+                    <div class="code">https://sunshine-api.com/maps/all</div>
                     <p class="note">To retrieve a list of all maps currently being played:</p>
-                    <div class="code">{{domain}}/maps/playing</div>
+                    <div class="code">https://sunshine-api.com/maps/playing</div>
                     <p class="note">To retrieve a specific map:</p>
-                    <div class="code">{{domain}}/maps/<mark>name</mark></div>
+                    <div class="code">https://sunshine-api.com/maps/<mark>name</mark></div>
                     <p><strong class="text-success">Remember</strong> that the names are dependent on the map. The map <a href="https://oc.tc/maps/lost_world_ctf">Lost World: CTF</a> has the ID <mark>lost_world_ctf</mark></p>
                     <p class="note">To retrieve all maps for a specific gamemode:</p>
-                    <div class="code">{{domain}}/maps/gamemode/<mark>gamemode</mark></div>
+                    <div class="code">https://sunshine-api.com/maps/gamemode/<mark>gamemode</mark></div>
                     <p>The list of gamemodes can change, and should use the <mark>short</mark> id. All IDs can be found <a href="https://oc.tc/maps">here</a>.</p>
                 </section>
 
@@ -220,19 +220,19 @@
                 <section>
                     <h3>{{authenticated}} Alerts</h3>
                     <p class="note">To retrieve a list of all of your alerts:</p>
-                    <div class="code">{{domain}}/alerts/all</div>
+                    <div class="code">https://sunshine-api.com/alerts/all</div>
                 </section>
                 <section>
                     <h3>{{authenticated}} Friends</h3>
                     <p class="note">To retrieve a list of all of your friends:</p>
-                    <div class="code">{{domain}}/friends/all</div>
+                    <div class="code">https://sunshine-api.com/friends/all</div>
                     <p class="note">To retrieve a list of all friends currently playing:</p>
-                    <div class="code">{{domain}}/friends/online</div>
+                    <div class="code">https://sunshine-api.com/friends/online</div>
                     <p class="note">To retrieve a list of all friends currently offline:</p>
-                    <div class="code">{{domain}}/friends/offline</div>
+                    <div class="code">https://sunshine-api.com/friends/offline</div>
                     <p class="note">To add a friend, POST to: 
                         <div class="code">
-                            {{domain}}/friends/add/<mark>username</mark>
+                            https://sunshine-api.com/friends/add/<mark>username</mark>
                         </div>
                     </p>
                 </section>
@@ -240,7 +240,7 @@
                     <h3>{{authenticated}} Forum Posting & Replying</h3>
                     <p class="note">To post a new thread in a topic, send a POST request to:</p>
                         <div class="code">
-                            {{domain}}/forums/<mark>categoryId</mark>
+                            https://sunshine-api.com/forums/<mark>categoryId</mark>
                         </div>
                         <p>The <mark>categoryId</mark> can be obtained in the <a href="#categories">categories</a> list endpoint.</p>
                         The POST <b>body</b> should contain the following values:
@@ -265,7 +265,7 @@
                     </p>
                      <p class="note">To post a reply to a topic, send a POST request to:</p>
                         <div class="code">
-                            {{domain}}/topics/<mark>topicId</mark>/reply
+                            https://sunshine-api.com/topics/<mark>topicId</mark>/reply
                         </div>
                         <p>The <mark>topicId</mark> is the ID of the topic that contains the post.</p>
                         The POST <b>body</b> should contain the following values:
@@ -286,7 +286,7 @@
                     </p>
                      <p class="note">To quote a post, send a POST request to:</p>
                         <div class="code">
-                            {{domain}}/forums/<mark>topicId</mark>/<mark>postId</mark>/quote
+                            https://sunshine-api.com/forums/<mark>topicId</mark>/<mark>postId</mark>/quote
                         </div>
                         <p>The <mark>postId</mark> is the ID of the post that you are quoting, while the <mark>topicId</mark> is the ID of the topic that contains the post.</p>
                         The POST <b>body</b> should contain the following values:
