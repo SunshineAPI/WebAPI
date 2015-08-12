@@ -20,7 +20,7 @@ footer {
 .navbar p {
     margin: 0;
 }
-a {
+a,.fa-key {
     color: #f1c40f;
 }
 a:hover {

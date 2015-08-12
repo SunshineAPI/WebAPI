@@ -14,7 +14,7 @@ app.engine("handlebars", exphbs({
 	defaultLayout: "main",
   helpers: {
     authenticated: function() {
-      return new hbs.SafeString("<i class=\"fa fa-key\" title=\"Authenticated Endpoint\"></i>");
+      return new hbs.SafeString("<a href=\"#auth\"><i class=\"fa fa-key\" data-toggle=\"tooltip\" title=\"Authenticated Endpoint\"></i></a>");
     }
   }
 }));
@@ -101,7 +101,7 @@ String.prototype.escapeSpecialChars = function() {
 	return this.replace(new RegExp("\\n", "g"), "", "");
 };
 
-// for some reason cheerio parses various lines with 
+// for some reason cheerio parses various lines with
 // spaces as new lines, rather than spaces
 String.prototype.spaceSpecialChars = function() {
 	return this.replace(new RegExp("\\n", "g"), " ", " ");
