@@ -10,8 +10,8 @@ var exp = {};
 
 exp.parseProfile = function(name, cb) {
 	var options = {
-		url: "/stats/" + name,
-		followAllRedirects: true
+		url: "/" + name,
+		followAllRedirects: false
 	};
 
 	helpers.request(options, function(error, response, body) {
@@ -33,14 +33,11 @@ exp.parseProfile = function(name, cb) {
 
 		// Get Status
 		var status;
-		if ($("body > div > section:nth-child(2) > div.row > div.span3 > div").text() !== "") {
-			status = $("body > div > section:nth-child(2) > div.row > div.span3 > div").text();
-		} else if ($("body > div > section:nth-child(2) > div.row > div.span3 > span:nth-child(3)").children().length === 0) {
-			var spanthree = $("body > div > section:nth-child(2) > div.row > div.span3 > strong").text();
-			status = "Seen " + spanthree + " ago";
-		} else {
-			var spthree = $("body > div > section:nth-child(2) > div.row > div.span3 > strong").text();
-			status = "Seen " + spthree + " ago on " + $("body > div > section:nth-child(2) > div.row > div.span3 > span:nth-child(3) > a").text();
+		if($(".offline")!==null){
+			status = "Last seen " + $(".time").attr("title") + " on "+ $(".server").children("a").text();
+		}
+		else{
+			status = "Online on " + $(".server").children("a").text();
 		}
 		status = status.escapeSpecialChars();
 		player.status = status;
@@ -72,13 +69,13 @@ exp.parseProfile = function(name, cb) {
 
 		// Get Friends
 		player.friends = {};
-		var friendsParent = $("body > div > section:nth-child(2) > div.row > div.span2");
-		player.friends.count = parseInt(friendsParent.find("> h2").text().escapeSpecialChars().replace("friends", ""));
+		var friendsParent = $(".heads > div.span2:nth-child(3)");
+		player.friends.count = parseInt($(friendsParent).children("div.number").text());
 
 		var friends = [];
-		var friendNodes = friendsParent.find("a img");
+		var friendNodes = friendsParent.find("a");
 		friendNodes.each(function() {
-			friends.push($(this).attr("alt"));
+			friends.push($(this).children("img").attr("alt"));
 		});
 		player.friends.sample = friends;
 
@@ -107,33 +104,48 @@ exp.parseProfile = function(name, cb) {
 
 		var stats = {};
 
-		var statsNodes = $("#stats > div");
+		var statsNodes = $(".row-fluid");
 		var forums = {};
 		var forumsNode = $(statsNodes[0]);
-		forums.posts = parseInt(getText($(forumsNode.find("h3")[0])));
-		forums.topics = parseInt(getText($(forumsNode.find("h3")[1])));
+		forums.posts = parseInt(getText($("#stats > div:nth-child(3) > div > div > div:nth-child(1) > h3")));
+		forums.topics = parseInt(getText($("#stats > div:nth-child(3) > div > div > div:nth-child(2) > h3")));
 		stats.forums = forums;
-
+		
+		var ranked = {};
+		var rankedNode = $(".stats").children(".well");
+		ranked.rank = parseInt(getText($(rankedNode.find("div.rank:nth-child(1) > a.number"))).replace("th","").replace("rd","").replace("nd","").replace("st",""));
+		ranked.rating = parseFloat(getText($("div.rank:nth-child(2) > div.number")));
+		var matches = $(rankedNode.find("div:nth-child(4)"));
+		ranked.matches = parseInt(getText($(matches.find("div.total:nth-child(1)").children(".number"))));
+		ranked.wins =parseInt(getText($(matches.find("div.total:nth-child(2)").children(".number"))));
+		ranked.losses = parseInt(getText($(matches.find("div.total:nth-child(3)").children(".number"))));
+		ranked.forfeits = parseInt(getText($(matches.find("div.total:nth-child(4)").children(".number"))));
+		stats.ranked = ranked;
+		
 		var overall = {};
 		var overallNode = $("section:nth-child(2) > div.row");
-		overall.kills = parseInt(overallNode.find(".span5 h2").attr("title").replace(" kills", ""));
-		overall.deaths = parseInt(overallNode.find(".span4 h2").attr("title").replace(" kills", ""));
-		overall.kd = parseFloat(getText(overallNode.find(".span3 h2:nth-child(4)")));
-		overall.kk = parseFloat(getText(overallNode.find(".span3 h2:nth-child(5)")));
-		overall.joins = parseInt(getText(overallNode.find(".span3 h2:nth-child(6)")));
-		overall.joined = overallNode.find(".span3 h2:nth-child(6)").attr("title").replace("First joined on", "").trim();
-		overall.played = parseFloat(getText(overallNode.find(".span3 h2:nth-child(7)")));
-		if(player.status.indexOf("Seen") > -1) {
-			overall.raindrops = parseInt(overallNode.find("div.row > div.span3 > h2:nth-child(8)").attr("title").replace("raindrops", "").trim());
-		} else {
-			overall.raindrops = parseInt(overallNode.find("div.row > div.span3 > h2:nth-child(6)").attr("title").replace("raindrops", "").trim());
-		}
+		overall.kills = parseInt(overallNode.find("div.heads").children("div:nth-child(1)").children("div.number").text());
+		overall.deaths = parseInt(overallNode.find("div.heads").children("div:nth-child(2)").children("div.number").text());
+		overall.joins = parseInt($("#stats > div.row > div:nth-child(3) > h3").text().replace("teams joined",""));
+		overall.joined = $("#stats > div.row > div:nth-child(1) > h3").attr("title").replace("First joined on","").trim();
+		overall.played = parseInt($("#stats > div.row > div:nth-child(2) > h3").text().replace("hours played","").escapeSpecialChars());
+		overall.raindrops = parseInt($("#stats > div.row > div:nth-child(4) > h3").text().replace("raindrops","").trim());
 		stats.overall = overall;
 
 		var objectiveNodes = $("#objectives h2");
-		var monuments = parseInt(getText($(objectiveNodes[0])));
-		var cores = parseInt(getText($(objectiveNodes[1])));
-		var wools = parseInt(getText($(objectiveNodes[2])));
+		var monuments,cores,wools;
+		objectiveNodes.each(function(i){
+			if($(this).children("small").text()==="wools placed"){
+				wools = $(this).text().replace("wools placed","").escapeSpecialChars();
+			}
+			else if($(this).children("small").text()==="monuments destroyed"){
+				monuments = $(this).text().replace("monuments destroyed","").escapeSpecialChars();
+			}
+			else if($(this).children("small").text()==="cores leaked"){
+				cores = $(this).text().replace("cores leaked","").escapeSpecialChars();
+			}
+			else{}
+		});
 		stats.objectives = {
 			monuments: monuments,
 			cores: cores,
@@ -141,26 +153,10 @@ exp.parseProfile = function(name, cb) {
 		};
 		var total_obs = 0.0;
 		var gamemodes = ["project_ares", "blitz", "ghost_squadron"];
-		for (var i = 1; i < statsNodes.length; i++) {
-			var elm = $(statsNodes[i]);
-
-			var headers = elm.find("h3");
-			var kills = parseInt(getText($(headers[0])));
-			var deaths = parseInt(getText($(headers[1])));
-			var kd = parseFloat(getText($(headers[2])));
-			var kk = parseFloat(getText($(headers[3])));
-			var played = parseFloat(getText($(headers[4])));
-			var observed = parseFloat(getText($(headers[5])));
-			total_obs += observed;
-			stats[gamemodes[i - 1]] = {
-				kills: kills,
-				deaths: deaths,
-				kd: kd,
-				kk: kk,
-				played: played,
-				observed: observed
-			};
-		}
+		stats["project_ares"] = exp.getStat($,5);
+		stats["blitz"] = exp.getStat($,7);
+		stats["ghost_squadron"] = exp.getStat($,9);
+		total_obs = stats["project_ares"].observed+stats["blitz"].observed+stats["ghost_squadron"].observed;
 		total_obs = parseFloat(total_obs.toFixed(2));
 		stats.overall.observed = total_obs;
 
@@ -368,4 +364,14 @@ exp.getTextNodes = function(elm) {
 	});
 };
 
+exp.getStat = function($,number){
+	return {
+		kills:parseInt($("#stats > div:nth-child("+number+") > div.span4 > div > div:nth-child(1) > h3").text().replace("kills","").trim()),
+		deaths:parseInt($("#stats > div:nth-child("+number+") > div.span4 > div > div:nth-child(2) > h3").text().replace("deaths","").trim()),
+		kd:parseFloat($("#stats > div:nth-child("+number+") > div.span3 > div > div:nth-child(1) > h3").text().replace("kd","").trim()),
+		kk:parseFloat($("#stats > div:nth-child("+number+") > div.span3 > div > div:nth-child(2) > h3").text().replace("kk","").trim()),
+		played:parseFloat($("#stats > div:nth-child("+number+") > div.span5 > div > div:nth-child(1) > h3").text().replace("days played","").trim()),
+		observed:parseFloat($("#stats > div:nth-child("+number+") > div.span5 > div > div:nth-child(2) > h3").text().replace("days observed","").trim())
+		};
+	};
 module.exports = exp;
