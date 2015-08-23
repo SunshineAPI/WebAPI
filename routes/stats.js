@@ -13,6 +13,7 @@ router.get("/", function(req, res) {
     var options = {
         method: "GET",
         url: "/leaderboard?page="+page,
+        timeout:3000
     };
 
     helpers.request(options, function(error, response, body) {
