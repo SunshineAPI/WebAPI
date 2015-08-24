@@ -34,7 +34,7 @@ router.get("/", function(req, res) {
         var players = [];
         var links = parser.setMeta(req, page, pages);
 
-    
+
 
         var rows = $("body > div > section > div.row > div > table > tbody > tr");
         rows.each(function(i){
@@ -43,13 +43,13 @@ router.get("/", function(req, res) {
             newPlayer.rank = parseInt($(this).find("td:nth-child(1)").text());
             newPlayer.rating = parseFloat($(this).find("td:nth-child(2)").children("strong").text());
             newPlayer.matches = parseInt($(this).find("td:nth-child(3)").text());
-            newPlayer.winloss = parseFloat($(this).find("td:nth-child(4)").text());
+            newPlayer.win_loss_ratio = parseFloat($(this).find("td:nth-child(4)").text());
             newPlayer.wins = parseInt($(this).find("td:nth-child(5)").text());
             newPlayer.losses = parseInt($(this).find("td:nth-child(6)").text());
             newPlayer.forfeits = parseInt($(this).find("td:nth-child(7)").text());
             players.push(newPlayer);
         });
-        
+
         var statsResponse = {
             links: links,
             data: players

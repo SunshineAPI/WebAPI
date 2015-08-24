@@ -79,6 +79,7 @@ exp.parseProfile = function(name, cb) {
 		});
 		player.friends.sample = friends;
 
+		//Get Ranks
 		var ranks = [];
 		$(".label").each(function() {
 			var rank = {};
@@ -89,6 +90,7 @@ exp.parseProfile = function(name, cb) {
 		});
 		player.ranks = ranks;
 
+		//Get Trophies
 		var trophies = [];
 		var trophyParent = $(".thumbnails").first();
 		trophyParent.children("li").each(function() {
@@ -103,25 +105,8 @@ exp.parseProfile = function(name, cb) {
 		player.trophies = trophies;
 
 		var stats = {};
-
-		var statsNodes = $(".row-fluid");
-		var forums = {};
-		var forumsNode = $(statsNodes[0]);
-		forums.posts = parseInt(getText($("#stats > div:nth-child(3) > div > div > div:nth-child(1) > h3")));
-		forums.topics = parseInt(getText($("#stats > div:nth-child(3) > div > div > div:nth-child(2) > h3")));
-		stats.forums = forums;
 		
-		var ranked = {};
-		var rankedNode = $(".stats").children(".well");
-		ranked.rank = parseInt(getText($(rankedNode.find("div.rank:nth-child(1) > a.number"))).replace("th","").replace("rd","").replace("nd","").replace("st",""));
-		ranked.rating = parseFloat(getText($("div.rank:nth-child(2) > div.number")));
-		var matches = $(rankedNode.find("div:nth-child(4)"));
-		ranked.matches = parseInt(getText($(matches.find("div.total:nth-child(1)").children(".number"))));
-		ranked.wins =parseInt(getText($(matches.find("div.total:nth-child(2)").children(".number"))));
-		ranked.losses = parseInt(getText($(matches.find("div.total:nth-child(3)").children(".number"))));
-		ranked.forfeits = parseInt(getText($(matches.find("div.total:nth-child(4)").children(".number"))));
-		stats.ranked = ranked;
-		
+		//Get Overall Stats
 		var overall = {};
 		var overallNode = $("section:nth-child(2) > div.row");
 		overall.kills = parseInt(overallNode.find("div.heads").children("div:nth-child(1)").children("div.number").text());
@@ -132,6 +117,19 @@ exp.parseProfile = function(name, cb) {
 		overall.raindrops = parseInt($("#stats > div.row > div:nth-child(4) > h3").text().replace("raindrops","").trim());
 		stats.overall = overall;
 
+		//Get Ranked Stats
+		var ranked = {};
+		var rankedNode = $(".stats").children(".well");
+		ranked.rank = parseInt(getText($(rankedNode.find("div.rank:nth-child(1) > a.number"))).replace("th","").replace("rd","").replace("nd","").replace("st",""));
+		ranked.rating = parseFloat(getText($("div.rank:nth-child(2) > div.number")));
+		var matches = $(rankedNode.find("div:nth-child(4)"));
+		ranked.matches = parseInt(getText($(matches.find("div.total:nth-child(1)").children(".number"))));
+		ranked.wins =parseInt(getText($(matches.find("div.total:nth-child(2)").children(".number"))));
+		ranked.losses = parseInt(getText($(matches.find("div.total:nth-child(3)").children(".number"))));
+		ranked.forfeits = parseInt(getText($(matches.find("div.total:nth-child(4)").children(".number"))));
+		stats.ranked = ranked;
+
+		//Get Objective Stats
 		var objectiveNodes = $("#objectives h2");
 		var monuments,cores,wools;
 		objectiveNodes.each(function(i){
@@ -151,6 +149,16 @@ exp.parseProfile = function(name, cb) {
 			cores: cores,
 			wools: wools
 		};
+
+		//Get Forum Stats
+		var statsNodes = $(".row-fluid");
+		var forums = {};
+		var forumsNode = $(statsNodes[0]);
+		forums.posts = parseInt(getText($("#stats > div:nth-child(3) > div > div > div:nth-child(1) > h3")));
+		forums.topics = parseInt(getText($("#stats > div:nth-child(3) > div > div > div:nth-child(2) > h3")));
+		stats.forums = forums;
+
+		//Get Gamemode Stats
 		var total_obs = 0.0;
 		var gamemodes = ["project_ares", "blitz", "ghost_squadron"];
 		stats["project_ares"] = exp.getStat($,5);
