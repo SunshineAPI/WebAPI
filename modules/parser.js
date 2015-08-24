@@ -10,7 +10,7 @@ var exp = {};
 
 exp.parseProfile = function(name, cb) {
 	var options = {
-		url: "/" + name,
+		url: "/users/" + name,
 		followAllRedirects: false
 	};
 
