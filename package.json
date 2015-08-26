@@ -1,5 +1,5 @@
 {
-  "name": "OvercastAPI",
+  "name": "SunshineAPI",
   "version": "1.0.0",
   "description": "REST API for the Overcast Network",
   "main": "bin/www",
