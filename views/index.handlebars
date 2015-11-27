@@ -33,6 +33,64 @@
                   <div id="auth" class="code">557e21685f35b92506006f9e</div>
                   <br>
               </section>
+              <section>
+                  <h3><i class="fa fa-key"></i> Authentication</h3>
+                  <p class="note">Some endpoints need authentication to make valid requests.</p>
+                  <h4>Obtaining a Token</h4>
+                  <p class="note">Getting your authentication token is a simple process:<br>
+                  Make a POST request to <div class="code">https://sunshine-api.com/players/auth</div> with the following data:
+                  <table class="table">
+                        <thead>
+                           <tr>
+                              <td><strong>Post Body</strong></td>
+                              <td><strong>Description</strong></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>email</td>
+                              <td>User's Email</td>
+                            </tr>
+                            <tr>
+                              <td>password</td>
+                              <td>User's Password</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <p class="note">Don't worry, the username and password are hashed and are not accessible to the developers or other users</p>
+                    <br>
+                    The JSON response will include a token, similar to this example:
+                    <div class="code">
+                      <code>
+                        {
+                            "token": "557e21685f35b92506006f9e"
+                        }
+                      </code>
+                    </div>
+                    </p>
+                    <h4>Making Authenticated API Requests</h4>
+                    <p class="note">
+                        In calls that need authentication to work, using auth is very easy.
+                        In the header section of your request, simply put
+                        <table class="table">
+                        <tbody>
+                            <tr>
+                              <td>Header Key</td>
+                              <td>Authorization</td>
+                            </tr>
+                            <tr>
+                              <td>Header Value</td>
+                              <td>Bearer <mark>user token</mark></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </p>
+                    <p class="note">Example:
+                    <div class="code">curl -H "Authorization: Bearer <mark>557e21685f35b92506006f9e</mark>" localhost:3000/alerts</div>
+                  </p>
+                  <br>
+              </section>
               <div class="nonauth">
                   <h2>Endpoints</h2>
                 <section>
@@ -157,6 +215,97 @@
                     <p>The list of gamemodes can change, and should use the <mark>short</mark> id. All IDs can be found <a href="https://oc.tc/maps">here</a>.</p>
                 </section>
 
+            </div>
+            <div class="auth">
+                <section>
+                    <h3>{{authenticated}} Alerts</h3>
+                    <p class="note">To retrieve a list of all of your alerts:</p>
+                    <div class="code">https://sunshine-api.com/alerts/all</div>
+                </section>
+                <section>
+                    <h3>{{authenticated}} Friends</h3>
+                    <p class="note">To retrieve a list of all of your friends:</p>
+                    <div class="code">https://sunshine-api.com/friends/all</div>
+                    <p class="note">To retrieve a list of all friends currently playing:</p>
+                    <div class="code">https://sunshine-api.com/friends/online</div>
+                    <p class="note">To retrieve a list of all friends currently offline:</p>
+                    <div class="code">https://sunshine-api.com/friends/offline</div>
+                    <p class="note">To add a friend, POST to:
+                        <div class="code">
+                            https://sunshine-api.com/friends/add/<mark>username</mark>
+                        </div>
+                    </p>
+                </section>
+                <section>
+                    <h3>{{authenticated}} Forum Posting & Replying</h3>
+                    <p class="note">To post a new thread in a topic, send a POST request to:</p>
+                        <div class="code">
+                            https://sunshine-api.com/forums/<mark>categoryId</mark>
+                        </div>
+                        <p>The <mark>categoryId</mark> can be obtained in the <a href="#categories">categories</a> list endpoint.</p>
+                        The POST <b>body</b> should contain the following values:
+                        <table class="table">
+                        <tbody>
+                            <thead>
+                           <tr>
+                              <td><strong>Key</strong></td>
+                              <td><strong>Description</strong></td>
+                            </tr>
+                        </thead>
+                            <tr>
+                              <td>topic</td>
+                              <td>Name of new post</td>
+                            </tr>
+                            <tr>
+                              <td>contents</td>
+                              <td>The contents of each post, in markdown format</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </p>
+                     <p class="note">To post a reply to a topic, send a POST request to:</p>
+                        <div class="code">
+                            https://sunshine-api.com/topics/<mark>topicId</mark>/reply
+                        </div>
+                        <p>The <mark>topicId</mark> is the ID of the topic that contains the post.</p>
+                        The POST <b>body</b> should contain the following values:
+                        <table class="table">
+                        <tbody>
+                            <thead>
+                           <tr>
+                              <td><strong>Key</strong></td>
+                              <td><strong>Description</strong></td>
+                            </tr>
+                        </thead>
+                            <tr>
+                              <td>contents</td>
+                              <td>Contents of the reply</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </p>
+                     <p class="note">To quote a post, send a POST request to:</p>
+                        <div class="code">
+                            https://sunshine-api.com/forums/<mark>topicId</mark>/<mark>postId</mark>/quote
+                        </div>
+                        <p>The <mark>postId</mark> is the ID of the post that you are quoting, while the <mark>topicId</mark> is the ID of the topic that contains the post.</p>
+                        The POST <b>body</b> should contain the following values:
+                        <table class="table">
+                        <tbody>
+                            <thead>
+                           <tr>
+                              <td><strong>Key</strong></td>
+                              <td><strong>Description</strong></td>
+                            </tr>
+                        </thead>
+                            <tr>
+                              <td>contents</td>
+                              <td>Contents of the quote</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </p>
+                </section>
             </div>
         </section>
         <section id="wrappers">
