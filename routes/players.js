@@ -56,7 +56,7 @@ router.get("/:player", function(req, res) {
             parser.getForumStatus(player,function(forumstatus){
                 playerResponse.forumStatus = forumstatus;
                 res.json(playerResponse);
-            cache.cache_response(res, playerResponse, "player");
+            //cache.cache_response(res, playerResponse, "player");
             });
             
         } else {
