@@ -53,8 +53,12 @@ router.get("/:player", function(req, res) {
                 links: links,
                 data: user
             };
-            res.json(playerResponse);
+            parser.getForumStatus(player,function(forumstatus){
+                playerResponse.forumStatus = forumstatus;
+                res.json(playerResponse);
             cache.cache_response(res, playerResponse, "player");
+            });
+            
         } else {
             res.status(status || 404).json({
                 errors: ["Player not found"]

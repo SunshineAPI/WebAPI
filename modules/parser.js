@@ -181,7 +181,22 @@ exp.parseProfile = function(name, cb) {
 		cb(player);
 	});
 };
-
+exp.getForumStatus = function(player,cb){
+		var options = {
+		url: "/forums/",
+		followAllRedirects: false
+	};
+	helpers.request(options,function(err,response,body){
+		if(err) throw err;
+		var $ = cheerio.load(body);
+		$("#forum-sidebar > small").children("a").each(function(){
+			if($(this).text().toLowerCase()===player.toLowerCase()){
+				return cb(true);
+			}	
+		});
+		cb(false);
+	});
+};
 exp.parseForum = function(body, page, cat, callback) {
 	var $ = cheerio.load(body);
 	var topics = [];
