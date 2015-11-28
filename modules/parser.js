@@ -191,10 +191,13 @@ exp.getForumStatus = function(player,cb){
 		var $ = cheerio.load(body);
 		$("#forum-sidebar > small").children("a").each(function(){
 			if($(this).text().toLowerCase()===player.toLowerCase()){
-				return cb(true);
+				 cb(true);
+				 return;
 			}	
+			else{}
 		});
 		cb(false);
+		return;
 	});
 };
 exp.parseForum = function(body, page, cat, callback) {
@@ -259,12 +262,12 @@ exp.parseForum = function(body, page, cat, callback) {
 
 exp.parseForumTopic = function($, id) {
 	var header = $(".page-header > h3");
-	var title = getText(header).escapeSpecialChars();
-	var creator = header.find("a").text();
+	var author = $(header).children("small").text().replace("by","").escapeSpecialChars();
+	var title = $(header).children("a").text().escapeSpecialChars();
 	var t = {
 		id: id,
 		title: title,
-		author: creator
+		author: author
 	};
 
 	var posts = [];
