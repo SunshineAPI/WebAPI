@@ -1,3 +1,5 @@
+_**Notice:** With the recent update to Bootstrap 3, it is highly possible that various parts of this API are no longer functional_
+
 # Sunshine [![travis](https://img.shields.io/travis/SunshineAPI/WebAPI/master.svg?style=flat-square)](https://travis-ci.org/SunshineAPI/WebAPI/) [![Coveralls](https://img.shields.io/coveralls/SunshineAPI/WebAPI.svg?style=flat-square)](https://coveralls.io/github/SunshineAPI/WebAPI) [![Code Climate](https://img.shields.io/codeclimate/github//SunshineAPI/WebAPI.svg?style=flat-square)](https://codeclimate.com/github/SunshineAPI/WebAPI)
 
 [![Dependencies](https://img.shields.io/david/SunshineAPI/WebAPI.svg?style=flat-square)](https://david-dm.org/SunshineAPI/WebAPI) [![Dev Dependencies](https://img.shields.io/david/dev/SunshineAPI/WebAPI.svg?style=flat-square)](https://david-dm.org/SunshineAPI/WebAPI#info=devDependencies)
